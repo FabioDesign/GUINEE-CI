@@ -11,6 +11,7 @@ use App\Http\Controllers\API\{
     RegisterController,
     RequestdocController,
     UserController,
+    TodoController,
 };
 
 /*
@@ -35,16 +36,16 @@ Route::fallback(function() {
 });
 // Route pour la connexion
 Route::post('users/auth', [UserController::class, 'login']);
-// Route pour l'inscription
-Route::controller(RegisterController::class)->group(function () {
-  Route::post('register/sendotp', 'sendotp');
-  Route::post('register/validotp', 'validotp');
-  Route::post('register/forms', 'store');
-});
+// Route pour Todo
+Route::resources([
+  'todos' => TodoController::class,
+]);
 // Routes pour les mots de passe oubliés
 Route::controller(PasswordController::class)->group(function () {
   Route::post('password/verifemail', 'verifemail');
   Route::post('password/verifotp', 'verifotp');
+  Route::post('password/addpass', 'addpass');
+  Route::post('password/addpass', 'addpass');
   Route::post('password/addpass', 'addpass');
 });
 // Route pour les listes

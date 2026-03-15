@@ -35,7 +35,7 @@ class PasswordController extends BaseController
         //Validator
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field
@@ -105,7 +105,7 @@ class PasswordController extends BaseController
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
             'otp' => 'required|size:6',
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field
@@ -172,7 +172,7 @@ class PasswordController extends BaseController
                     ->numbers()   // Doit contenir des chiffres
                     ->symbols()   // Doit contenir des caractères spéciaux
             ],
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field

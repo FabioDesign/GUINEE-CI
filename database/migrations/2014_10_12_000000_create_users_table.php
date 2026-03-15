@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('fullname_person', 255);
             $table->string('number_person', 255);
             $table->string('residence_person', 255);
-            $table->string('photo', 255);
+            $table->string('photo', 20);
             $table->timestamp('photo_at')->nullable();
             $table->string('otp', 10)->nullable();
             $table->timestamp('otp_at')->nullable();

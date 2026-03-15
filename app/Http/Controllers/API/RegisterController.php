@@ -34,7 +34,7 @@ class RegisterController extends BaseController
         //Validator
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email',
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field
@@ -109,7 +109,7 @@ class RegisterController extends BaseController
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'otp' => 'required|size:6',
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field
@@ -192,7 +192,7 @@ class RegisterController extends BaseController
         Log::notice("User::store : " . json_encode($request->all()));
         //Validator
         $validator = Validator::make($request->all(), [
-            'lg' => 'required',
+            'lg' => 'required|in:fr,en',
             'g_recaptcha_response' => 'required',
             'lastname' => 'required',
             'firstname' => 'required',

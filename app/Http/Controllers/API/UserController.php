@@ -600,7 +600,7 @@ class UserController extends BaseController
         $validator = Validator::make($request->all(), [
           'login' => 'required',
           'password' => 'required',
-          'lg' => 'required',
+          'lg' => 'required|in:fr,en',
         ]);
 		App::setLocale($request->lg);
         //Error field

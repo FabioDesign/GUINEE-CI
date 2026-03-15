@@ -1,8 +1,8 @@
 # Titre du projet
-API RWANDA
+API GUINEE-COTE D'IVOIRE
 
 ## A Propos
-C'est un API de demande consulaire des ressortisants guinéens au Rwanda
+C'est un API de demande consulaire des ressortisants guinéens en Côte d'Ivoire.
 
 ## Dépendences / Prérequis
 LARAVEL = 10
@@ -15,8 +15,11 @@ Apache 2.4
 1. Dépôt vide
 ```
 git init
-git remote add origin https://github.com/FabioDesign/rwanda.git
-git branch -M master
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/FabioDesign/GUINEE-CI.git
+git push -u origin main
 ```
 
 2. Installer Passport
