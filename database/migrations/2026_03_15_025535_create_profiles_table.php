@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('description_fr')->nullable();
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
-            $table->integer('created_user');
-            $table->integer('updated_user')->default('0');
+            $table->integer('created_id');
+            $table->integer('updated_id')->default('0');
         });
     }
 

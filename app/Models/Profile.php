@@ -15,8 +15,8 @@ class Profile extends Model
         'fr',
         'uid',
         'status',
-        'created_user',
-        'updated_user',
+        'created_id',
+        'updated_id',
         'description_en',
         'description_fr',
     ];

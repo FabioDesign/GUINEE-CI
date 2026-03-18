@@ -20,8 +20,8 @@ class Document extends Model
         'amount',
         'user_id',
         'period_id',
-        'created_user',
-        'updated_user',
+        'created_id',
+        'updated_id',
         'description_en',
         'description_fr',
     ];

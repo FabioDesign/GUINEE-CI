@@ -61,7 +61,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Rendez-vous
+        // Demandes
         Permission::firstOrCreate(
             [
                 'menu_id' => 7,
@@ -73,14 +73,6 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(
             [
                 'menu_id' => 8,
-                'action_id' => 1,
-                'profile_id' => 1,
-            ]
-        );
-        // Demandes
-        Permission::firstOrCreate(
-            [
-                'menu_id' => 9,
                 'action_id' => 1,
                 'profile_id' => 1,
             ]

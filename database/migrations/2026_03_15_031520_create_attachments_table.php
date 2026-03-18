@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('spouses', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('rank');
+            $table->uuid('uid');
+            $table->string('number', 255);
+            $table->date('date_at');
+            $table->string('place', 255);
             $table->string('filename', 255);
-            $table->date('wedding_at')->nullable();
-            $table->tinyInteger('status')->default('1');
             $table->timestamps();
-            $table->integer('user_id');
-            $table->integer('spouse_id');
-            $table->integer('requestdoc_id');
+            $table->integer('file_id');
+            $table->integer('demand_id');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('spouses');
+        Schema::dropIfExists('attachments');
     }
 };

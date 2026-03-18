@@ -145,7 +145,7 @@ class MenuActionSeeder extends Seeder
                 'action_id' => 4,
             ]
         );
-        // Rendez-vous
+        // Demandes
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 7,
@@ -187,43 +187,6 @@ class MenuActionSeeder extends Seeder
             [
                 'menu_id' => 8,
                 'action_id' => 1,
-            ]
-        );
-        // Demandes
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 1,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 2,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 3,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 5,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 6,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 9,
-                'action_id' => 7,
             ]
         );
     }

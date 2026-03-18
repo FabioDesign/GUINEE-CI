@@ -26,9 +26,7 @@ class DatabaseSeeder extends Seeder
                 // Permission
                 PermissionSeeder::class,
                 // Pièces à fournir
-                RequestdocSeeder::class,
-                // Situation matrimoniale
-                MaritalStatusSeeder::class,
+                FileSeeder::class,
             ]);
         } catch (QueryException $e) {
             $this->command->info('Erreur d’insertion détectée. Processus de seed ignoré pour cet enregistrement.');

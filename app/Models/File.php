@@ -10,15 +10,14 @@ class File extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
+        'en',
+        'fr',
         'status',
-        'required',
-        'document_id',
-        'requestdoc_id',
     ];
-
-    public function requestdoc()
-    {
-        return $this->belongsTo(Requestdoc::class, 'requestdoc_id');
-    }
 }

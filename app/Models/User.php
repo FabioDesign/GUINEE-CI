@@ -19,46 +19,41 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'lg',
-        'bp',
         'uid',
         'otp',
+        'size',
+        'hair',
+        'year',
+        'stamp',
+        'month',
         'email',
-        'photo',
-        'otp_at',
         'gender',
-        'number',
         'status',
+        'number',
+        'otp_at',
         'town_id',
-        'village',
-        'comment',
-        'diplome',
-        'photo_at',
-        'login_at',
+        'whatsapp',
         'password',
+        'login_at',
         'lastname',
-        'firstname',
+        'signature',
         'blocked_id',
-        'blocked_at',
         'profile_id',
-        'cellule_id',
+        'blocked_at',
+        'firstname',
         'birthplace',
+        'complexion',
         'profession',
+        'prefecture',
         'password_at',
         'birthday_at',
-        'distinction',
-        'activated_id',
         'activated_at',
-        'number_person',
-        'street_number',
-        'house_number',
-        'family_number',
-        'nationality_id',
-        'fullname_father',
-        'fullname_mother',
-        'fullname_person',
-        'register_number',
-        'residence_person',
-        'maritalstatus_id',
+        'activated_id',
+        'person_number',
+        'person_address',
+        'father_fullname',
+        'mother_fullname',
+        'person_fullname',
     ];
 
     /**
@@ -79,22 +74,11 @@ class User extends Authenticatable
         'otp_at' => 'datetime',
         'birthday_at' => 'date',
         'login_at' => 'datetime',
-        'photo_at' => 'datetime',
         'blocked_at' => 'datetime',
         'password_at' => 'datetime',
         'activated_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    // Génération de Filename unique
-    public static function filenameUnique($ext)
-    {
-        do {
-            $alfa = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
-            $string = substr(str_shuffle($alfa), 0, 15) . '.' . $ext;
-        } while(self::where('photo', $string)->exists());
-        return $string;
-    }
 
     // Génération de UUID unique
     protected static function boot()

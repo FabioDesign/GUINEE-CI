@@ -14,20 +14,20 @@ class PeriodSeeder extends Seeder
      */
     public function run(){
         Period::firstOrCreate(
-            ["en" => 'Days'],
-            ["fr" => 'Jours']
+            ['en' => "Days"],
+            ['fr' => "Jours"]
         );
         Period::firstOrCreate(
-            ["en" => 'Weeks'],
-            ["fr" => 'Semaines']
+            ['en' => "Weeks"],
+            ['fr' => "Semaines"]
         );
         Period::firstOrCreate(
-            ["en" => 'Months'],
-            ["fr" => 'Mois']
+            ['en' => "Months"],
+            ['fr' => "Mois"]
         );
         Period::firstOrCreate(
-            ["en" => 'Years'],
-            ["fr" => 'Années']
+            ['en' => "Years"],
+            ['fr' => "Années"]
         );
     }
 }

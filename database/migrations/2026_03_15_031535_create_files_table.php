@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('children', function (Blueprint $table) {
-            $table->id();
-            $table->tinyInteger('rank');
-            $table->string('filename', 255);
+        Schema::create('files', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('en', 255);
+            $table->string('fr', 255);
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
-            $table->integer('user_id');
-            $table->integer('children_id');
-            $table->integer('requestdoc_id');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('children');
+        Schema::dropIfExists('files');
     }
 };

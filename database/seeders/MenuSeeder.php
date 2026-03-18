@@ -14,102 +14,91 @@ class MenuSeeder extends Seeder
      */
     public function run(){
         Menu::firstOrCreate(
-            ["en" => 'Dashboard'],
+            ['en' => "Dashboard"],
             [
-                "fr" => 'Tableau de bord',
-                "status" => 1,
-                "icone" => 'dashboard-icon',
-                "target" => '/dashboard',
-                "menu_id" => 0,
-                "position" => 1,
+                'fr' => "Tableau de bord",
+                'status' => 1,
+                'icone' => "dashboard-icon",
+                'target' => "/dashboard",
+                'menu_id' => 0,
+                'position' => 1,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Documents'],
+            ['en' => "Documents"],
             [
-                "fr" => 'Documents',
-                "status" => 1,
-                "icone" => 'documents-icon',
-                "target" => '/documents',
-                "menu_id" => 0,
-                "position" => 3,
+                'fr' => "Documents",
+                'status' => 1,
+                'icone' => "documents-icon",
+                'target' => "/documents",
+                'menu_id' => 0,
+                'position' => 3,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Documents to provide'],
+            ['en' => "Documents to provide"],
             [
-                "fr" => 'Pièces à fournir',
-                "status" => 1,
-                "icone" => 'attachments-icon',
-                "target" => '/attachments',
-                "menu_id" => 0,
-                "position" => 4,
+                'fr' => "Pièces à fournir",
+                'status' => 1,
+                'icone' => "attachments-icon",
+                'target' => "/attachments",
+                'menu_id' => 0,
+                'position' => 4,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Settings'],
+            ['en' => "Settings"],
             [
-                "fr" => 'Paramètres',
-                "status" => 1,
-                "icone" => 'settings-icon',
-                "target" => '/settings',
-                "menu_id" => 0,
-                "position" => 8,
+                'fr' => "Paramètres",
+                'status' => 1,
+                'icone' => "settings-icon",
+                'target' => "/settings",
+                'menu_id' => 0,
+                'position' => 8,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Profile Management'],
+            ['en' => "Profile Management"],
             [
-                "fr" => 'Gestion des Profils',
-                "status" => 1,
-                "icone" => 'profile-icon',
-                "target" => '/profile',
-                "menu_id" => 0,
-                "position" => 7,
+                'fr' => "Gestion des Profils",
+                'status' => 1,
+                'icone' => "profile-icon",
+                'target' => "/profile",
+                'menu_id' => 0,
+                'position' => 7,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'User Management'],
+            ['en' => "User Management"],
             [
-                "fr" => 'Gestion des Utilisateurs',
-                "status" => 1,
-                "icone" => 'user-icon',
-                "target" => '/users',
-                "menu_id" => 0,
-                "position" => 6,
+                'fr' => "Gestion des Utilisateurs",
+                'status' => 1,
+                'icone' => "user-icon",
+                'target' => "/users",
+                'menu_id' => 0,
+                'position' => 6,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Appointments'],
+            ['en' => "Audit trail"],
             [
-                "fr" => 'Rendez-vous',
-                "status" => 1,
-                "icone" => 'appointments-icon',
-                "target" => '/appointments',
-                "menu_id" => 0,
-                "position" => 5,
+                'fr' => "Piste d'audit",
+                'status' => 1,
+                'icone' => "audit_trail-icon",
+                'target' => "/audit_trail",
+                'menu_id' => 0,
+                'position' => 9,
             ]
         );
         Menu::firstOrCreate(
-            ["en" => 'Audit trail'],
+            ['en' => "Requests"],
             [
-                "fr" => "Piste d'audit",
-                "status" => 1,
-                "icone" => 'audit_trail-icon',
-                "target" => '/audit_trail',
-                "menu_id" => 0,
-                "position" => 9,
-            ]
-        );
-        Menu::firstOrCreate(
-            ["en" => 'Requests'],
-            [
-                "fr" => "Demandes",
-                "status" => 1,
-                "icone" => 'requests-icon',
-                "target" => '/requests',
-                "menu_id" => 0,
-                "position" => 2,
+                'fr' => "Demandes",
+                'status' => 1,
+                'icone' => "requests-icon",
+                'target' => "/requests",
+                'menu_id' => 0,
+                'position' => 2,
             ]
         );
     }

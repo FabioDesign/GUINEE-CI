@@ -17,15 +17,15 @@ return new class extends Migration
             $table->string('code', 5)->unique();
             $table->string('en', 255);
             $table->string('fr', 255);
-            $table->string('amount', 50)->nullable();
-            $table->integer('number')->default('0');
+            $table->string('amount', 50);
+            $table->integer('number');
             $table->text('description_en');
             $table->text('description_fr');
             $table->tinyInteger('status');
             $table->timestamps();
             $table->integer('period_id');
-            $table->integer('created_user');
-            $table->integer('updated_user')->default('0');
+            $table->integer('created_id');
+            $table->integer('updated_id')->default('0');
         });
     }
 
