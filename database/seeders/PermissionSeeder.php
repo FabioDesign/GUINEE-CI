@@ -21,7 +21,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Documents
+        // Demandes
         Permission::firstOrCreate(
             [
                 'menu_id' => 2,
@@ -29,7 +29,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Pièces à fournir
+        // Documents
         Permission::firstOrCreate(
             [
                 'menu_id' => 3,
@@ -37,7 +37,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Paramètres
+        // Pièces à fournir
         Permission::firstOrCreate(
             [
                 'menu_id' => 4,
@@ -45,7 +45,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Gestion des Profils
+        // Villes
         Permission::firstOrCreate(
             [
                 'menu_id' => 5,
@@ -53,7 +53,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Gestion des Utilisateurs
+        // Gestion des Profils
         Permission::firstOrCreate(
             [
                 'menu_id' => 6,
@@ -61,7 +61,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Demandes
+        // Gestion des Utilisateurs
         Permission::firstOrCreate(
             [
                 'menu_id' => 7,

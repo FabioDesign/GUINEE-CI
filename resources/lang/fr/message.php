@@ -17,12 +17,14 @@ return [
     'logouterr' => "Erreur lors de la déconnexion.",
     'creataccount' => "Création de compte",
     'actifaccount' => "Activation de compte",
+    'recaptcha' => "Recaptcha incorreto, tente novamente.",
     
     //Password
     'forgotpwd' => "Mot de passe oublié.",
     'otp' => "Le code OTP est",
 
     // Settings
+    'listuser' => "Liste des utilisateurs.",
     'listnation' => "Liste des nationalités.",
     'listcountry' => "Liste des pays.",
     'listprovince' => "Liste des provinces.",
@@ -44,5 +46,6 @@ return [
     'paraconn' => "Veuillez trouver ci-dessous vos paramètres de connexion :<br>",
 
     // Message
+    'nodata' => "Aucune donnée trouvée.",
     'error' => "Une erreur est survenue, veuillez réessayer plus tard !",
 ];

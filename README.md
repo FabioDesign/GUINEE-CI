@@ -1,8 +1,8 @@
 # Titre du projet
-API GUINEE-COTE D'IVOIRE
+APP WEB GUINEE-COTE D'IVOIRE
 
 ## A Propos
-C'est un API de demande consulaire des ressortisants guinéens en Côte d'Ivoire.
+C'est une App de demande consulaire des ressortisants guinéens en Côte d'Ivoire.
 
 ## Dépendences / Prérequis
 LARAVEL = 10
@@ -22,63 +22,41 @@ git remote add origin https://github.com/FabioDesign/GUINEE-CI.git
 git push -u origin main
 ```
 
-2. Installer Passport
-```
-composer require laravel/passport
-```
-
-3. Installer Log-viewer
+2. Installer Log-viewer
 ```
 composer require arcanedev/log-viewer
 ```
 
-4. Installer PHP Mailer
+3. Installer PHP Mailer
 ```
 composer require phpmailer/phpmailer
 ```
 
-5. Installer Swagger
-```
-composer require darkaonline/l5-swagger
-```
-
-6. Installer DomPDF
+4. Installer DomPDF
 ```
 composer require barryvdh/laravel-dompdf
 php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"
 ```
 
-7. Copier le contenu de .env.example vers .env et modifier les paramètres
+5. Copier le contenu de .env.example vers .env et modifier les paramètres
 ```
 cp .env.example .env
 ```
 
-8. Faire la migration de la base de données
+6. Faire la migration de la base de données
 ```
 php artisan migrate
 php artisan db:seed
 ```
 
-9. Exécuter les commandes de Passport
-```
-php artisan passport:install --force
-php artisan passport:keys --length=512 --force
-```
-
-10. Exécuter la commande à la fin
+7. Exécuter la commande à la fin
 ```
 php artisan key:generate
 ```
 
-11. Vérifier si tout est bien installé
+8. Vérifier si tout est bien installé
 ```
 composer dump-autoload
-```
-
-12. Lien du swagger
-```
-php artisan l5-swagger:generate
-url/api/documentation
 ```
 
 ## Réalisé avec

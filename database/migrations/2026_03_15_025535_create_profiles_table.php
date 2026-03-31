@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uid');
-            $table->string('en', 50);
-            $table->string('fr', 50);
-            $table->text('description_en')->nullable();
-            $table->text('description_fr')->nullable();
+            $table->string('libelle', 50);
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->integer('created_id');

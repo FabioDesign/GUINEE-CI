@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uid');
-            $table->string('number', 255);
-            $table->date('date_at');
-            $table->string('place', 255);
             $table->string('filename', 255);
             $table->timestamps();
+            $table->softDeletes();
+            $table->integer('created_user')->nullable();
+            $table->integer('updated_user')->nullable();
+            $table->integer('deleted_user')->nullable();
             $table->integer('file_id');
-            $table->integer('demand_id');
+            $table->integer('request_id');
         });
     }
 

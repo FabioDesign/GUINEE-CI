@@ -8,10 +8,7 @@ class MenuAction extends Model
 {
     public $table = 'menu_actions';
 
-    protected $fillable = [
-        'menu_id',
-        'action_id',
-    ];
+    protected $guarded = [];
     
     public $timestamps = false;
 }

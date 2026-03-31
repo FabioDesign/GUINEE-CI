@@ -17,12 +17,14 @@ return [
     'logouterr' => "Error while logging out.",
     'creataccount' => "Account creation",
     'actifaccount' => "Account activation",
+    'recaptcha' => "Incorrect Recaptcha, please try again.",
 
     //Password
     'forgotpwd' => "Forgot password.",
     'otp' => "The OTP code is",
 
     // Settings
+    'listuser' => "List of users.",
     'listnation' => "List of nationalities.",
     'listcountry' => "List of contries.",
     'listprovince' => "List of provinces.",
@@ -44,5 +46,6 @@ return [
     'paraconn' => "Please find your login details below :<br>",
 
     // Message
+    'nodata' => "No data found.",
     'error' => "An error has occurred, please try again later !",
 ];

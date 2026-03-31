@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('en', 50);
-            $table->string('fr', 50);
+            $table->string('libelle', 50);
         });
     }
 

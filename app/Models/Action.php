@@ -9,10 +9,7 @@ class Action extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'en',
-        'fr',
-    ];
+    protected $guarded = [];
     
     public $timestamps = false;
 }

@@ -10,16 +10,7 @@ class Profile extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'en',
-        'fr',
-        'uid',
-        'status',
-        'created_id',
-        'updated_id',
-        'description_en',
-        'description_fr',
-    ];
+    protected $guarded = [];
 
     protected static function boot()
     {

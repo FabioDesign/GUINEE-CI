@@ -27,6 +27,10 @@ class DatabaseSeeder extends Seeder
                 PermissionSeeder::class,
                 // Pièces à fournir
                 FileSeeder::class,
+                // Utilisateur
+                UserSeeder::class,
+                // Ville
+                TownSeeder::class,
             ]);
         } catch (QueryException $e) {
             $this->command->info('Erreur d’insertion détectée. Processus de seed ignoré pour cet enregistrement.');

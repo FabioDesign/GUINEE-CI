@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->uuid('uid');
-            $table->string('code', 5)->unique();
-            $table->string('en', 255);
-            $table->string('fr', 255);
+            $table->string('icone', 50);
+            $table->string('libelle', 255);
             $table->string('amount', 50);
             $table->integer('number');
-            $table->text('description_en');
-            $table->text('description_fr');
+            $table->text('description');
             $table->tinyInteger('status');
             $table->timestamps();
             $table->integer('period_id');

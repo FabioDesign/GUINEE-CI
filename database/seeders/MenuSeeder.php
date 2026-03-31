@@ -14,91 +14,75 @@ class MenuSeeder extends Seeder
      */
     public function run(){
         Menu::firstOrCreate(
-            ['en' => "Dashboard"],
+            ['libelle' => "Tableau de bord"],
             [
-                'fr' => "Tableau de bord",
-                'status' => 1,
                 'icone' => "dashboard-icon",
                 'target' => "/dashboard",
-                'menu_id' => 0,
                 'position' => 1,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Documents"],
+            ['libelle' => "Demandes"],
             [
-                'fr' => "Documents",
-                'status' => 1,
+                'icone' => "requests-icon",
+                'target' => "/requests",
+                'position' => 2,
+            ]
+        );
+        Menu::firstOrCreate(
+            ['libelle' => "Documents"],
+            [
                 'icone' => "documents-icon",
                 'target' => "/documents",
-                'menu_id' => 0,
                 'position' => 3,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Documents to provide"],
+            ['libelle' => "Pièces à fournir"],
             [
-                'fr' => "Pièces à fournir",
-                'status' => 1,
-                'icone' => "attachments-icon",
-                'target' => "/attachments",
-                'menu_id' => 0,
+                'icone' => "files-icon",
+                'target' => "/files",
                 'position' => 4,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Settings"],
+            ['libelle' => "Villes"],
             [
-                'fr' => "Paramètres",
-                'status' => 1,
-                'icone' => "settings-icon",
-                'target' => "/settings",
-                'menu_id' => 0,
-                'position' => 8,
+                'icone' => "cities-icon",
+                'target' => "/cities",
+                'position' => 5,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Profile Management"],
+            ['libelle' => "Gestion des Menus"],
             [
-                'fr' => "Gestion des Profils",
-                'status' => 1,
-                'icone' => "profile-icon",
-                'target' => "/profile",
-                'menu_id' => 0,
-                'position' => 7,
-            ]
-        );
-        Menu::firstOrCreate(
-            ['en' => "User Management"],
-            [
-                'fr' => "Gestion des Utilisateurs",
-                'status' => 1,
-                'icone' => "user-icon",
-                'target' => "/users",
-                'menu_id' => 0,
+                'icone' => "menus-icon",
+                'target' => "/menus",
                 'position' => 6,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Audit trail"],
+            ['libelle' => "Gestion des Profils"],
             [
-                'fr' => "Piste d'audit",
-                'status' => 1,
-                'icone' => "audit_trail-icon",
-                'target' => "/audit_trail",
-                'menu_id' => 0,
-                'position' => 9,
+                'icone' => "profile-icon",
+                'target' => "/profile",
+                'position' => 7,
             ]
         );
         Menu::firstOrCreate(
-            ['en' => "Requests"],
+            ['libelle' => "Gestion des Utilisateurs"],
             [
-                'fr' => "Demandes",
-                'status' => 1,
-                'icone' => "requests-icon",
-                'target' => "/requests",
-                'menu_id' => 0,
-                'position' => 2,
+                'icone' => "user-icon",
+                'target' => "/users",
+                'position' => 8,
+            ]
+        );
+        Menu::firstOrCreate(
+            ['libelle' => "Piste d'audit"],
+            [
+                'icone' => "audit_trail-icon",
+                'target' => "/audit_trail",
+                'position' => 9,
             ]
         );
     }

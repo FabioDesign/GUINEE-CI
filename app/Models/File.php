@@ -15,9 +15,5 @@ class File extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'en',
-        'fr',
-        'status',
-    ];
+    protected $guarded = [];
 }

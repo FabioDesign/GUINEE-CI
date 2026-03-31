@@ -9,15 +9,7 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'en',
-        'fr',
-        'icone',
-        'status',
-        'target',
-        'menu_id',
-        'position',
-    ];
+    protected $guarded = [];
     
     public $timestamps = false;
 

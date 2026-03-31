@@ -10,21 +10,7 @@ class Document extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'en',
-        'fr',
-        'uid',
-        'code',
-        'number',
-        'status',
-        'amount',
-        'user_id',
-        'period_id',
-        'created_id',
-        'updated_id',
-        'description_en',
-        'description_fr',
-    ];
+    protected $guarded = [];
 
     protected static function boot()
     {

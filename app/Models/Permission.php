@@ -9,11 +9,7 @@ class Permission extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'menu_id',
-        'action_id',
-        'profile_id',
-    ];
+    protected $guarded = [];
     
     public $timestamps = false;
 }

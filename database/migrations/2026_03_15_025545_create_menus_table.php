@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('en', 50);
-            $table->string('fr', 50);
+            $table->string('libelle', 50);
             $table->string('target')->nullable();
             $table->string('icone')->nullable();
             $table->tinyInteger('position');
-            $table->tinyInteger('status');
-            $table->bigInteger('menu_id')->default(0);
+            $table->tinyInteger('status')->default(1);
         });
     }
 

@@ -14,46 +14,22 @@ class FileSeeder extends Seeder
      */
     public function run(){
         File::firstOrCreate(
-            ['en' => "National Identity Card"],
-            [
-                'fr' => "Carte Nationale d’Identité",
-                'status' => 1,
-            ]
+            ['libelle' => "Carte Nationale d’Identité"]
         );
         File::firstOrCreate(
-            ['en' => "Passport"],
-            [
-                'fr' => "Passeport",
-                'status' => 1,
-            ]
+            ['libelle' => "Passeport"]
         );
         File::firstOrCreate(
-            ['en' => "Extract from birth certificate"],
-            [
-                'fr' => "Extrait d’acte de naissance",
-                'status' => 1,
-            ]
+            ['libelle' => "Extrait d’acte de naissance"]
         );
         File::firstOrCreate(
-            ['en' => "Notoriety act"],
-            [
-                'fr' => "Acte de notoriété",
-                'status' => 1,
-            ]
+            ['libelle' => "Acte de notoriété"]
         );
         File::firstOrCreate(
-            ['en' => "Consular card expired"],
-            [
-                'fr' => "Carte consulaire périmée",
-                'status' => 1,
-            ]
+            ['libelle' => "Carte consulaire périmée"]
         );
         File::firstOrCreate(
-            ['en' => "Electoral card"],
-            [
-                'fr' => "Carte d'électeur",
-                'status' => 1,
-            ]
+            ['libelle' => "Carte d'électeur"]
         );
     }
 }

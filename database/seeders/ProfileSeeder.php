@@ -14,32 +14,16 @@ class ProfileSeeder extends Seeder
      */
     public function run(){
         Profile::firstOrCreate(
-            ['en' => "Super Admin"],
+            ['libelle' => "Administrateur"],
             [
-                'fr' => "Super Admin",
-                'description_en' => "Super system administrator.",
-                'description_fr' => "Super administrateur du système.",
-                'status' => 1,
+                'description' => "Administrateur du système.",
                 'created_id' => 1,
             ]
         );
         Profile::firstOrCreate(
-            ['en' => "Administrator"],
+            ['libelle' => "Consul"],
             [
-                'fr' => "Administrateur",
-                'description_en' => "System Manager.",
-                'description_fr' => "Gestionnaire du système.",
-                'status' => 1,
-                'created_id' => 1,
-            ]
-        );
-        Profile::firstOrCreate(
-            ['en' => "User"],
-            [
-                'fr' => "Utilisateur",
-                'description_en' => "System user.",
-                'description_fr' => "Utilisateur du système.",
-                'status' => 1,
+                'description' => "Gestionnaire du système.",
                 'created_id' => 1,
             ]
         );

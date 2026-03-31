@@ -14,36 +14,31 @@ class ActionSeeder extends Seeder
      */
     public function run(){
         Action::firstOrCreate(
-            ['en' => "See"],
-            ['fr' => "Voir"]
+            ['libelle' => "Voir"]
         );
         Action::firstOrCreate(
-            ['en' => "Add"],
-            ['fr' => "Ajouter"]
+            ['libelle' => "Ajouter"]
         );
         Action::firstOrCreate(
-            ['en' => "Update"],
-            ['fr' => "Modifier"]
+            ['libelle' => "Modifier"]
         );
         Action::firstOrCreate(
-            ['en' => "Enable/Disable"],
-            ['fr' => "Activer/Désactiver"]
+            ['libelle' => "Supprimer"]
         );
         Action::firstOrCreate(
-            ['en' => "Send"],
-            ['fr' => "Envoyer"]
+            ['libelle' => "Activer/Désactiver"]
         );
         Action::firstOrCreate(
-            ['en' => "Approve"],
-            ['fr' => "Approuver"]
+            ['libelle' => "Transmettre"]
         );
         Action::firstOrCreate(
-            ['en' => "Delete"],
-            ['fr' => "Supprimer"]
+            ['libelle' => "Valider"]
         );
         Action::firstOrCreate(
-            ['en' => "Export"],
-            ['fr' => "Exporter"]
+            ['libelle' => "Rejeter"]
+        );
+        Action::firstOrCreate(
+            ['libelle' => "Imprimer"]
         );
     }
 }
