@@ -78,7 +78,7 @@ class FileController extends Controller
 				'specimen' => $path,
 				'libelle' => $request->libelle,
 				'icone' => "far fa-address-card",
-				'created_id' => Session::get('idUsr'),
+				'created_by' => Session::get('idUsr'),
 			];
 			DB::beginTransaction();
 			try {
@@ -154,7 +154,7 @@ class FileController extends Controller
 			$set = [
 				'specimen' => $path,
 				'libelle' => $request->libelle,
-				'updated_id' => Session::get('idUsr'),
+				'updated_by' => Session::get('idUsr'),
 			];
 			DB::beginTransaction(); // Démarrer une transaction
 			try {
@@ -186,7 +186,7 @@ class FileController extends Controller
 				// Mettre à jour le statut du pièce à fournir
 				$files->update([
 					'status' => $newStatus,
-					'updated_id' => Session::get('idUsr')
+					'updated_by' => Session::get('idUsr')
 				]);
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "Pièce à fournir: " . $files->libelle, $action, 'success', Session::get('avatar'));
 				return "1|Pièce à fournir " . Str::lower($action) . " avec succès.";
@@ -216,7 +216,7 @@ class FileController extends Controller
 				DB::beginTransaction();
 				// Supprimer la pièce à fournir
 				$files->delete();
-            	$files->update(['deleted_id' => Session::get('idUsr')]);
+            	$files->update(['deleted_by' => Session::get('idUsr')]);
 				DB::commit();
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "Pièce à fournir: " . $files->libelle, 'Supprimer', 'success', Session::get('avatar'));
 				return "1|Pièce à fournir supprimée avec succès.";

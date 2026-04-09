@@ -15,18 +15,21 @@ class TownController extends Controller
     //Liste des Villes
 	public function index()
 	{
-    	if (Session::has('idUsr')) {
-			//Title
-			$title = 'Gestion des Villes';
-			//Menu
-			$currentMenu = 'towns';
-			//Modal
-			$actionIds = Myhelper::actions(Session::get('idPro'), 5);
-			$addmodal = in_array(2, $actionIds) ? '<a href="/towns/create" class="btn btn-sm fw-bold btn-primary">Ajouter une ville</a>':'';
-			//Requete Read
-			$query = Town::orderByDesc('created_at')->get();
-			return view('pages.towns.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
-	    } else return redirect('/');
+        if (!Session::has('idUsr')) {
+            return redirect('/');
+        }
+		//Title
+		$title = 'Gestion des Villes';
+		//Menu
+		$currentMenu = 'towns';
+		//Modal
+		$actionIds = Myhelper::actions(Session::get('idPro'), 5);
+		$addmodal = in_array(2, $actionIds) ? '<a href="/towns/create" class="btn btn-sm fw-bold btn-primary">Ajouter une ville</a>':'';
+		//Requete Read
+		$query = Town::select('towns.uid', 'towns.libelle as town', 'towns.status', 'towns.created_at', 'alpha', 'country.libelle AS country')
+		->join('country', 'country.id','=','towns.country_id')
+        ->orderByDesc('created_at')->get();
+		return view('pages.towns.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
     //Liste des villes
 	public function create()
@@ -78,7 +81,7 @@ class TownController extends Controller
 				'specimen' => $path,
 				'libelle' => $request->libelle,
 				'icone' => "far fa-address-card",
-				'created_id' => Session::get('idUsr'),
+				'created_by' => Session::get('idUsr'),
 			];
 			DB::beginTransaction();
 			try {
@@ -154,7 +157,7 @@ class TownController extends Controller
 			$set = [
 				'specimen' => $path,
 				'libelle' => $request->libelle,
-				'updated_id' => Session::get('idUsr'),
+				'updated_by' => Session::get('idUsr'),
 			];
 			DB::beginTransaction(); // Démarrer une transaction
 			try {
@@ -186,7 +189,7 @@ class TownController extends Controller
 				// Mettre à jour le statut du ville
 				$towns->update([
 					'status' => $newStatus,
-					'updated_id' => Session::get('idUsr')
+					'updated_by' => Session::get('idUsr')
 				]);
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "ville: " . $towns->libelle, $action, 'success', Session::get('avatar'));
 				return "1|ville " . Str::lower($action) . " avec succès.";
@@ -216,7 +219,7 @@ class TownController extends Controller
 				DB::beginTransaction();
 				// Supprimer la ville
 				$towns->delete();
-            	$towns->update(['deleted_id' => Session::get('idUsr')]);
+            	$towns->update(['deleted_by' => Session::get('idUsr')]);
 				DB::commit();
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "ville: " . $towns->libelle, 'Supprimer', 'success', Session::get('avatar'));
 				return "1|ville supprimée avec succès.";

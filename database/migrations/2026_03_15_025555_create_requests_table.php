@@ -22,9 +22,9 @@ return new class extends Migration
             $table->timestamp('transmitted_at')->nullable();
             $table->timestamp('validated_at')->nullable();
             $table->integer('document_id');
-            $table->integer('created_id');
-            $table->integer('updated_id')->default('0');
-            $table->integer('deleted_id')->default('0');
+            $table->integer('created_by');
+            $table->integer('updated_by')->default('0');
+            $table->integer('deleted_by')->default('0');
             $table->integer('validated_id')->default('0');
             $table->integer('transmitted_id')->default('0');
         });

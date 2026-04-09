@@ -10,6 +10,9 @@ use App\Http\Controllers\{
   PasswordController,
   ProfileController,
   RequestController,
+  StatusController,
+  TownController,
+  LogsController,
   UserController,
 };
 
@@ -31,6 +34,7 @@ Route::fallback(function() {
 Route::resources([
   'menus' => MenuController::class,
   'files' => FileController::class,
+  'towns' => TownController::class,
   'users' => UserController::class,
   'profiles' => ProfileController::class,
   'documents' => DocumentController::class,
@@ -52,9 +56,7 @@ Route::controller(PasswordController::class)->group(function () {
   Route::post('forgotpass', 'store');
   Route::post('editpass', 'editpass');
 });
-// Route pour status des profils
-Route::patch('profiles/status/{uid}', [ProfileController::class, 'status']);
-// Route pour status des profils
-Route::patch('files/status/{uid}', [FileController::class, 'status']);
+// Route pour les statuts
+Route::patch('{type}/status/{uid}', [StatusController::class, 'update']);
 // Route pour les pistes d'audit
 Route::get('logs', [LogsController::class, 'index']);

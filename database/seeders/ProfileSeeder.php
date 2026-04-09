@@ -17,14 +17,14 @@ class ProfileSeeder extends Seeder
             ['libelle' => "Administrateur"],
             [
                 'description' => "Administrateur du système.",
-                'created_id' => 1,
+                'created_by' => 1,
             ]
         );
         Profile::firstOrCreate(
             ['libelle' => "Consul"],
             [
                 'description' => "Gestionnaire du système.",
-                'created_id' => 1,
+                'created_by' => 1,
             ]
         );
     }

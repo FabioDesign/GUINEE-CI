@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('towns', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uid');
             $table->string('libelle', 255);
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
+            $table->softDeletes();
+            $table->integer('created_by');
+            $table->integer('updated_by')->default('0');
+            $table->integer('deleted_by')->default('0');
             $table->integer('country_id');
         });
     }

@@ -23,8 +23,8 @@ return new class extends Migration
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->integer('period_id');
-            $table->integer('created_id');
-            $table->integer('updated_id')->default('0');
+            $table->integer('created_by');
+            $table->integer('updated_by')->default('0');
         });
     }
 

@@ -112,7 +112,7 @@ class ProfileController extends Controller
 			}
 			$set = [
 				'libelle' => $request->libelle,
-				'created_id' => Session::get('idUsr'),
+				'created_by' => Session::get('idUsr'),
 				'description' => $request->description,
 			];
 			DB::beginTransaction(); // Démarrer une transaction
@@ -211,7 +211,7 @@ class ProfileController extends Controller
 			}
 			$set = [
 				'libelle' => $request->libelle,
-				'updated_id' => Session::get('idUsr'),
+				'updated_by' => Session::get('idUsr'),
 				'description' => $request->description,
 			];
 			DB::beginTransaction(); // Démarrer une transaction
@@ -263,7 +263,7 @@ class ProfileController extends Controller
 				// Mettre à jour le statut du profil
 				$profile->update([
 					'status' => $newStatus,
-					'updated_id' => Session::get('idUsr')
+					'updated_by' => Session::get('idUsr')
 				]);
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: " . $profile->libelle, $action, 'success', Session::get('avatar'));
 				return "1|Profil " . strtolower($action) . " avec succès.";
@@ -300,7 +300,7 @@ class ProfileController extends Controller
 				Permission::where('profile_id', $profile->id)->delete();
 				// Supprimer le profil
 				$profile->delete();
-            	$profile->update(['deleted_id' => Session::get('idUsr')]);
+            	$profile->update(['deleted_by' => Session::get('idUsr')]);
 				DB::commit();
 				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: " . $profile->libelle, 'Supprimer', 'success', Session::get('avatar'));
 				return "1|Profil supprimé avec succès.";
