@@ -40,26 +40,19 @@
 							<h2 class="text-white m-0">AmbaGui-CI</h2>
 						</div>
 						<div class="body-left">
-							<h1 class="text-white m-0">Gérer vos documents administratifs</h1>
+							<h1 class="text-white m-0">Gérer vos documents consulaires</h1>
 						</div>
 						<div class="footer-left">
-							<h3 class="text-white fw-normal m-0">Une plateforme de gestion complète de documents administratifs de l'Ambassade de la Guinée en Côte d'Ivoire.</h3>
+							<h3 class="text-white fw-normal m-0">Une plateforme de gestion complète de documents consulaires de l'Ambassade de la Guinée en Côte d'Ivoire.</h3>
 						</div>
 						<div class="footer-button">
-							<button class="btn">
-								<i class="fa-regular fa-address-card"></i><span>Attestaion d'identité</span>
-							</button>
-							<button class="btn">
-								<i class="fa-regular fa-address-book"></i><span>Carte consulaire</span>
-							</button>
-							<button class="btn">
-								<i class="fa-solid fa-building-lock"></i><span>Paiements</span>
-							</button>
-						</div>
-						<div class="footer-button">
-							<button class="btn">
-								<i class="fa-solid fa-brush"></i><span>Statistiques</span>
-							</button>
+							@foreach($query as $data)
+							<a href="{{ asset('storage/' . $data->specimen) }}" target="_blank">
+								<button class="btn">
+									<i class="{{ $data->icone }}"></i><span>{{ $data->libelle }}</span>
+								</button>
+							</a>
+							@endforeach
 						</div>
 						<!--end::Title-->
 					</div>
@@ -85,14 +78,14 @@
 								<!--begin::Heading-->
 								<div class="text-center">
 									<!--begin::Subtitle-->
-									<div class="subtitle-signin">Veuillez renseigner votre email.</div>
+									<div class="subtitle-signin">Veuillez renseigner votre e-mail.</div>
 									<!--end::Subtitle=-->
 								</div>
 								<!--begin::Heading-->
 								<!--begin::Input group=-->
 								<div class="fv-row mb-8">
 									<!--begin::Login-->
-									<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+									<input type="text" name="email" placeholder="Adresse E-mail" class="form-control bg-transparent" />
 									<!--end::Login-->
 								</div>
 								<!--begin::Submit button-->
@@ -107,10 +100,10 @@
 										<!--end::Indicator progress-->
 									</button>
 									<!--begin::Link-->
-									<a href="/" class="subtitle-signin mt-5">Connexion</a>
+									<a href="/" class="subtitle-signin mt-5 m-auto">Connexion</a>
 									<!--end::Link-->
 								</div>
-                        		<div class="d-grid text-center error"></div>
+                        		<div class="d-grid error"></div>
 								<!--end::Submit button-->
 							</form>
 							<!--end::Form-->
@@ -133,7 +126,7 @@
 		<!--begin::Custom Javascript(used for this page only)-->
 		<script src="/assets/js/custom/authentication/reset-password/reset-password.js"></script>
 		<script src="/assets/js/custom/icheck.js"></script>
-		<script src="/assets/js/custom.js?v1.1.2"></script>
+		<script src="/assets/js/custom.js?v20126.03.29.02.45"></script>
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 	</body>

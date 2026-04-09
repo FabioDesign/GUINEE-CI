@@ -1,369 +1,314 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use \Carbon\Carbon;
+use Session;
+use Myhelper;
 use Illuminate\Support\Str;
-use App\Models\{Action, Permission, Profile};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{App, DB, Validator, Log, Auth};
-use App\Http\Controllers\API\BaseController as BaseController;
+use Illuminate\Validation\Rule;
+use App\Models\{Menu, Permission, Profile, User};
+use Illuminate\Support\Facades\{DB, Log, Validator};
 
 class ProfileController extends Controller
 {
-    //Liste des profils
-    /**
-    * @OA\Get(
-    *   path="/api/profiles",
-    *   tags={"Profiles"},
-    *   operationId="listProfile",
-    *   description="Liste des profils",
-    *   security={{"bearer":{}}},
-    *   @OA\Response(response=200, description="Liste des profils."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function index(): JsonResponse {
-        //User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        try {
-            // Code to list profiles
-            $query = Profile::select('uid', "$user->lg as label", 'description_' . $user->lg . ' as description', 'status', 'created_at')
-            ->orderByDesc('created_at')
-            ->get();
-            // Vérifier si les données existent
-            if ($query->isEmpty()) {
-                Log::warning("Profile::index - Aucun profil trouvé.");
-                return $this->sendSuccess(__('message.nodata'));
-            }
-            // Transformer les données
-            $data = $query->map(fn($data) => [
-                'uid' => $data->uid,
-                'label' => $data->label,
-                'description' => $data->description,
-                'status' => $data->status ? 'Activé':'Désactivé',
-                'date' => Carbon::parse($data->created_at)->format('d/m/Y H:i'),
-            ]);
-            return $this->sendSuccess("Liste des profils.", $data);
-        } catch (\Exception $e) {
-            Log::warning("Profile::index - Erreur lors de la récupération des profils: " . $e->getMessage());
-            return $this->sendError("Erreur lors de la récupération des profils.");
-        }
-    }
-    //Détail d'un profil
-    /**
-    * @OA\Get(
-    *   path="/api/profiles/{uid}",
-    *   tags={"Profiles"},
-    *   operationId="showProfile",
-    *   description="Détail d'un profil",
-    *   security={{"bearer":{}}},
-    *   @OA\Response(response=200, description="Détail d'un profil."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function show($uid): JsonResponse {
-        //User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        // Vérifier si l'ID est présent et valide
-        $profile = Profile::select('id', 'en', 'fr', 'description_en', 'description_fr', 'status')
-        ->where('uid', $uid)
-        ->first();
-        if (!$profile) {
-            Log::warning("Profile::show - Aucun profil trouvé pour l'ID : " . $uid);
-            return $this->sendSuccess(__('message.nodata'));
-        }
-        try {
-            // Charger les permissions avec eager loading et les transformer directement
-            $permissions = $profile->permissions
-            ->sortBy(['menu_id', 'action_id'])
-            ->map(function ($permission) {
-                return "{$permission->menu_id}|{$permission->action_id}";
-            })
-            ->values()
-            ->all();
-            // Retourner les détails du profil avec les permissions
-            return $this->sendSuccess('Détails sur le profil', [
-                'label_en' => $profile->en,
-                'label_fr' => $profile->fr,
-                'description_en' => $profile->description_en,
-                'description_fr' => $profile->description_fr,
-                'status' => $profile->status,
-                'permissions' => $permissions,
-            ]);
-        } catch(\Exception $e) {
-            Log::warning("Profile::show - Erreur d'affichage d'un profil : ".$e->getMessage());
-            return $this->sendError("Erreur d'affichage d'un profil");
-        }
-    }
-    //Enregistrement
-    /**
-    * @OA\Post(
-    *   path="/api/profiles",
-    *   tags={"Profiles"},
-    *   operationId="storeProfile",
-    *   description="Enregistrement d'un profil",
-    *   security={{"bearer":{}}},
-    *   @OA\RequestBody(
-    *      required=true,
-    *      @OA\JsonContent(
-    *         required={"en", "fr", "permissions"},
-    *         @OA\Property(property="en", type="string"),
-    *         @OA\Property(property="fr", type="string"),
-    *         @OA\Property(property="description_en", type="string"),
-    *         @OA\Property(property="description_fr", type="string"),
-    *         @OA\Property(property="permissions", type="array", @OA\Items(
-    *               @OA\Property(property="menu_id", type="integer"),
-    *               @OA\Property(property="action_id", type="integer"),
-    *               example="[1|1, 1|2, 1|3]"
-    *           )
-    *         ),
-    *      )
-    *   ),
-    *   @OA\Response(response=200, description="Profil enregisté avec succès."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function store(Request $request): JsonResponse {
-        //User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        //Data
-        Log::notice("Profile::store - ID User : {$user->id} - Requête : " . json_encode($request->all()));
-        //Validator
-        $validator = Validator::make($request->all(), [
-            'en' => 'required|string|max:255|unique:profiles,en',
-            'fr' => 'required|string|max:255|unique:profiles,fr',
-            'description_en' => 'present',
-            'description_fr' => 'present',
-            'permissions' => 'required|array',
-        ]);
-        //Error field
-        if($validator->fails()){
-            Log::warning("Profile::store - Validator : " . $validator->errors()->first() . " - ".json_encode($request->all()));
-            return $this->sendError('Champs invalides.', $validator->errors(), 422);
-        }
-        // Création de la reclamation
-        $set = [
-            'status' => 1,
-            'en' => $request->en,
-            'fr' => $request->fr,
-            'created_user' => $user->id,
-            'description_en' => $request->description_en ?? '',
-            'description_fr' => $request->description_fr ?? '',
-        ];
-        DB::beginTransaction(); // Démarrer une transaction
-        try {
-            $profile = Profile::create($set);
-            // Valider la transaction
-            DB::commit();
-            // Si des permissions sont fournies, les associer au profil
-            if ($request->has('permissions') && is_array($request->permissions)) {
-                foreach ($request->permissions as $permissions) {
-                    $permission = Str::of($permissions)->explode('|');
-                    // Enregistrer la permission
-                    Permission::firstOrCreate([
-                        'menu_id' => $permission[0],
-                        'action_id' => $permission[1],
-                        'profile_id' => $profile->id,
-                    ]);
-                }
-            }
-            return $this->sendSuccess("Profil enregistré avec succès.", [
-                'en' => $request->en,
-                'fr' => $request->fr,
-                'description_en' => $request->description_en,
-                'description_fr' => $request->description_fr,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack(); // Annuler la transaction en cas d'erreur
-            Log::warning("Profile::store : " . $e->getMessage() . " " . json_encode($set));
-            return $this->sendError("Erreur lors de l'enregistrement du Profil.");
-        }
-    }
-    // Modification
-    /**
-    * @OA\Put(
-    *   path="/api/profiles/{uid}",
-    *   tags={"Profiles"},
-    *   operationId="editProfile",
-    *   description="Modification d'un profil",
-    *   security={{"bearer":{}}},
-    *   @OA\RequestBody(
-    *      required=true,
-    *      @OA\JsonContent(
-    *         required={"en", "fr", "permissions", "status"},
-    *         @OA\Property(property="en", type="string"),
-    *         @OA\Property(property="fr", type="string"),
-    *         @OA\Property(property="description_en", type="string"),
-    *         @OA\Property(property="description_fr", type="string"),
-    *         @OA\Property(property="status", type="integer"),
-    *         @OA\Property(property="permissions", type="array", @OA\Items(
-    *               @OA\Property(property="menu_id", type="integer"),
-    *               @OA\Property(property="action_id", type="integer"),
-    *               example="[1|1, 1|2, 1|3]"
-    *           )
-    *         )
-    *      )
-    *   ),
-    *   @OA\Response(response=200, description="Profil modifié avec succès."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function update(request $request, $uid): JsonResponse {
-        //User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        //Data
-        Log::notice("Profile::update - ID User : {$user->id} - Requête : " . json_encode($request->all()));
-        //Validator
-        $validator = Validator::make($request->all(), [
-            'en' => 'required|string|max:255|unique:profiles,en,' . $uid . ',uid',
-            'fr' => 'required|string|max:255|unique:profiles,fr,' . $uid . ',uid',
-            'description_en' => 'present',
-            'description_fr' => 'present',
-            'status' => 'required|integer|in:0,1',
-            'permissions' => 'required|array',
-        ]);
-        //Error field
-        if($validator->fails()){
-            Log::warning("Profile::update - Validator : " . $validator->errors()->first() . " - ".json_encode($request->all()));
-            return $this->sendError('Champs invalides.', $validator->errors(), 422);
-        }
-        // Vérifier si l'ID est présent et valide
-        $profile = Profile::where('uid', $uid)->first();
-        if (!$profile) {
-            Log::warning("Profile::update - Aucun profil trouvé pour l'ID : " . $uid);
-            return $this->sendSuccess(__('message.nodata'));
-        }
-        // Création de la reclamation
-        $set = [
-            'en' => $request->en,
-            'fr' => $request->fr,
-            'updated_user' => $user->id,
-            'status' => $request->status,
-            'description_en' => $request->description_en ?? '',
-            'description_fr' => $request->description_fr ?? '',
-        ];
-        DB::beginTransaction(); // Démarrer une transaction
-        try {
-            $profile->update($set);
-            // Valider la transaction
-            DB::commit();
-            // Si des permissions sont fournies, les associer au profil
-            if ($request->has('permissions') && is_array($request->permissions)) {
-                // Supprimer les permissions existantes pour ce profil
-                Permission::where('profile_id', $profile->id)->delete();
-                // Parcourir les permissions fournies
-                foreach ($request->permissions as $permissions) {
-                    $permission = Str::of($permissions)->explode('|');
-                    // Enregistrer la permission
-                    Permission::firstOrCreate([
-                        'menu_id' => $permission[0],
-                        'action_id' => $permission[1],
-                        'profile_id' => $profile->id,
-                    ]);
-                }
-            }
-            return $this->sendSuccess("Profil modifié avec succès.", [
-                'en' => $request->en,
-                'fr' => $request->fr,
-                'description_en' => $request->description_en,
-                'description_fr' => $request->description_fr,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack(); // Annuler la transaction en cas d'erreur
-            Log::warning("Profile::update : " . $e->getMessage() . " " . json_encode($set));
-            if ($e->getCode() != 23000) {
-                return $this->sendError("Erreur lors de l'enregistrement du Profil.");
-            }
-        }
+    //Liste des Profils
+	public function index()
+	{
+    	if (Session::has('idUsr')) {
+			//Title
+			$title = 'Gestion des Profils';
+			//Menu
+			$currentMenu = 'profiles';
+			//Modal
+			$actionIds = Myhelper::actions(Session::get('idPro'), 7);
+			$addmodal = in_array(2, $actionIds) ? '<a href="/profiles/create" class="btn btn-sm fw-bold btn-primary">Ajouter un profil</a>':'';
+			//Requete Read
+			$query = Profile::orderByDesc('created_at')->get();
+			return view('pages.profiles.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
+	    } else return redirect('/');
 	}
-    // Suppression d'un profil
-    /**
-    *   @OA\Delete(
-    *   path="/api/profiles/{uid}",
-    *   tags={"Profiles"},
-    *   operationId="deleteProfile",
-    *   description="Suppression d'un profil",
-    *   security={{"bearer":{}}},
-    *   @OA\Response(response=200, description="Profil supprimé avec succès."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function destroy($uid): JsonResponse {
-        // User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        // Data
-        Log::notice("Profile::destroy - ID User : {$user->id} - Requête : " . $uid);
-        try {
-            // Vérification si le profil est attribué à un utilisateur
-            $profile = Profile::select('profiles.id', 'profile_id')
-            ->where('profiles.uid', $uid)
-            ->leftJoin('users', 'users.profile_id','=','profiles.id')
-            ->first();
-            if ($profile->profile_id != null) {
-                Log::warning("Profile::destroy - Tentative de suppression d'un profil déjà attribué à un utilisateur : " . $uid);
-                return $this->sendError("Profil déjà attribué à un utilisateur.", [], 403);
+	// Afficher le détail d'un profil
+	public function show($uid)
+	{
+		if (Session::has('idUsr')) {
+			// Title
+			$title = 'Détail du Profil';
+			// Menu
+			$currentMenu = 'profiles';
+            // Vérifier si le profil existe
+            $profile = Profile::where('uid', $uid)->first();
+            if (!$profile) {
+                Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
+                return redirect('/profiles');
             }
-            // Suppression
-            $deleted = Profile::destroy($profile->id);
-            if (!$deleted) {
-                Log::warning("Profile::destroy - Tentative de suppression d'un profil inexistante : " . $uid);
-                return $this->sendError("Impossible de supprimer le profil.", [], 403);
+			// Modal
+			$addmodal = '<!--begin::Secondary button-->
+			<a href="/profiles" class="btn btn-sm fw-bold btn-danger">Retour</a>
+			<!--end::Secondary button-->';
+			// Récupérer les menus avec leurs actions
+			$menusWithActions = Menu::with('actions')
+				->where('status', 1)
+				->orderBy('position')
+				->get();
+			// Récupérer les permissions actuelles du profil
+			$currentPermissions = Permission::where('profile_id', $profile->id)
+				->get()
+				->map(function($permission) {
+					return $permission->menu_id . '|' . $permission->action_id;
+				})
+				->toArray();
+			return view('pages.profiles.show', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'profile', 'currentPermissions'));
+		} else return redirect('/');
+	}
+    //Liste des Profils
+	public function create()
+	{
+    	if (Session::has('idUsr')) {
+			//Title
+			$title = "Ajout d'un Profil";
+			//Menu
+			$currentMenu = 'profiles';
+			//Modal
+			$addmodal = '<!--begin::Secondary button-->
+			<a href="/profiles" class="btn btn-sm fw-bold btn-danger">Retour</a>
+			<!--end::Secondary button-->
+			<!--begin::Primary button-->
+			<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>
+			<!--end::Primary button-->';
+			// Dans votre contrôleur
+			$menusWithActions = Menu::with('actions')
+				->where('status', 1)
+				->orderBy('position')
+				->get();
+			return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions'));
+	    } else return redirect('/');
+	}
+	//Add/Mod Profil
+	public function store(request $request)
+	{
+    	if (Session::has('idUsr')) {
+			//Validator
+			$validator = Validator::make($request->all(), [
+				'libelle' => [
+					'required',
+					Rule::unique('profiles')->where(function ($query) {
+						return $query->whereNull('deleted_at');
+					}),
+				],
+				'description' => 'required',
+            	'permissions' => 'required|array',
+			], [
+				'libelle.required' => "Le libellé est obligatoire.",
+				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+				'description.required' => "La description est obligatoire.",
+				'permissions.required' => "Cocher au moins une case.",
+				'permissions.array' => "Format des permissions invalide.",
+			]);
+			// Error field
+			if ($validator->fails()) {
+				Log::warning("Profile::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+				return "0|" . $validator->errors()->first();
+			}
+			$set = [
+				'libelle' => $request->libelle,
+				'created_id' => Session::get('idUsr'),
+				'description' => $request->description,
+			];
+			DB::beginTransaction(); // Démarrer une transaction
+			try {
+				$profile = Profile::create($set);
+				// Valider la transaction
+				DB::commit();
+				// Si des permissions sont fournies, les associer au profil
+				if ($request->has('permissions') && is_array($request->permissions)) {
+					foreach ($request->permissions as $permissions) {
+						$permission = Str::of($permissions)->explode('|');
+						// Enregistrer la permission
+						Permission::firstOrCreate([
+							'menu_id' => $permission[0],
+							'action_id' => $permission[1],
+							'profile_id' => $profile->id,
+						]);
+					}
+				}
+				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: {$request->libelle}", 'Ajouter', 'success', Session::get('avatar'));
+				return "1|Profil enregistré avec succès.";
+			} catch (\Exception $e) {
+				DB::rollBack(); // Annuler la transaction en cas d'erreur
+				Log::warning("Profile::store : {$e->getMessage()} " . json_encode($request->all()));
+				return "0|Erreur lors de l'enregistrement du Profil.";
+			}
+		} else return 'x';
+	}
+	// Afficher le formulaire d'édition d'un profil
+	public function edit($uid)
+	{
+		if (Session::has('idUsr')) {
+			// Title
+			$title = 'Modification du Profil';
+			// Menu
+			$currentMenu = 'profiles';
+            // Vérifier si le profil existe
+            $profile = Profile::where('uid', $uid)->first();
+            if (!$profile) {
+                Log::warning("Profile::edit - Aucun profil trouvé pour l'UID : {$uid}");
+                return redirect('/profiles');
             }
-            Permission::where('profile_id', $profile->id)->delete();
-            return $this->sendSuccess("Profil supprimé avec succès.");
-        } catch(\Exception $e) {
-            Log::warning("Profile::destroy - Erreur lors de la suppression d'un profil : " . $e->getMessage());
-            return $this->sendError("Erreur lors de la suppression d'un profil.");
-        }
-    }
-    //Liste des actions du menu
-    /**
-    * @OA\Get(
-    *   path="/api/profiles/menu/{id}",
-    *   tags={"Profiles"},
-    *   operationId="menuProfile",
-    *   description="Liste des actions du menu",
-    *   security={{"bearer":{}}},
-    *   @OA\Response(response=200, description="Liste des actions du menu."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function menu($id): JsonResponse {
-        // User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        // Data
-        Log::notice("Profile::action - ID User : {$user->id} - Requête : " . $id);
-        try {
-            // Code to list actions
-            $actions = Action::select('actions.id', "$user->lg as label")
-            ->join('permissions', 'permissions.action_id','=','actions.id')
-            ->where('menu_id', $id)
-            ->where('action_id', '!=', 1)
-            ->where('profile_id', $user->profile_id)
-            ->orderBy('id')
-            ->get();
-            // Vérifier si les données existent
-            if ($actions->isEmpty()) {
-                Log::warning("Profile::action - Aucune action trouvée.");
-                return $this->sendSuccess(__('message.nodata'));
-            }
-            return $this->sendSuccess("Liste des actions du menu.", $actions);
-        } catch (\Exception $e) {
-            Log::warning("Profile::menu - Erreur lors de la récupération des actions du menu: " . $e->getMessage());
-            return $this->sendError("Erreur lors de la récupération des actions du menu.");
-        }
-    }
+			// Modal
+			$addmodal = '<!--begin::Secondary button-->
+			<a href="/profiles" class="btn btn-sm fw-bold btn-danger">Retour</a>
+			<!--end::Secondary button-->
+			<!--begin::Primary button-->
+			<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>
+			<!--end::Primary button-->';
+			// Récupérer les menus avec leurs actions
+			$menusWithActions = Menu::with('actions')
+				->where('status', 1)
+				->orderBy('position')
+				->get();
+			// Récupérer les permissions actuelles du profil
+			$currentPermissions = Permission::where('profile_id', $profile->id)
+				->get()
+				->map(function($permission) {
+					return $permission->menu_id . '|' . $permission->action_id;
+				})
+				->toArray();
+			return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'profile', 'currentPermissions'));
+		} else return redirect('/');
+	}
+	// Mettre à jour un profil
+	public function update(Request $request, $uid)
+	{
+		if (Session::has('idUsr')) {
+			// Validator
+			$validator = Validator::make($request->all(), [
+				'libelle' => [
+					'required',
+					Rule::unique('profiles')->where(function ($query) use ($uid) {
+						return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+					}),
+				],
+				'description' => 'required',
+				'permissions' => 'required|array',
+			], [
+				'libelle.required' => "Le libellé est obligatoire.",
+				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+				'description.required' => "La description est obligatoire.",
+				'permissions.required' => "Cocher au moins une case.",
+				'permissions.array' => "Format des permissions invalide.",
+			]);
+			// Error field
+			if ($validator->fails()) {
+				Log::warning("Profile::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+				return "0|" . $validator->errors()->first();
+			}
+            // Vérifier si le profil existe
+            $profile = Profile::where('uid', $uid)->first();
+            if (!$profile) {
+                Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
+				return "0|Profil non trouvé.";
+			}
+			$set = [
+				'libelle' => $request->libelle,
+				'updated_id' => Session::get('idUsr'),
+				'description' => $request->description,
+			];
+			DB::beginTransaction(); // Démarrer une transaction
+			try {
+				// Mettre à jour le profil
+				$profile->update($set);
+				// Supprimer les anciennes permissions
+				Permission::where('profile_id', $profile->id)->delete();
+				// Ajouter les nouvelles permissions
+				if ($request->has('permissions') && is_array($request->permissions)) {
+					foreach ($request->permissions as $permissionValue) {
+						$permission = Str::of($permissionValue)->explode('|');
+						// Enregistrer la permission
+						Permission::firstOrCreate([
+							'menu_id' => $permission[0],
+							'action_id' => $permission[1],
+							'profile_id' => $profile->id,
+						]);
+					}
+				}
+				DB::commit(); // Valider la transaction
+				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: {$request->libelle}", 'Modifier', 'success', Session::get('avatar'));
+				return "1|Profil modifié avec succès.";
+			} catch (\Exception $e) {
+				DB::rollBack(); // Annuler la transaction en cas d'erreur
+				Log::warning("Profile::update : {$e->getMessage()} " . json_encode($request->all()));
+				return "0|Erreur lors de la modification du Profil.";
+			}
+		} else return 'x';
+	}
+	// Changer le statut d'un profil (activer/désactiver)
+	public function status($uid)
+	{
+		if (Session::has('idUsr')) {
+			try {
+				// Vérifier si le profil existe
+				$profile = Profile::where('uid', $uid)->first();
+				if (!$profile) {
+					Log::warning("Profile::status - Aucun profil trouvé pour l'UID : {$uid}");
+					return "0|Profil non trouvé.";
+				}
+				// Ne pas permettre la désactivation du profil admin
+				if ($profile->id == 1) {
+					Log::warning("Profile::status - Profil administrateur pour l'UID : {$uid}");
+					return "0|Le profil administrateur ne peut pas être désactivé.";
+				}
+				$newStatus = $profile->status == 1 ? 0 : 1;
+				$action = $newStatus == 1 ? 'Activé' : 'Désactivé';
+				// Mettre à jour le statut du profil
+				$profile->update([
+					'status' => $newStatus,
+					'updated_id' => Session::get('idUsr')
+				]);
+				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: " . $profile->libelle, $action, 'success', Session::get('avatar'));
+				return "1|Profil " . strtolower($action) . " avec succès.";
+			} catch (\Exception $e) {
+				Log::warning("Profile::status : {$e->getMessage()} " . json_encode($request->all()));
+				return "0|Erreur lors du changement de statut.";
+			}
+		} else return 'x';
+	}
+	// Supprimer un profil
+	public function destroy($uid)
+	{
+		if (Session::has('idUsr')) {
+			try {
+				// Vérifier si le profil existe
+				$profile = Profile::where('uid', $uid)->first();
+				if (!$profile) {
+					Log::warning("Profile::destroy - Aucun profil trouvé pour l'UID : {$uid}");
+					return "0|Profil non trouvé.";
+				}
+				// Ne pas permettre la désactivation du profil admin
+				if ($profile->id == 1) {
+					Log::warning("Profile::destroy - Profil administrateur pour l'UID : {$uid}");
+					return "0|Le profil administrateur ne peut pas être supprimé.";
+				}
+				// Vérifier si des utilisateurs sont associés
+				$userCount = User::where('profile_id', $profile->id)->count();
+				if ($userCount > 0) {
+					Log::warning("Profile::destroy - Ce profil est associé à {$userCount} utilisateur(s).");
+					return "0|Ce profil est associé à {$userCount} utilisateur(s).";
+				}
+				DB::beginTransaction();
+				// Supprimer les permissions associées
+				Permission::where('profile_id', $profile->id)->delete();
+				// Supprimer le profil
+				$profile->delete();
+            	$profile->update(['deleted_id' => Session::get('idUsr')]);
+				DB::commit();
+				Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: " . $profile->libelle, 'Supprimer', 'success', Session::get('avatar'));
+				return "1|Profil supprimé avec succès.";
+			} catch (\Exception $e) {
+				DB::rollBack();
+				Log::warning("Profile::destroy : {$e->getMessage()} " . json_encode($request->all()));
+				return "0|Erreur lors de la suppression.";
+			}
+		} else return 'x';
+	}
 }

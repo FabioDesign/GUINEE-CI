@@ -7,13 +7,14 @@ use \Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
-use App\Models\{Document, Permission, Profile, User};
 use Illuminate\Support\Facades\{DB, Hash, Log, Validator};
+use App\Models\{Document, Logs, Permission, Profile, User};
 
 class UserController extends Controller
 {    
-    //Liste des utilisateurs
-    public function index(Request $request) {
+    // Liste des utilisateurs
+    public function index(Request $request)
+    {
         // User
         try {
             $num = isset($request->num) ? (int) $request->num:1;
@@ -58,7 +59,8 @@ class UserController extends Controller
         }
     }
     // Détail d'Utilisateur
-    public function show($uid) {
+    public function show($uid)
+    {
         try {
             // Info user connecté
             if ($uid == 'perso') $uid = Auth::user()->uid;
@@ -463,7 +465,9 @@ class UserController extends Controller
 	public function login()
     {
         //Requete Read
-        $query = Document::where('status', 1)->get();
+        $query = Document::where('status', 1)
+        ->orderBy('position')
+        ->get();
         return view('login', compact('query'));
 	}
     // Authentification
@@ -486,9 +490,8 @@ class UserController extends Controller
 		//Requete Read
 		$users = User::select('users.id', 'lastname', 'firstname', 'gender', 'password', 'avatar', 'users.status AS status_usr', 'profile_id', 'libelle', 'profiles.status AS status_pro')
 		->join('profiles', 'profiles.id','=','users.profile_id')
-        ->where('number', $request->login)
+        ->where('whatsapp', $request->login)
         ->first();
-        // dd($users);
 		//Test Connexion
 		if ($users == null || !(password_verify($request->password, $users->password)))
 			return '0|Login ou mot de passe incorrect.';
@@ -502,17 +505,17 @@ class UserController extends Controller
                 $username = $prenom[0] . ' ' . $users->lastname;
                 Session::put('idUsr', $users->id);
                 Session::put('username', $username);
-                Session::put('idPro', $users->profil_id);
-                Session::put('number', $users->number);
+                Session::put('idPro', $users->profile_id);
+                Session::put('whatsapp', $users->whatsapp);
                 Session::put('profil', $users->libelle);
                 // Test si la photo est vide
                 if ($users->avatar != '')
-                    $avatar = 'storage/media/avatar/' . $users->avatar;
+                    $avatar = $users->avatar;
                 else
-                    $avatar = $users->genre == 'M' ? 'assets/img/homme.jpg' : '/assets/img/femme.jpg';
+                    $avatar = $users->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 			    Session::put('avatar', $avatar);
                 // Code to list permissions
-                $permissions = Permission::select('menus.id', 'libelle', 'target', 'icone')
+                $menus = Permission::select('menus.id', 'libelle', 'target', 'icone')
                 ->join('menus', 'menus.id', '=', 'permissions.menu_id')
                 ->where('profile_id', $users->profile_id) // Seulement les menus du profil de l'utilisateur
                 ->where('status', 1) // Seulement les menus activés
@@ -520,23 +523,24 @@ class UserController extends Controller
                 ->orderBy('position')
                 ->get();
                 // Vérifier si les données existent
-                if ($permissions->isEmpty()) {
+                if ($menus->isEmpty()) {
                     Log::warning("Aucun menu trouvé pour ce profil : " . $users->profile_id);
 			        return '0|Aucun menu trouvé pour ce profil.';
                 }
-                $page = $permissions->first()->target ?? '/';
+                $page = $menus->first()->target ?? '/';
                 Session::put('page', $page);
                 // Transformer les données
-                $query = $permissions->map(fn($permission) => [
-                    'id' => $permission->id,
-                    'menu' => $permission->libelle,
-                    'target' => $permission->target,
-                    'icone' => $permission->icone,
+                $query = $menus->map(fn($menu) => [
+                    'id' => $menu->id,
+                    'libelle' => $menu->libelle,
+                    'target' => $menu->target,
+                    'icone' => $menu->icone,
                 ]);
-                Session::put('permissions', $query);
+                Session::put('menus', $query);
                 $users->update([
                     'login_at' => now(),
                 ]);
+			    Myhelper::logs($username, $users->libelle, $menus->first()->libelle, 'Connecter', 'primary', $avatar);
 			    return '1|' . $page;
             } catch (\Exception $e) {
                 Log::warning("Echec de connexion à la base de données : " . $e->getMessage());
@@ -544,15 +548,13 @@ class UserController extends Controller
             }
         }
     }
-    // Déconnexion
-    public function logout(Request $request)
+    //Déconnexion
+    public function logout(request $request)
     {
-        try {
-            $request->user()->token()->revoke();
-            return $this->sendSuccess(__('message.logoutsucc'));
-        } catch (\Exception $e) {
-            Log::error("Logout error: " . $e->getMessage());
-            return $this->sendError(__('message.logouterr'));
-        }
+    	if (Session::has('idUsr')) {
+			Myhelper::logs(Session::get('username'), Session::get('profil'), Session::get('title'), 'Deconnecter', 'primary', Session::get('avatar'));
+			$request->session()->flush();
+	    }
+		return redirect('/');
     }
 }

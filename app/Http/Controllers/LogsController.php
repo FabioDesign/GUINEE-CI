@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use Session;
 use Myhelper;
-use Validator;
 use App\Models\Logs;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\Habilitation;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class LogsController extends Controller
 {

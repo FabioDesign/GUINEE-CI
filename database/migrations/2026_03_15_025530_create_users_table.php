@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('lastname', 255);
             $table->string('firstname', 255);
             $table->string('gender', 1);
-            $table->string('number', 20)->unique();
+            $table->string('whatsapp', 20)->unique();
+            $table->string('number', 20)->nullable();
             $table->string('email', 255)->nullable();
             $table->string('password', 255)->nullable();
             $table->timestamp('password_at')->nullable();

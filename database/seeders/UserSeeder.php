@@ -14,11 +14,12 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['number' => '2250102030405'],
+            ['whatsapp' => '2250102030405'],
             [
                 'lastname' => 'OGOU',
                 'firstname' => 'Fabrice',
                 'gender' => 'M',
+                'number' => '',
                 'email' => 'fabio225@yopmail.com',
                 'password' => Hash::make('Azerty@123'),
                 'password_at' => now(),

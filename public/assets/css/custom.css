@@ -8,7 +8,7 @@
   pointer-events: none;
   cursor: none !important;
   color: #FFF !important;
-  background: #909090 !important
+  background: #909090 !important;
 }
 .fieldError {
   border-radius: 0.42rem;
@@ -62,7 +62,7 @@
 }
 .tooltip-inner {
   color: #FFF ;
-  background-color: #000000!important;
+  background-color: #000000 !important;
 }
 .w-85 {
   width: 85% !important;
@@ -161,4 +161,42 @@
 }
 .btn-signin:hover {
   background: #00796B;
+}
+.app-header {
+  position: relative;
+}
+.gradient-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: linear-gradient(to right, #DC2626, #EAB308, #16A34A);
+  z-index: 0;
+}
+.app-container {
+  position: relative;
+  z-index: 2;
+}
+.img-avatar {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  object-fit: cover;
+}
+.app-sidebar-logo{
+  background:#DC2626 !important;
+}
+#previewImage {
+  max-width: 100%; /* largeur maximale pour éviter les débordements */
+  max-height: 500px; /* hauteur souhaitée */
+  width: auto;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+}
+.d-flex.flex-column-fluid.flex-lg-start.flex-column {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }

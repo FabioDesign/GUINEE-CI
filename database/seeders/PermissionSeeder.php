@@ -29,11 +29,88 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 6,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 7,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 8,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 9,
+                'profile_id' => 1,
+            ]
+        );
         // Documents
         Permission::firstOrCreate(
             [
                 'menu_id' => 3,
                 'action_id' => 1,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 3,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 3,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 3,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 3,
+                'action_id' => 5,
                 'profile_id' => 1,
             ]
         );
@@ -45,11 +122,67 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 4,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 4,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 4,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 4,
+                'action_id' => 5,
+                'profile_id' => 1,
+            ]
+        );
         // Villes
         Permission::firstOrCreate(
             [
                 'menu_id' => 5,
                 'action_id' => 1,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 5,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 5,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 5,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 5,
+                'action_id' => 5,
                 'profile_id' => 1,
             ]
         );
@@ -61,11 +194,60 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 6,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 6,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 6,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 6,
+                'action_id' => 5,
+                'profile_id' => 1,
+            ]
+        );
         // Gestion des Utilisateurs
         Permission::firstOrCreate(
             [
                 'menu_id' => 7,
                 'action_id' => 1,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 7,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 7,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 7,
+                'action_id' => 5,
                 'profile_id' => 1,
             ]
         );

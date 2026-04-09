@@ -91,6 +91,12 @@ class MenuActionSeeder extends Seeder
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 3,
+                'action_id' => 4,
+            ]
+        );
+        MenuAction::firstOrCreate(
+            [
+                'menu_id' => 3,
                 'action_id' => 5,
             ]
         );
@@ -111,6 +117,12 @@ class MenuActionSeeder extends Seeder
             [
                 'menu_id' => 4,
                 'action_id' => 3,
+            ]
+        );
+        MenuAction::firstOrCreate(
+            [
+                'menu_id' => 4,
+                'action_id' => 4,
             ]
         );
         MenuAction::firstOrCreate(
@@ -141,88 +153,75 @@ class MenuActionSeeder extends Seeder
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 5,
-                'action_id' => 5,
-            ]
-        );
-        // Gestion des Menus
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 6,
-                'action_id' => 1,
+                'action_id' => 4,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 6,
-                'action_id' => 2,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 6,
-                'action_id' => 3,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 6,
+                'menu_id' => 5,
                 'action_id' => 5,
             ]
         );
         // Gestion des Profils
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 7,
+                'menu_id' => 6,
                 'action_id' => 1,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 7,
+                'menu_id' => 6,
                 'action_id' => 2,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 7,
+                'menu_id' => 6,
                 'action_id' => 3,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 7,
+                'menu_id' => 6,
+                'action_id' => 4,
+            ]
+        );
+        MenuAction::firstOrCreate(
+            [
+                'menu_id' => 6,
                 'action_id' => 5,
             ]
         );
         // Gestion des Utilisateurs
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 8,
+                'menu_id' => 7,
                 'action_id' => 1,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 8,
+                'menu_id' => 7,
                 'action_id' => 2,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 8,
+                'menu_id' => 7,
                 'action_id' => 3,
             ]
         );
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 8,
+                'menu_id' => 7,
                 'action_id' => 5,
             ]
         );
         // Piste d'audit
         MenuAction::firstOrCreate(
             [
-                'menu_id' => 9,
+                'menu_id' => 8,
                 'action_id' => 1,
             ]
         );

@@ -9,15 +9,14 @@ var KTAuthResetPassword = function(){
 
     // Handle form
     var handleValidation = function(e){
-        $('.msgError').html('');
         // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
         validator = FormValidation.formValidation(
 			form, {
 				fields: {
-					'login': {
+					'email': {
                         validators: {
 							notEmpty: {
-								message: 'Login est obligatoire'
+								message: 'Adresse e-mail est obligatoire'
 							}
 						}
 					}
@@ -39,34 +38,23 @@ var KTAuthResetPassword = function(){
         submitButton.addEventListener('click', function(e){
             // Prevent button default action
             e.preventDefault();
-            
+            $('.error').removeClass('msgError').html('');
             // Validate form
             validator.validate().then(function(status){
                 if(status == 'Valid'){
                     // Show loading indication
                     submitButton.setAttribute('data-kt-indicator', 'on');
-
                     // Disable button to avoid multiple click 
                     submitButton.disabled = true;
-                    
-
                     // Simulate ajax request
                     setTimeout(function(){
                         // Hide loading indication
                         submitButton.removeAttribute('data-kt-indicator');
-
                         // Enable button
                         submitButton.disabled = false;
-                        
                         var dataString = new FormData();
                         $('#kt_password_reset_form').find('input').each(function(){
                             dataString.append(this.name, $(this).val()); 
-                        });
-                        //X-CSRF-TOKEN
-                        $.ajaxSetup({
-                          headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                          }
                         });
                         $.ajax({
                             type: 'POST',
@@ -79,7 +67,7 @@ var KTAuthResetPassword = function(){
                             },
                             success:function(response){
                                 var splitter = response.split('|');
-                                if(splitter[0] == 1){
+                                if (splitter[0] == 1) {
                                   swal.fire({
                                     title: "Félicitation !",
                                     text: splitter[1],
@@ -92,9 +80,9 @@ var KTAuthResetPassword = function(){
                                   }).then(function(){
                                     location.href = '/';
                                   });
-                                }else{
-                                    $('.msgError').html(splitter[1]);
-                                    $('#kt_password_reset_submit').removeClass('not-active').addClass('btn-primary')
+                                } else {
+                                    $('.error').addClass('msgError').html(splitter[1]);
+                                    $('#kt_password_reset_submit').removeClass('not-active').css('background', '#009688');
                                 }
                             }
                         });

@@ -16,73 +16,65 @@ class MenuSeeder extends Seeder
         Menu::firstOrCreate(
             ['libelle' => "Tableau de bord"],
             [
-                'icone' => "dashboard-icon",
-                'target' => "/dashboard",
+                'icone' => "ki-element-7",
+                'target' => "dashboard",
                 'position' => 1,
             ]
         );
         Menu::firstOrCreate(
             ['libelle' => "Demandes"],
             [
-                'icone' => "requests-icon",
-                'target' => "/requests",
+                'icone' => "ki-calendar-8",
+                'target' => "requests",
                 'position' => 2,
             ]
         );
         Menu::firstOrCreate(
             ['libelle' => "Documents"],
             [
-                'icone' => "documents-icon",
-                'target' => "/documents",
+                'icone' => "ki-abstract-26",
+                'target' => "documents",
                 'position' => 3,
             ]
         );
         Menu::firstOrCreate(
             ['libelle' => "Pièces à fournir"],
             [
-                'icone' => "files-icon",
-                'target' => "/files",
+                'icone' => "ki-abstract-25",
+                'target' => "files",
                 'position' => 4,
             ]
         );
         Menu::firstOrCreate(
             ['libelle' => "Villes"],
             [
-                'icone' => "cities-icon",
-                'target' => "/cities",
+                'icone' => "ki-bank",
+                'target' => "towns",
                 'position' => 5,
             ]
         );
         Menu::firstOrCreate(
-            ['libelle' => "Gestion des Menus"],
+            ['libelle' => "Profils"],
             [
-                'icone' => "menus-icon",
-                'target' => "/menus",
+                'icone' => "ki-map",
+                'target' => "profiles",
                 'position' => 6,
             ]
         );
         Menu::firstOrCreate(
-            ['libelle' => "Gestion des Profils"],
+            ['libelle' => "Utilisateurs"],
             [
-                'icone' => "profile-icon",
-                'target' => "/profile",
+                'icone' => "ki-address-book",
+                'target' => "users",
                 'position' => 7,
-            ]
-        );
-        Menu::firstOrCreate(
-            ['libelle' => "Gestion des Utilisateurs"],
-            [
-                'icone' => "user-icon",
-                'target' => "/users",
-                'position' => 8,
             ]
         );
         Menu::firstOrCreate(
             ['libelle' => "Piste d'audit"],
             [
-                'icone' => "audit_trail-icon",
-                'target' => "/audit_trail",
-                'position' => 9,
+                'icone' => "ki-code",
+                'target' => "logs",
+                'position' => 8,
             ]
         );
     }

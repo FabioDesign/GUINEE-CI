@@ -40,26 +40,19 @@
 							<h2 class="text-white m-0">AmbaGui-CI</h2>
 						</div>
 						<div class="body-left">
-							<h1 class="text-white m-0">Gérer vos documents administratifs</h1>
+							<h1 class="text-white m-0">Gérer vos documents consulaires</h1>
 						</div>
 						<div class="footer-left">
-							<h3 class="text-white fw-normal m-0">Une plateforme de gestion complète de documents administratifs de l'Ambassade de la Guinée en Côte d'Ivoire.</h3>
+							<h3 class="text-white fw-normal m-0">Une plateforme de gestion complète de documents consulaires de l'Ambassade de la Guinée en Côte d'Ivoire.</h3>
 						</div>
 						<div class="footer-button">
-							<button class="btn">
-								<i class="fa-regular fa-address-card"></i><span>Attestaion d'identité</span>
-							</button>
-							<button class="btn">
-								<i class="fa-regular fa-address-book"></i><span>Carte consulaire</span>
-							</button>
-							<button class="btn">
-								<i class="fa-solid fa-building-lock"></i><span>Paiements</span>
-							</button>
-						</div>
-						<div class="footer-button">
-							<button class="btn">
-								<i class="fa-solid fa-brush"></i><span>Statistiques</span>
-							</button>
+							@foreach($query as $data)
+							<a href="{{ asset('storage/' . $data->specimen) }}" target="_blank">
+								<button class="btn">
+									<i class="{{ $data->icone }}"></i><span>{{ $data->libelle }}</span>
+								</button>
+							</a>
+							@endforeach
 						</div>
 						<!--end::Title-->
 					</div>

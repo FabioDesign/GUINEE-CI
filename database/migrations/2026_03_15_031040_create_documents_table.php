@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('amount', 50);
             $table->integer('number');
             $table->text('description');
-            $table->tinyInteger('status');
+            $table->tinyInteger('position')->default('0');
+            $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->integer('period_id');
             $table->integer('created_id');

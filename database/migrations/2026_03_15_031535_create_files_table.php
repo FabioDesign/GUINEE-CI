@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uid');
             $table->string('libelle', 255);
+            $table->text('specimen');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
+            $table->softDeletes();
+            $table->integer('created_id');
+            $table->integer('updated_id')->default('0');
+            $table->integer('deleted_id')->default('0');
         });
     }
 

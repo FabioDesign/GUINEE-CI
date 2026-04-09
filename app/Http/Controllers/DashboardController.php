@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Session;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
@@ -12,13 +11,13 @@ class DashboardController extends Controller
   	public function index(request $request)
 	{
 		if (Session::has('idUsr')) {
-			//Title
+			// Title
 			$title = 'Tableau de bord';
-			//Breadcrumb
-			$breadcrumb = 'Tableau de bord';
-			//Menu
+			// Menu
 			$currentMenu = 'dashboard';
-			return view('pages.dashboard', compact('title', 'breadcrumb', 'currentMenu'));
+			// Modal
+			$addmodal = '';
+			return view('pages.dashboard', compact('title', 'currentMenu', 'addmodal'));
 		} else return redirect('/');
   	}
 }

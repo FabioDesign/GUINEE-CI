@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 	<!--begin::Head-->
+	@php 
+		//Page active
+		Session::put('title', $title);
+	@endphp
 	<head>
 		<base href=""/>
 		<title>{{ env('APP_NAME') }}</title>
@@ -8,6 +12,7 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<link href="/assets/img/favicon.png" rel="icon" type="image/x-icon">
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -43,8 +48,9 @@
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 				<!--begin::Header-->
 				<div id="kt_app_header" class="app-header">
+					<div class="gradient-div"></div>
 					<!--begin::Header container-->
-					<div class="app-container container-fluid d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
+					<div class="app-container container-fluid d-flex align-items-stretch justify-content-between" id="kt_app_header_container" style="position: relative; z-index: 2;">
 						<!--begin::Sidebar mobile toggle-->
 						<div class="d-flex align-items-center d-lg-none ms-n3 me-1 me-md-2" title="Show sidebar menu">
 							<div class="btn btn-icon btn-active-color-primary w-35px h-35px" id="kt_app_sidebar_mobile_toggle">
@@ -72,7 +78,7 @@
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title">Ambassade de Guinée - Côte d’Ivoire</span>
+											<span class="menu-title">Ambassade de la République de Guinée en Côte d’Ivoire</span>
 										</span>
 										<!--end:Menu link-->
 									</div>
@@ -88,7 +94,7 @@
 								<div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
 									<!--begin::Menu wrapper-->
 									<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-										<img src="/{{ Session::get('avatar') }}" alt="{{ Session::get('username') }}" />
+										<img src="{{ asset('storage/' . Session::get('avatar')) }}" class="img-avatar" alt="{{ Session::get('username') }}" />
 									</div>
 									<!--begin::User account menu-->
 									<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -97,7 +103,7 @@
 											<div class="menu-content d-flex align-items-center px-3">
 												<!--begin::Avatar-->
 												<div class="symbol symbol-50px me-5">
-													<img src="/assets/media/avatars/{{ Session::get('avatar') }}" alt="{{ Session::get('username') }}" />
+													<img src="{{ asset('storage/' . Session::get('avatar')) }}" alt="{{ Session::get('username') }}" />
 												</div>
 												<!--end::Avatar-->
 												<!--begin::Username-->
@@ -115,12 +121,12 @@
 										<!--end::Menu separator-->
 										<!--begin::Menu item-->
 										<div class="menu-item px-5">
-											<a href="/account" class="menu-link px-5"><i class="fas fa-user-circle me-2"></i>Mon compte</a>
+											<a href="/account" class="menu-link px-5"><i class="fas fa-user-circle me-2"></i> Mon compte</a>
 										</div>
 										<!--end::Menu item-->
 										<!--begin::Menu item-->
 										<div class="menu-item px-5">
-											<a href="/password" class="menu-link px-5"><i class="fas fa-lock me-2"></i>Mot de passe</a>
+											<a href="/password" class="menu-link px-5"><i class="fas fa-lock me-2"></i> Mot de passe</a>
 										</div>
 										<!--end::Menu item-->
 										<!--begin::Menu separator-->
@@ -159,13 +165,22 @@
 					<!--begin::Sidebar-->
 					<div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
 						<!--begin::Logo-->
-						<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
-							<!--begin::Logo image-->
-							<a href="/{{ Session::get('page') }}" style="margin: auto;">
-								<img alt="Logo" src="/assets/img/amoirie.png" class="h-50px app-sidebar-logo-default" />
-								<img alt="Logo" src="/assets/img/amoirie.png" class="h-20px app-sidebar-logo-minimize" />
-							</a>
-							<!--end::Logo image-->
+						<div class="app-sidebar-logo" id="kt_app_sidebar_logo">
+							<!--begin::Logo container-->
+							<div class="d-flex align-items-center">
+								<!--begin::Logo image-->
+								<a href="/{{ Session::get('page') }}" class="d-flex align-items-center">
+									<div class="logo-image">
+										<img alt="Logo" src="/assets/img/amoirie.png" class="h-50px app-sidebar-logo-default" />
+										<img alt="Logo" src="/assets/img/amoirie.png" class="h-20px app-sidebar-logo-minimize" />
+									</div>
+									<div class="logo-text d-flex flex-column">
+										<span style="color:#FFF; font-weight:bold;">République de Guinée</span>
+										<span style="color:#FFF;font-size: 10px;">Ministère d'Etat Chargé des Affaires Étrangères et des Guinéens de l'Etrangers</span>
+									</div>
+								</a>
+								<!--end::Logo image-->
+							</div>
 							<!--begin::Sidebar toggle-->
 							<div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
 								<i class="ki-duotone ki-double-left fs-2 rotate-180">
@@ -184,7 +199,7 @@
 								<div class="d-flex align-items-center flex-grow-1">
 									<!--begin::Avatar-->
 									<div class="symbol symbol-45px me-5">
-										<img src="/{{ Session::get('avatar') }}" alt="{{ Session::get('username') }}">
+										<img src="{{ asset('storage/' . Session::get('avatar')) }}" alt="{{ Session::get('username') }}">
 									</div>
 									<!--end::Avatar-->
 									<!--begin::Info-->
@@ -198,28 +213,30 @@
 								<!--end::User-->
 								<!--begin::Menu-->
 								<div class="menu menu-column menu-rounded menu-sub-indention px-3 my-5" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
-									
+									@foreach (Session::get('menus') as $menu)
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a href="/dashboard" class="menu-link
-										@php echo $currentMenu == 'dashboard' ? 'active':'' @endphp">
+										<a href="/{{ $menu['target'] }}" class="menu-link menu-active
+										@php echo $currentMenu == $menu['target'] ? 'active':'' @endphp" data-menu="{{ $menu['id'] }}">
 											<span class="menu-icon">
-												<i class="ki-duotone ki-element-11 fs-2">
+												<i class="ki-duotone {{ $menu['icone'] }} fs-2">
 													<span class="path1"></span>
 													<span class="path2"></span>
 													<span class="path3"></span>
 													<span class="path4"></span>
 													<span class="path5"></span>
 													<span class="path6"></span>
+													<span class="path7"></span>
+													<span class="path8"></span>
 												</i>
 											</span>
-											<span class="menu-title">Tableau de bord</span>
+											<span class="menu-title">{{ $menu['libelle'] }}</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
 									<!--end:Menu item-->
-
+									@endforeach
 								</div>
 								<!--end::Menu-->
 							</div>
@@ -241,27 +258,10 @@
 										<!--begin::Title-->
 										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ $title }}</h1>
 										<!--end::Title-->
-										<!--begin::Breadcrumb-->
-										<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">
-												<a href="/{{ Session::get('page') }}" class="text-muted text-hover-primary">Accueil</a>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item">
-												<span class="bullet bg-gray-400 w-5px h-2px"></span>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">{{ $breadcrumb }}</li>
-											<!--end::Item-->
-										</ul>
-										<!--end::Breadcrumb-->
 									</div>
 									<!--end::Page title-->
 									<!--begin::Actions-->
-									<div class="d-flex align-items-center gap-2 gap-lg-3" style="display: none;">
+									<div class="d-flex align-items-center gap-2 gap-lg-3">
 										<!--begin::Primary button-->
 										@php echo $addmodal; @endphp
 										<!--end::Primary button-->
@@ -311,104 +311,6 @@
 			<!--end::Page-->
 		</div>
 		<!--end::App-->
-		<!-- begin::Modal Status -->
-		<form id="frmstatus">
-			<input type="hidden" id="idStatus" name="id">
-			<input type="hidden" id="valStatus" name="val">
-			<input type="hidden" id="typStatus" name="typ">
-		</form>
-		<!--end::Modal Status -->
-		<!--begin::Modal - Form-->
-		<div class="modal fade" id="modalform" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
-			<!--begin::Modal dialog-->
-			<div class="modal-dialog modal-dialog-centered mw-650px">
-				<!--begin::Modal content-->
-				<div class="modal-content rounded">
-					<!--begin::Modal header-->
-					<div class="modal-header pb-0 border-0 justify-content-end">
-						<!--begin::Close-->
-						<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-							<i class="ki-duotone ki-cross fs-1">
-								<span class="path1"></span>
-								<span class="path2"></span>
-							</i>
-						</div>
-						<!--end::Close-->
-					</div>
-					<!--begin::Modal header-->
-					<!--begin::Modal body-->
-					<div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-						<!--begin:Form-->
-						<form class="form formField" autocomplete="off">
-							<!--begin::Heading-->
-							<div class="mb-13 text-center">
-								<!--begin::Title-->
-								<h1 id="titleForm" class="mb-3">Modal Title</h1>
-								<!--end::Title-->
-							</div>
-							<!--end::Heading-->
-							<!--begin::Input group-->
-							<div id="bodyForm">Modal Body</div>
-							<!--end::Input group-->
-							<span class="msgError" style="display: none;"></span>
-							<!--begin::Actions-->
-							<div class="text-center">
-								<button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Fermer</button>
-								<button type="button" class="btn btn-primary submitForm">Enregistrer</button>
-							</div>
-							<!--end::Actions-->
-						</form>
-						<!--end:Form-->
-					</div>
-					<!--end::Modal body-->
-				</div>
-				<!--end::Modal content-->
-			</div>
-			<!--end::Modal dialog-->
-		</div>
-		<!--end::Modal - Form-->
-		<!--begin::Modal - Detail-->
-		<div class="modal fade" id="modaldetail" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
-			<!--begin::Modal dialog-->
-			<div class="modal-dialog modal-dialog-centered mw-650px">
-				<!--begin::Modal content-->
-				<div class="modal-content rounded">
-					<!--begin::Modal header-->
-					<div class="modal-header pb-0 border-0 justify-content-end">
-						<!--begin::Close-->
-						<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-							<i class="ki-duotone ki-cross fs-1">
-								<span class="path1"></span>
-								<span class="path2"></span>
-							</i>
-						</div>
-						<!--end::Close-->
-					</div>
-					<!--begin::Modal header-->
-					<!--begin::Modal body-->
-					<div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-						<!--begin:Form-->
-						<form class="form formField" autocomplete="off">
-							<!--begin::Heading-->
-							<div class="mb-13 text-center">
-								<!--begin::Title-->
-								<h1 id="titleDetail" class="mb-3">Modal Title</h1>
-								<!--end::Title-->
-							</div>
-							<!--end::Heading-->
-							<!--begin::Input group-->
-							<div id="bodyDetail">Modal Body</div>
-							<!--end::Input group-->
-						</form>
-						<!--end:Form-->
-					</div>
-					<!--end::Modal body-->
-				</div>
-				<!--end::Modal content-->
-			</div>
-			<!--end::Modal dialog-->
-		</div>
-		<!--end::Modal - Detail-->
 		<!--begin::Scrolltop-->
 		<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
 			<i class="ki-duotone ki-arrow-up">
@@ -430,8 +332,6 @@
 		<script src="/assets/js/custom/icheck.js"></script>
 		<script src="/assets/js/custom.js?v20126.03.29.02.45"></script>
 		<script>
-			var titleLoad = "Traitement en cours!";
-			var textLoad = "Veuillez patienter svp...";
 			"use strict";
 			//DataTable
 			$("#kt_datatable").DataTable({

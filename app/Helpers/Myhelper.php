@@ -2,24 +2,25 @@
 	namespace App\Helpers;
 	
 	use \Carbon\Carbon;
-	use App\Models\User;
-	use GuzzleHttp\Psr7;
-	use App\Models\Logs;
-	use App\Models\Devis;
-	use GuzzleHttp\Client;
-	use App\Models\Supplie;
-	use App\Models\Commande;
-	use App\Models\BillAddr;
-	use App\Models\Suppllib;
 	use Illuminate\Support\Str;
 	use Illuminate\Http\Request;
-	use PHPMailer\PHPMailer\SMTP;
-	use PHPMailer\PHPMailer\PHPMailer;
 	use Illuminate\Support\Facades\Log;
-	use GuzzleHttp\Exception\GuzzleException;
+	use App\Models\{Logs, Permission, User};
+	use PHPMailer\PHPMailer\{PHPMailer, SMTP};
 
 	class Myhelper
 	{
+		// Recherche de droit d'accès
+		public static function actions($profile, $menu)
+		{
+			// Requete Read
+			$permission = Permission::where([
+				'menu_id' => $menu,
+				'profile_id' => $profile,
+			])
+			->get();
+			return $permission->pluck('action_id')->toArray();
+		}
     	//sans accent
     	public static function valideString($string, $encoding='utf-8'){
       		// transformer les caractères accentués en entités HTML
@@ -34,45 +35,9 @@
       		$string = preg_replace('#&[^;]+;€#', '', $string);
       		return $string;
     	}
-		//Format English
-	  	public static function formatDateEn($date){
-			if($date != ''){
-				$arrayDate = Str::of($date)->explode(' ');
-				if(sizeof($arrayDate) == 1)
-					return Carbon::parse($date)->format('Y-m-d');
-				else
-					return Carbon::parse($date)->format('Y-m-d H:i');
-			}
-	  	}
-	    //Format Français
-		public static function formatDateFr($date){
-			if($date != ''){
-				$arrayDate = Str::of($date)->explode(' ');
-				if(sizeof($arrayDate) == 1)
-					return Carbon::parse($date)->format('d-m-Y');
-				else
-					return Carbon::parse($date)->format('d-m-Y H:i');
-			}
-	  	}
-		//Format Français
-	  	public static function datejour($date){
-			$mois = substr($date, 5, 2) - 1;
-			$months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-			$date = substr($date, 8, 2).' '.$months[$mois].' '.substr($date, 0, 4);
-	    	return $date;
-	  	}
-		//Format Euro
-	  	public static function formatEuro($euro){
-		  	$arrayEuro = Str::of($euro)->explode('.');
-			if(sizeof($arrayEuro) == 1)
-				$euro = number_format($euro, 0, ',', '.');
-			else
-		  		$euro = number_format($arrayEuro[0], 0, ',', '.').",".$arrayEuro[1];
-			return $euro;
-		}
 		//Piste d'audit
 		public static function logs($username, $profil, $libelle, $action, $color, $avatar){
-			try{
+			try {
 				$set = [
 					'color' => $color,
 					'action' => $action,
@@ -82,80 +47,36 @@
 					'username' => $username,
 				];
 				Logs::create($set);
-			}catch(Exception $e){
-				Log::warning('Error : '.$e->getMessage());
+			} catch(Exception $e) {
+				Log::warning("Logs::Error : {$e->getMessage()}");
 			}
-		}
-		//Search Client
-		public static function searchClt($field){
-			$count = BillAddr::where('client_id', $field)->count();
-			return $count;
-		}
-		//Search Navire
-		public static function searchShip($field){
-			$count = Devis::where('ship_id', $field)->count();
-			return $count;
-		}
-		//Search Billing Address
-		public static function searchAddr($field){
-			$count = Devis::where('billaddr_id', $field)->count();
-			return $count;
-		}
-		//Search Nom
-		public static function searchNom($field){
-			$count = Supplie::where('suppllib_id', $field)->count();
-			return $count;
-		}
-		//Search Material
-		public static function searchMat($field){
-			$count = Supplie::where('material_id', $field)->count();
-			return $count;
-		}
-		//Search Dimension
-		public static function searchQualif($field){
-			$count = Supplie::where('diameter_id', $field)->count();
-			return $count;
-		}
-		//Search Type Fourniture
-		public static function searchFounrTyp($field){
-			$count = Suppllib::where('suppltyp_id', $field)->count();
-			return $count;
-		}
-		//Search Supplie/
-		public static function searchDevtyp($field, $typ){
-			$count = Commande::where([
-				'item_id' => $field,
-				'devtyp_id' => $typ,
-			])->count();
-			return $count;
 		}
     	//Send mail
 	  	public static function sendMail($to, $cc, $subject, $content){
 	  		require base_path("vendor/autoload.php");
       		$mail = new PHPMailer(true);   // Passing `true` enables exceptions
       		$mail->CharSet = "UTF-8";
-      		$config = Messagerie::first();
 	      	try{
 		        // Email server settings
 		        $mail->SMTPDebug = 0;
 		        $mail->isSMTP();
-		        $mail->Host = $config->host;           	// smtp host
+		        $mail->Host = env('MAIL_HOST');           	// smtp host
 		        $mail->SMTPAuth = true;
-		        $mail->Username = $config->user;   		// sender username
-		        $mail->Password = $config->password;    // sender password
+		        $mail->Username = env('MAIL_USERNAME');   		// sender username
+		        $mail->Password = env('MAIL_PASSWORD');    // sender password
 		        $mail->SMTPSecure = "ssl";              // encryption - ssl/tls
-		        $mail->Port = $config->port;            // port - 587/465
+		        $mail->Port = env('MAIL_PORT');            // port - 587/465
 		        $mail->timeout = null;
 		        $mail->Encoding = 'base64';
 
-		        $mail->setFrom($config->user, $config->sender);
+		        $mail->setFrom(env('MAIL_USERNAME'), env('MAIL_FROM_ADDRESS'));
 		        $mail->addAddress($to);
 				if($cc != ''){
 					foreach($cc as $email):
 						$mail->AddCC($email);
 					endforeach;
 				}
-		        $mail->addReplyTo($config->user, $config->sender);
+		        $mail->addReplyTo(env('MAIL_USERNAME'), env('MAIL_FROM_ADDRESS'));
 		        $mail->SMTPOptions = [
 			    	'ssl' => [
 				        'verify_peer' => false,
@@ -167,11 +88,11 @@
 		        $mail->Subject = $subject;
 		        $mail->Body = $content;
 	        	if($mail->send())
-        			Log::info('Success : Email has been sent.');
+        			Log::info("Sendmail::Success : Email has been sent.");
 	        	else
-	    			Log::warning('failed : '.$mail->ErrorInfo);
+	    			Log::warning("Sendmail::Failed : {$mail->ErrorInfo}");
 	      	}catch(Exception $e){
-	           	Log::warning('Error : '.$e->getMessage());
+	           	Log::warning("Sendmail::Error : {$e->getMessage()}");
 	      	}
 		}
 		//Génération du password

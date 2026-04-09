@@ -18,8 +18,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('created_id');
             $table->integer('updated_id')->default('0');
+            $table->integer('deleted_id')->default('0');
         });
     }
 
