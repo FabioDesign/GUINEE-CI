@@ -12,7 +12,7 @@ class StatusController extends Controller
 {
     public function update($type, $uid)
     {
-        if (!Session::has('idUsr')) {
+        if (!auth()->check()) {
             return 'x';
         }
         try {
@@ -28,7 +28,7 @@ class StatusController extends Controller
                 ],
                 'towns' => [
                     'model' => Town::class,
-                    'label' => 'ville'
+                    'label' => 'Ville'
                 ],
             ];
             // Vérifier si le type existe
@@ -53,7 +53,6 @@ class StatusController extends Controller
             $action = $newStatus == 1 ? 'Activé' : 'Désactivé';
             $item->update([
                 'status' => $newStatus,
-                'updated_by' => Session::get('idUsr')
             ]);
             // 📝 Log
             Myhelper::logs(

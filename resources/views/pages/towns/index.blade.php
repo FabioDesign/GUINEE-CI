@@ -34,7 +34,7 @@
           <tr>
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">
-              <img src="/assets/flags/{{ $data->alpha }}.svg" alt="{{ $data->country }}" class="h-20px"> 
+              <img src="/assets/flags/{{ $data->alpha }}.svg" alt="{{ $data->country }}" class="h-20px me-2" /> 
               {{ $data->country }}
             </td>
             <td class="align-middle">{{ $data->town }}</td>

@@ -1,33 +1,40 @@
 @extends('layouts.master')
 
 @section('content')
-  <!--begin::Card-->
-  <div class="card">
-    <!--begin::Card body-->
-    <div class="card-body py-4">
-      <form class="formField">
-        @method('PUT')
-        <input type="hidden" id="rootForm" value="files/{{ $files->uid }}">
+<div class="card">
+  <div class="card-body py-4">
+    <form class="formField">
+      @method('PUT')
+      <input type="hidden" id="rootForm" value="towns/{{ $town->uid }}">
         <div class="row form-group fv-row mb-2">
-            <div class="col-lg-6">
-                <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-                <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('libelle', $files->libelle) }}" />
-            </div>
-
-            <div class="col-lg-6">
-                <label class="fw-bolder text-dark fs-5">Spécimen : <span class="text-danger">*</span></label>
-                <input type="file" id="specimen" name="specimen" class="form-control requiredField" accept=".png,.jpg,.jpeg" />
-            </div>
-        </div>
-        <span class="msgError" style="display: none;"></span>
-        <!-- Aperçu image -->
-        <div class="mt-3 text-center">
-          @php $style = $files->specimen ? "" : "display: none;"; @endphp
-          <img id="previewImage" src="{{ asset('storage/' . $files->specimen) }}" alt="{{ $files->libelle }}" style="{{ $style }}">
-        </div>
-      </form>
-    </div>
-    <!--end::Card body-->
+          <div class="col-lg-6">
+            <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
+            <select id="country_id" name="country_id" class="form-control">
+              <option value="" selected disabled>Sélectionner</option>
+              @foreach($query as $data)
+                <option value="{{ $data->id }}" @php echo $data->id == $town->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-lg-6">
+            <label class="fw-bolder text-dark fs-5">Ville : <span class="text-danger">*</span></label>
+            <input type="text" name="libelle" value="{{ old('libelle', $town->libelle) }}" class="form-control requiredField" placeholder="Saisir la ville" />
+          </div>
+      </div>
+      <span class="msgError" style="display: none;"></span>
+    </form>
   </div>
-  <!--end::Card-->
+</div>
+@endsection
+
+@section('scripts')
+	<script src="/assets/js/custom/select2.js"></script>
+    <script>
+    $(document).ready(function() {
+      $('#country_id').select2({
+        placeholder: "Sélectionner le pays",
+        width: '100%'
+      });
+    });
+</script>
 @endsection

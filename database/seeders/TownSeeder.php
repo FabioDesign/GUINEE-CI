@@ -12,7 +12,14 @@ class TownSeeder extends Seeder
      *
      * @return void
      */
-    public function run(){
+    public function run() {
+        Town::firstOrCreate(
+            ['libelle' => "CONAKRY"],
+            [
+                'country_id' => 90,
+                'created_by' => 1,
+            ]
+        );
         Town::firstOrCreate(
             ['libelle' => "COCODY (ABIDJAN)"],
             [
@@ -80,13 +87,6 @@ class TownSeeder extends Seeder
             ['libelle' => "TREICHVILLE (ABIDJAN)"],
             [
                 'country_id' => 53,
-                'created_by' => 1,
-            ]
-        );
-        Town::firstOrCreate(
-            ['libelle' => "CONAKRY"],
-            [
-                'country_id' => 90,
                 'created_by' => 1,
             ]
         );

@@ -10,7 +10,7 @@ class DashboardController extends Controller
 	//Tableau de bord
   	public function index(request $request)
 	{
-        if (!Session::has('idUsr')) {
+        if (!auth()->check()) {
             return redirect('/');
         }
 		// Title

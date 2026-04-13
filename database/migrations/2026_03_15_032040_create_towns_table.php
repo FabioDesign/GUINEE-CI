@@ -18,9 +18,9 @@ return new class extends Migration
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('created_by');
-            $table->integer('updated_by')->default('0');
-            $table->integer('deleted_by')->default('0');
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
             $table->integer('country_id');
         });
     }

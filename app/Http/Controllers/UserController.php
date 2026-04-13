@@ -7,8 +7,8 @@ use \Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\{DB, Hash, Log, Validator};
 use App\Models\{Document, Logs, Permission, Profile, User};
+use Illuminate\Support\Facades\{DB, Hash, Log, Validator, Auth};
 
 class UserController extends Controller
 {    
@@ -470,91 +470,126 @@ class UserController extends Controller
         ->get();
         return view('login', compact('query'));
 	}
-    // Authentification
+    // Authentification avec Laravel Auth
     public function auth(Request $request)
     {
-        Log::notice("User::auth : " . json_encode($request->all()));
         //Validator
         $validator = Validator::make($request->all(), [
-          'login' => 'required',
-          'password' => 'required|min:8',
+            'login' => 'required',
+            'password' => 'required|min:8',
         ], [
-	        'login.required' => "Login ou mot de passe incorrect.",
-	        'password.*' => "Login ou mot de passe incorrect.",
-	    ]);
+            'login.required' => "Login ou mot de passe incorrect.",
+            'password.*' => "Login ou mot de passe incorrect.",
+        ]);
         // Error field
         if ($validator->fails()) {
-            Log::warning("User::auth - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-          return $validator->errors()->first();
+            Log::warning("User::auth - Validator : {$validator->errors()->first()}");
+            return $validator->errors()->first();
         }
-		//Requete Read
-		$users = User::select('users.id', 'lastname', 'firstname', 'gender', 'password', 'avatar', 'users.status AS status_usr', 'profile_id', 'libelle', 'profiles.status AS status_pro')
-		->join('profiles', 'profiles.id','=','users.profile_id')
-        ->where('whatsapp', $request->login)
-        ->first();
-		//Test Connexion
-		if ($users == null || !(password_verify($request->password, $users->password)))
-			return '0|Login ou mot de passe incorrect.';
-		else if($users->status_usr == 0)
-			return '0|Votre compte est bloqué.';
-		else if($users->status_pro == 0)
-			return '0|Votre profil est désactivé.';
-		else {
-            try {
-                $prenom = explode(' ', $users->firstname);
-                $username = $prenom[0] . ' ' . $users->lastname;
-                Session::put('idUsr', $users->id);
-                Session::put('username', $username);
-                Session::put('idPro', $users->profile_id);
-                Session::put('whatsapp', $users->whatsapp);
-                Session::put('profil', $users->libelle);
-                // Test si la photo est vide
-                if ($users->avatar != '')
-                    $avatar = $users->avatar;
-                else
-                    $avatar = $users->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-			    Session::put('avatar', $avatar);
-                // Code to list permissions
-                $menus = Permission::select('menus.id', 'libelle', 'target', 'icone')
-                ->join('menus', 'menus.id', '=', 'permissions.menu_id')
-                ->where('profile_id', $users->profile_id) // Seulement les menus du profil de l'utilisateur
-                ->where('status', 1) // Seulement les menus activés
-                ->where('action_id', 1) // Seulement les actions de voir
-                ->orderBy('position')
-                ->get();
-                // Vérifier si les données existent
-                if ($menus->isEmpty()) {
-                    Log::warning("Aucun menu trouvé pour ce profil : " . $users->profile_id);
-			        return '0|Aucun menu trouvé pour ce profil.';
-                }
-                $page = $menus->first()->target ?? '/';
-                Session::put('page', $page);
-                // Transformer les données
-                $query = $menus->map(fn($menu) => [
-                    'id' => $menu->id,
-                    'libelle' => $menu->libelle,
-                    'target' => $menu->target,
-                    'icone' => $menu->icone,
-                ]);
-                Session::put('menus', $query);
-                $users->update([
+        try {
+            // Déterminer si le login est un email ou un numéro de téléphone
+            $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'whatsapp';
+            // Tentative de connexion avec Laravel Auth
+            $credentials = [
+                $loginField => $request->login,
+                'password' => $request->password,
+                'status' => 1, // Compte actif
+            ];
+            // Vérifier d'abord si l'utilisateur existe et son statut
+            $user = User::where($loginField, $request->login)->first();
+            if (!$user) {
+                return '0|Login ou mot de passe incorrect.';
+            }
+            // Vérifier le statut du compte
+            if ($user->status == 0) {
+                return '0|Votre compte est inactif.';
+            }
+            if ($user->status == 2) {
+                return '0|Votre compte est bloqué.';
+            }
+            // Vérifier le statut du profil
+            if ($user->profile && $user->profile->status == 0) {
+                return '0|Votre profil est désactivé.';
+            }
+            // Tentative de connexion
+            if (Auth::attempt($credentials)) {
+                // Connexion réussie
+                $user = Auth::user();
+                // Mise à jour de la dernière connexion
+                $user->update([
                     'login_at' => now(),
                 ]);
-			    Myhelper::logs($username, $users->libelle, $menus->first()->libelle, 'Connecter', 'primary', $avatar);
-			    return '1|' . $page;
-            } catch (\Exception $e) {
-                Log::warning("Echec de connexion à la base de données : " . $e->getMessage());
-                return "0|Service indisponible, veuillez réessayer plus tard !";
+                // Préparer les données de session
+                $prenom = explode(' ', $user->firstname);
+                $username = $prenom[0] . ' ' . $user->lastname;
+                // Récupération des menus
+                $menus = Permission::select('menus.id', 'libelle', 'target', 'icone')
+                    ->join('menus', 'menus.id', '=', 'permissions.menu_id')
+                    ->where('profile_id', $user->profile_id)
+                    ->where('status', 1)
+                    ->where('action_id', 1)
+                    ->orderBy('position')
+                    ->get();
+                if ($menus->isEmpty()) {
+                    Log::warning("Aucun menu trouvé pour ce profil : " . $user->profile_id);
+                    Auth::logout();
+                    return '0|Aucun menu trouvé pour ce profil.';
+                }
+                $page = $menus->first()->target ?? '/';
+                // Stocker des informations supplémentaires en session
+                Session::put('username', $username);
+                Session::put('profil', $user->profile->libelle ?? '');
+                Session::put('menus', $menus);
+                // Avatar
+                if ($user->avatar != '') {
+                    $avatar = $user->avatar;
+                } else {
+                    $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
+                }
+                Session::put('avatar', $avatar);
+                // Log de connexion
+                Myhelper::logs($username, $user->profile->libelle ?? '', $menus->first()->libelle, 'Connecter', 'primary', $avatar);
+                return '1|' . $page;
+            } else {
+                // Mot de passe incorrect
+                Log::warning("Tentative de connexion échouée pour : {$request->login}");
+                return '0|Login ou mot de passe incorrect.';
             }
+        } catch (\Exception $e) {
+            Log::warning("Echec de connexion : {$e->getMessage()}");
+            return "0|Service indisponible, veuillez réessayer plus tard !";
         }
     }
-    //Déconnexion
-    public function logout(request $request)
+    // Déconnexion avec Laravel Auth
+    public function logout(Request $request)
     {
-    	if (Session::has('idUsr')) {
-			Myhelper::logs(Session::get('username'), Session::get('profil'), Session::get('title'), 'Deconnecter', 'primary', Session::get('avatar'));
-			$request->session()->flush();
-	    }
-		return redirect('/');
+        if (Auth::check()) {
+            Myhelper::logs(
+                Session::get('username'), 
+                Session::get('profil'), 
+                Session::get('title'), 
+                'Deconnecter', 
+                'primary', 
+                Session::get('avatar')
+            );
+            // Déconnexion avec Laravel Auth
+            Auth::logout();
+            // Invalidation de la session
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+        return redirect('/');
+    }
+    // Middleware pour vérifier les permissions
+    public function checkPermission($permission)
+    {
+        $user = Auth::user();
+        if (!$user) return false;
+        
+        return Permission::where('profile_id', $user->profile_id)
+            ->whereHas('menu', function($query) use ($permission) {
+                $query->where('libelle', $permission);
+            })
+            ->exists();
     }
 }
