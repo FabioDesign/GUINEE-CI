@@ -7,7 +7,7 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Menu, Permission};
-use Illuminate\Support\Facades\{Log, Validator};
+use Illuminate\Support\Facades\{Auth, Log, Validator};
 
 class MenuController extends Controller
 {
@@ -18,7 +18,7 @@ class MenuController extends Controller
 			$title = 'Gestion des menus';
 			//Menu
 			$currentMenu = 'menus';
-			$actionIds = Myhelper::actions(Session::get('idPro'), 6);
+			$actionIds = Myhelper::actions(Auth::user()->profile_id, 6);
 			$addmodal = in_array(2, $actionIds) ? '<a href="#" class="btn btn-sm btn-primary modalform" data-h="0|menuForm|" submitbtn="Valider">Ajouter un menu</a>':'';
 			//Requete Read
 			$query = Menu::all();

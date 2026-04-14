@@ -34,36 +34,36 @@ class PasswordController extends Controller
           return $validator->errors()->first();
         }
 		//Requete Read
-		$users = User::join('profiles', 'profiles.id', '=', 'users.profile_id')
+		$user = User::join('profiles', 'profiles.id', '=', 'users.profile_id')
 		->where([
 			'users.status' => 1,
 			'email' => $request->email
 		])
 		->first();
-		if ($users) {
-			$prenom = explode(' ', $users->firstname);
-			$username = $prenom[0].' '.$users->lastname;
+		if ($user) {
+			$prenom = explode(' ', $user->firstname);
+			$username = $prenom[0].' '.$user->lastname;
 			//Requete Read
 			$password = Myhelper::generate();
 			$subject = "Nouveau Mot de passe";
-			$gender = $users->gender == 'M' ? 'Cher':'Chère';
+			$gender = $user->gender == 'M' ? 'Cher':'Chère';
 			$content = "{$gender} {$username},<br/>
 			Votre nouveau mot de passe est : <strong>{$password}</strong><br/><br/>
 			Cordialement<br/>
 			L'équipe Ambassade de Guinée - CI<br>
 			27 01 02 03 04<br>
 			ambagui-ci@yopomail.com";
-			Myhelper::sendMail($users->email, '', $subject, $content);
+			Myhelper::sendMail($user->email, '', $subject, $content);
 			//Update passwd_change_code
-			$users->update([
+			$user->update([
 				'password_at' => now(),
 				'password' => Hash::make($password),
 			]);
-            if ($users->avatar != '')
-                $avatar = 'storage/media/avatar/' . $users->avatar;
+            if ($user->avatar != '')
+                $avatar = 'storage/media/avatar/' . $user->avatar;
             else
-                $avatar = $users->gender == 'M' ? 'assets/img/homme.jpg' : 'assets/img/femme.jpg';
-			Myhelper::logs($username, $users->libelle, 'Mot de passe oublié', 'Modifier', 'warning', $avatar);
+                $avatar = $user->gender == 'M' ? 'assets/img/homme.jpg' : 'assets/img/femme.jpg';
+			Myhelper::logs($username, $user->libelle, 'Mot de passe oublié', 'Modifier', 'warning', $avatar);
 		    return "1|Mot de passe envoyé par mail avec succès.";
 		} else {
             Log::warning("Forgotpass::store - Adresse e-mail non trouvée : {$request->email}");

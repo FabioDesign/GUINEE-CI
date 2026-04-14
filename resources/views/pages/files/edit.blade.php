@@ -7,11 +7,11 @@
     <div class="card-body py-4">
       <form class="formField">
         @method('PUT')
-        <input type="hidden" id="rootForm" value="files/{{ $files->uid }}">
+        <input type="hidden" id="rootForm" value="files/{{ $file->uid }}">
         <div class="row form-group fv-row mb-2">
             <div class="col-lg-6">
                 <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-                <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('libelle', $files->libelle) }}" />
+                <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('libelle', $file->libelle) }}" />
             </div>
 
             <div class="col-lg-6">
@@ -22,8 +22,8 @@
         <span class="msgError" style="display: none;"></span>
         <!-- Aperçu image -->
         <div class="mt-3 text-center">
-          @php $style = $files->specimen ? "" : "display: none;"; @endphp
-          <img id="previewImage" src="{{ asset('storage/' . $files->specimen) }}" alt="{{ $files->libelle }}" style="{{ $style }}">
+          @php $style = $file->specimen ? "" : "display: none;"; @endphp
+          <img id="previewImage" src="{{ asset('storage/' . $file->specimen) }}" alt="{{ $file->libelle }}" style="{{ $style }}">
         </div>
       </form>
     </div>
