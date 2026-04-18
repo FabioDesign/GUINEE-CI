@@ -15,7 +15,7 @@ class ProfileController extends Controller
     //Liste des Profils
 	public function index()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -32,7 +32,7 @@ class ProfileController extends Controller
 	// Afficher le détail d'un profil
 	public function show($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
@@ -40,8 +40,8 @@ class ProfileController extends Controller
 		// Menu
 		$currentMenu = 'profiles';
 		// Vérifier si le profil existe
-		$profile = Profile::where('uid', $uid)->first();
-		if (!$profile) {
+		$query = Profile::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
 			return redirect('/profiles');
 		}
@@ -53,18 +53,18 @@ class ProfileController extends Controller
 			->orderBy('position')
 			->get();
 		// Récupérer les permissions actuelles du profil
-		$currentPermissions = Permission::where('profile_id', $profile->id)
+		$currentPermissions = Permission::where('profile_id', $query->id)
 			->get()
 			->map(function($permission) {
 				return $permission->menu_id . '|' . $permission->action_id;
 			})
 			->toArray();
-		return view('pages.profiles.show', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'profile', 'currentPermissions'));
+		return view('pages.profiles.show', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions'));
 	}
     //Liste des Profils
 	public function create()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -84,7 +84,7 @@ class ProfileController extends Controller
 	//Add/Mod Profil
 	public function store(request $request)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		//Validator
@@ -115,7 +115,7 @@ class ProfileController extends Controller
 		];
 		DB::beginTransaction(); // Démarrer une transaction
 		try {
-			$profile = Profile::create($set);
+			$query = Profile::create($set);
 			// Valider la transaction
 			DB::commit();
 			// Si des permissions sont fournies, les associer au profil
@@ -126,11 +126,17 @@ class ProfileController extends Controller
 					Permission::firstOrCreate([
 						'menu_id' => $permission[0],
 						'action_id' => $permission[1],
-						'profile_id' => $profile->id,
+						'profile_id' => $query->id,
 					]);
 				}
 			}
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: {$request->libelle}", 'Ajouter', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Profil: {$request->libelle}",
+				'Ajouter',
+				Session::get('avatar')
+			);
 			return "1|Profil enregistré avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
@@ -141,7 +147,7 @@ class ProfileController extends Controller
 	// Afficher le formulaire d'édition d'un profil
 	public function edit($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
@@ -149,8 +155,8 @@ class ProfileController extends Controller
 		// Menu
 		$currentMenu = 'profiles';
 		// Vérifier si le profil existe
-		$profile = Profile::where('uid', $uid)->first();
-		if (!$profile) {
+		$query = Profile::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("Profile::edit - Aucun profil trouvé pour l'UID : {$uid}");
 			return redirect('/profiles');
 		}
@@ -163,18 +169,18 @@ class ProfileController extends Controller
 			->orderBy('position')
 			->get();
 		// Récupérer les permissions actuelles du profil
-		$currentPermissions = Permission::where('profile_id', $profile->id)
+		$currentPermissions = Permission::where('profile_id', $query->id)
 			->get()
 			->map(function($permission) {
 				return $permission->menu_id . '|' . $permission->action_id;
 			})
 			->toArray();
-		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'profile', 'currentPermissions'));
+		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions'));
 	}
 	// Mettre à jour un profil
 	public function update(Request $request, $uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		// Validator
@@ -200,8 +206,8 @@ class ProfileController extends Controller
 			return "0|" . $validator->errors()->first();
 		}
 		// Vérifier si le profil existe
-		$profile = Profile::where('uid', $uid)->first();
-		if (!$profile) {
+		$query = Profile::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
 			return "0|Profil non trouvé.";
 		}
@@ -212,9 +218,9 @@ class ProfileController extends Controller
 		DB::beginTransaction(); // Démarrer une transaction
 		try {
 			// Mettre à jour le profil
-			$profile->update($set);
+			$query->update($set);
 			// Supprimer les anciennes permissions
-			Permission::where('profile_id', $profile->id)->delete();
+			Permission::where('profile_id', $query->id)->delete();
 			// Ajouter les nouvelles permissions
 			if ($request->has('permissions') && is_array($request->permissions)) {
 				foreach ($request->permissions as $permissionValue) {
@@ -223,12 +229,18 @@ class ProfileController extends Controller
 					Permission::firstOrCreate([
 						'menu_id' => $permission[0],
 						'action_id' => $permission[1],
-						'profile_id' => $profile->id,
+						'profile_id' => $query->id,
 					]);
 				}
 			}
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: {$request->libelle}", 'Modifier', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Profil: {$request->libelle}",
+				'Modifier',
+				Session::get('avatar')
+			);
 			return "1|Profil modifié avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
@@ -239,34 +251,40 @@ class ProfileController extends Controller
 	// Supprimer un profil
 	public function destroy($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		try {
 			// Vérifier si le profil existe
-			$profile = Profile::where('uid', $uid)->first();
-			if (!$profile) {
+			$query = Profile::where('uid', $uid)->first();
+			if (!$query) {
 				Log::warning("Profile::destroy - Aucun profil trouvé pour l'UID : {$uid}");
 				return "0|Profil non trouvé.";
 			}
 			// Ne pas permettre la désactivation du profil admin
-			if ($profile->id == 1) {
+			if ($query->id == 1) {
 				Log::warning("Profile::destroy - Profil administrateur pour l'UID : {$uid}");
 				return "0|Le profil administrateur ne peut pas être supprimé.";
 			}
 			// Vérifier si des utilisateurs sont associés
-			$userCount = User::where('profile_id', $profile->id)->count();
+			$userCount = User::where('profile_id', $query->id)->count();
 			if ($userCount > 0) {
 				Log::warning("Profile::destroy - Ce profil est associé à {$userCount} utilisateur(s).");
 				return "0|Ce profil est associé à {$userCount} utilisateur(s).";
 			}
 			DB::beginTransaction();
 			// Supprimer les permissions associées
-			Permission::where('profile_id', $profile->id)->delete();
+			Permission::where('profile_id', $query->id)->delete();
 			// Supprimer le profil
-			$profile->delete();
+			$query->delete();
 			DB::commit();
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Profil: " . $profile->libelle, 'Supprimer', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Profil: " . $query->libelle,
+				'Supprimer',
+				Session::get('avatar')
+			);
 			return "1|Profil supprimé avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack();

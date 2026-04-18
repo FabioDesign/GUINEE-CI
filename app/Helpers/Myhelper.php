@@ -4,8 +4,8 @@
 	use \Carbon\Carbon;
 	use Illuminate\Support\Str;
 	use Illuminate\Http\Request;
-	use Illuminate\Support\Facades\Log;
 	use App\Models\{Logs, Permission, User};
+	use Illuminate\Support\Facades\{DB, Log};
 	use PHPMailer\PHPMailer\{PHPMailer, SMTP};
 
 	class Myhelper
@@ -36,19 +36,31 @@
       		return $string;
     	}
 		//Piste d'audit
-		public static function logs($username, $profil, $libelle, $action, $color, $avatar){
+		public static function logs($username, $profil, $libelle, $action, $avatar) {
+			switch ($action) {
+				case 'Ajouter' : $color = 'success';
+					break;
+				case 'Modifier' : $color = 'warning';
+					break;
+				case 'Supprimer' : $color = 'danger';
+					break;
+				default : $color = 'primary';
+			}
+			$set = [
+				'username' => $username,
+				'profil' => $profil,
+				'libelle' => $libelle,
+				'action' => $action,
+				'color' => $color,
+				'avatar' => $avatar,
+			];
+			DB::beginTransaction();
 			try {
-				$set = [
-					'color' => $color,
-					'action' => $action,
-					'profil' => $profil,
-					'avatar' => $avatar,
-					'libelle' => $libelle,
-					'username' => $username,
-				];
 				Logs::create($set);
+				DB::commit();
 			} catch(Exception $e) {
-				Log::warning("Logs::Error : {$e->getMessage()}");
+				DB::rollBack();
+				Log::warning("Logs::Error : {$e->getMessage()} " . json_encode($set));
 			}
 		}
     	//Send mail

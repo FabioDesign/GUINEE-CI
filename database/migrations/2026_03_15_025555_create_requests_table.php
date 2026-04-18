@@ -16,17 +16,20 @@ return new class extends Migration
             $table->uuid('uid');
             $table->string('code', 50)->unique();
             $table->date('daterdv_at');
+            $table->text('motif')->nullable();
             $table->tinyInteger('status')->default('0');
             $table->timestamps();
             $table->softDeletes();
             $table->timestamp('transmitted_at')->nullable();
             $table->timestamp('validated_at')->nullable();
+            $table->timestamp('rejeted_at')->nullable();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
+            $table->integer('transmitted_by')->default('0');
+            $table->integer('validated_by')->default('0');
+            $table->integer('rejeted_by')->default('0');
             $table->integer('document_id');
-            $table->integer('created_by');
-            $table->integer('updated_by')->default('0');
-            $table->integer('deleted_by')->default('0');
-            $table->integer('validated_id')->default('0');
-            $table->integer('transmitted_id')->default('0');
         });
     }
 

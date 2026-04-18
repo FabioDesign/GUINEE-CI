@@ -6,7 +6,7 @@
         <form class="formField">
             <input type="hidden" id="rootForm" value="towns">
             <div class="row form-group fv-row mb-2">
-                <div class="col-lg-6">
+                <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
                     <select id="country_id" name="country_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
@@ -15,7 +15,7 @@
 						@endforeach
 					</select>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Ville : <span class="text-danger">*</span></label>
                     <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir la ville" />
                 </div>

@@ -15,20 +15,22 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 // Action
                 ActionSeeder::class,
+                // Pays
+                CountrySeeder::class,
                 // Menu
                 MenuSeeder::class,
-                // Period
-                PeriodSeeder::class,
+                // Nationalité
+                NationalitySeeder::class,
                 // Profil
                 ProfileSeeder::class,
                 // Menu-Action
                 MenuActionSeeder::class,
                 // Permission
                 PermissionSeeder::class,
-                // Utilisateur
-                UserSeeder::class,
                 // Ville
                 TownSeeder::class,
+                // Utilisateur
+                UserSeeder::class,
             ]);
         } catch (QueryException $e) {
             $this->command->info("Erreur d'insertion détectée. Processus de seed ignoré pour cet enregistrement.");

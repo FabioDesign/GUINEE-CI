@@ -10,10 +10,6 @@
   color: #FFF !important;
   background: #909090 !important;
 }
-.fieldError {
-  border-radius: 0.42rem;
-  border: 1px solid #E35B5A !important;
-}
 .msgError {
   width: 100%;
   color:#E35B5A;

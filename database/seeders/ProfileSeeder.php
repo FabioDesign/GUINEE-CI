@@ -20,12 +20,5 @@ class ProfileSeeder extends Seeder
                 'created_by' => 1,
             ]
         );
-        Profile::firstOrCreate(
-            ['libelle' => "Consul"],
-            [
-                'description' => "Gestionnaire du système.",
-                'created_by' => 1,
-            ]
-        );
     }
 }

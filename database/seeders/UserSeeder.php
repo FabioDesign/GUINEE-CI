@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['whatsapp' => '2250102030405'],
             [
+                'title' => 'M.',
                 'lastname' => 'OGOU',
                 'firstname' => 'Fabrice',
                 'gender' => 'M',
@@ -25,7 +26,7 @@ class UserSeeder extends Seeder
                 'password_at' => now(),
                 'birthday_at' => '1990-05-15',
                 'birthplace' => 'Cocody',
-                'size' => '175',
+                'size' => '1.75',
                 'hair' => 'Brun',
                 'complexion' => 'Clair',
                 'profession' => 'Ingénieur',
@@ -34,13 +35,15 @@ class UserSeeder extends Seeder
                 'person_fullname' => 'JB OGOU',
                 'person_number' => '2250102030406',
                 'person_address' => '10 rue de Cocody, 75001 Abidjan',
-                'month' => 'Mai',
-                'year' => 2000,
+                'arrival_at' => '2000-05-00',
                 'status' => 1,
                 'activated_at' => now(),
-                'town_id' => 1,
-                'activated_id' => 1,
+                'created_by' => 1,
+                'activated_by' => 1,
+                'town_id' => 2,
                 'profile_id' => 1,
+                'country_id' => 53,
+                'nationality_id' => 49,
             ]
         );
     }

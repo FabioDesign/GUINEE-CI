@@ -59,11 +59,18 @@ class PasswordController extends Controller
 				'password_at' => now(),
 				'password' => Hash::make($password),
 			]);
+            // Avatar
             if ($user->avatar != '')
-                $avatar = 'storage/media/avatar/' . $user->avatar;
+                $avatar = $user->avatar;
             else
-                $avatar = $user->gender == 'M' ? 'assets/img/homme.jpg' : 'assets/img/femme.jpg';
-			Myhelper::logs($username, $user->libelle, 'Mot de passe oublié', 'Modifier', 'warning', $avatar);
+                $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
+			Myhelper::logs(
+                $username,
+                $user->libelle,
+                'Mot de passe oublié',
+                'Modifier',
+                $avatar
+            );
 		    return "1|Mot de passe envoyé par mail avec succès.";
 		} else {
             Log::warning("Forgotpass::store - Adresse e-mail non trouvée : {$request->email}");

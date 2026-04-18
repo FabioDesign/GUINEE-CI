@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('menu_actions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->smallIncrements('id');
             $table->integer('menu_id');
             $table->integer('action_id');
             $table->unique(['menu_id', 'action_id']);

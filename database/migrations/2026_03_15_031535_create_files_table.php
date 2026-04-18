@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->increments('id');
+            $table->smallIncrements('id');
             $table->uuid('uid');
             $table->string('libelle', 255);
             $table->text('specimen');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('created_by');
-            $table->integer('updated_by')->default('0');
-            $table->integer('deleted_by')->default('0');
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
         });
     }
 

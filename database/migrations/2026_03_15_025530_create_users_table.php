@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid('uid');
+            $table->string('title', 5);
             $table->string('lastname', 255);
             $table->string('firstname', 255);
             $table->string('gender', 1);
@@ -24,17 +25,16 @@ return new class extends Migration
             $table->timestamp('password_at')->nullable();
             $table->date('birthday_at');
             $table->string('birthplace', 255);
-            $table->string('size', 255);
-            $table->string('hair', 255);
-            $table->string('complexion', 255);
-            $table->string('profession', 255);
-            $table->string('father_fullname', 255);
-            $table->string('mother_fullname', 255);
-            $table->string('person_fullname', 255);
-            $table->string('person_number', 255);
-            $table->string('person_address', 255);
-            $table->string('month', 20);
-            $table->year('year');
+            $table->string('size', 255)->nullable();
+            $table->string('hair', 255)->nullable();
+            $table->string('complexion', 255)->nullable();
+            $table->string('profession', 255)->nullable();
+            $table->string('father_fullname', 255)->nullable();
+            $table->string('mother_fullname', 255)->nullable();
+            $table->string('person_fullname', 255)->nullable();
+            $table->string('person_number', 255)->nullable();
+            $table->string('person_address', 255)->nullable();
+            $table->char('arrival_at', 10)->nullable();
             $table->string('stamp', 20)->nullable();
             $table->string('signature', 20)->nullable();
             $table->string('avatar', 20)->nullable();
@@ -43,10 +43,14 @@ return new class extends Migration
             $table->timestamps();
             $table->timestamp('activated_at')->nullable();
             $table->timestamp('blocked_at')->nullable();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->integer('blocked_by')->default('0');
+            $table->integer('activated_by')->default('0');
             $table->integer('town_id');
-            $table->integer('activated_id')->default('0');
-            $table->integer('blocked_id')->default('0');
             $table->integer('profile_id')->default('0');
+            $table->integer('country_id')->default('0');
+            $table->integer('nationality_id');
         });
     }
 

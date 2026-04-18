@@ -5,20 +5,20 @@
   <div class="card-body py-4">
     <form class="formField">
       @method('PUT')
-      <input type="hidden" id="rootForm" value="towns/{{ $town->uid }}">
+      <input type="hidden" id="rootForm" value="towns/{{ $query->uid }}">
         <div class="row form-group fv-row mb-2">
-          <div class="col-lg-6">
+          <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
             <select id="country_id" name="country_id" class="form-control">
               <option value="" selected disabled>Sélectionner</option>
-              @foreach($query as $data)
-                <option value="{{ $data->id }}" @php echo $data->id == $town->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+              @foreach($list as $data)
+                <option value="{{ $data->id }}" @php echo $data->id == $query->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
               @endforeach
             </select>
           </div>
-          <div class="col-lg-6">
+          <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Ville : <span class="text-danger">*</span></label>
-            <input type="text" name="libelle" value="{{ old('libelle', $town->libelle) }}" class="form-control requiredField" placeholder="Saisir la ville" />
+            <input type="text" name="libelle" value="{{ old('libelle', $query->libelle) }}" class="form-control requiredField" placeholder="Saisir la ville" />
           </div>
       </div>
       <span class="msgError" style="display: none;"></span>

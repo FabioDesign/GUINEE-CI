@@ -511,6 +511,10 @@ class UserController extends Controller
             if ($user->profile && $user->profile->status == 0) {
                 return '0|Votre profil est désactivé.';
             }
+            // Vérifier si le compte n'est pas rattaché à une Ambassade
+            if ($user->country && $user->country->embassy == 0) {
+                return "0|Votre compte n'est pas rattaché à une Ambassade.";
+            }
             // Tentative de connexion
             if (Auth::attempt($credentials)) {
                 // Connexion réussie
@@ -539,16 +543,23 @@ class UserController extends Controller
                 // Stocker des informations supplémentaires en session
                 Session::put('username', $username);
                 Session::put('profil', $user->profile->libelle ?? '');
+                Session::put('embassy', $user->country->libelle ?? '');
+                Session::put('map', $user->country->alpha ?? '');
                 Session::put('menus', $menus);
                 // Avatar
-                if ($user->avatar != '') {
+                if ($user->avatar != '')
                     $avatar = $user->avatar;
-                } else {
+                else
                     $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-                }
                 Session::put('avatar', $avatar);
                 // Log de connexion
-                Myhelper::logs($username, $user->profile->libelle ?? '', $menus->first()->libelle, 'Connecter', 'primary', $avatar);
+                Myhelper::logs(
+                    $username,
+                    $user->profile->libelle ?? '',
+                    $menus->first()->libelle,
+                    'Connecter',
+                    $avatar
+                );
                 return '1|' . $page;
             } else {
                 // Mot de passe incorrect
@@ -568,8 +579,7 @@ class UserController extends Controller
                 Session::get('username'), 
                 Session::get('profil'), 
                 Session::get('title'), 
-                'Deconnecter', 
-                'primary', 
+                'Deconnecter',
                 Session::get('avatar')
             );
             // Déconnexion avec Laravel Auth

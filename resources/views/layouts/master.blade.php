@@ -78,7 +78,7 @@
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title">Ambassade de la République de Guinée en Côte d’Ivoire</span>
+											<span class="menu-title" style="font-size: 18px;">Ambassade de la République de Guinée - {{ Session::get('embassy') }}</span>
 										</span>
 										<!--end:Menu link-->
 									</div>
@@ -110,7 +110,6 @@
 												<div class="d-flex flex-column">
 													<div class="fw-bold d-flex align-items-center fs-5">{{ Session::get('username') }}</div>
 													<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ Session::get('profil') }}</a>
-													<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ Session::get('number') }}</a>
 												</div>
 												<!--end::Username-->
 											</div>
@@ -285,17 +284,17 @@
 						<!--begin::Footer-->
 						<div id="kt_app_footer" class="app-footer">
 							<!--begin::Footer container-->
-							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack">
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
 									<span class="text-muted fw-semibold me-1">2026&copy;</span>
-									<a href="#" class="text-gray-800 text-hover-primary">AmbaGUI-CI</a>
+									<a href="#" class="text-gray-800 text-hover-primary">Ambassade de la Guinée</a>
 								</div>
 								<!--end::Copyright-->
 								<!--begin::Menu-->
-								<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+								<ul class="menu order-1">
 									<li class="menu-item">
-										<a href="#" class="menu-link px-2">Ambassade de Guinée - Côte d’Ivoire</a>
+										<a href="#" class="menu-link px-2"><img alt="Logo" src="/assets/map/{{ Session::get('map') }}.png" class="h-30px" /></a>
 									</li>
 								</ul>
 								<!--end::Menu-->

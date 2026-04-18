@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Town;
-use App\Models\File;
-use App\Models\Profile;
 use App\Observers\ModelObserver;
 use Illuminate\Support\ServiceProvider;
-// import builder where defaultStringLength method is defined
 use Illuminate\Support\Facades\Schema;
+use App\Models\{Document, File, Profile, Town};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,8 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Fix for MySQL < 5.7.7 and MariaDB < 10.2.2
         Schema::defaultStringLength(191); //Update defaultStringLength
-        Town::observe(ModelObserver::class);
+        Document::observe(ModelObserver::class);
         File::observe(ModelObserver::class);
         Profile::observe(ModelObserver::class);
+        Town::observe(ModelObserver::class);
     }
 }

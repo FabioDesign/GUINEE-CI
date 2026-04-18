@@ -15,16 +15,17 @@ return new class extends Migration
             $table->id();
             $table->uuid('uid');
             $table->string('icone', 50);
-            $table->string('libelle', 255);
-            $table->string('amount', 50);
-            $table->integer('number');
-            $table->text('description');
+            $table->string('libelle', 50);
+            $table->decimal('amount', 10, 0);
+            $table->integer('day');
+            $table->text('description')->nullable();
             $table->tinyInteger('position')->default('0');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
-            $table->integer('period_id');
-            $table->integer('created_by');
-            $table->integer('updated_by')->default('0');
+            $table->softDeletes();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
         });
     }
 

@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('filename', 255);
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
             $table->integer('town_id');
             $table->integer('file_id');
             $table->integer('request_id');

@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periods', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('libelle', 50);
+        Schema::create('nationality', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('libelle');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('periods');
+        Schema::dropIfExists('nationality');
     }
 };

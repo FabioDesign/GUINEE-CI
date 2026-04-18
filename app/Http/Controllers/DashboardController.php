@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\{Auth};
 
 class DashboardController extends Controller
 {
 	//Tableau de bord
   	public function index(request $request)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		// Title

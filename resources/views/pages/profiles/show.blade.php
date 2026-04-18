@@ -9,11 +9,11 @@
         <div class="row form-group fv-row mb-2">
           <div class="col-lg-6">
             <label class="fw-bolder text-dark fs-5">Libellé :</label>
-            <input type="text" class="form-control" value="{{ $profile->libelle }}" readonly />
+            <input type="text" class="form-control" value="{{ $query->libelle }}" readonly />
           </div>
           <div class="col-lg-6">
             <label class="fw-bolder text-dark fs-5">Description :</label>
-            <input type="text" class="form-control" value="{{ $profile->description }}" readonly />
+            <input type="text" class="form-control" value="{{ $query->description }}" readonly />
           </div>
         </div>
         <div class="row form-group fv-row mb-2">
@@ -23,8 +23,8 @@
         </div>
         @foreach($menusWithActions as $menu)
           <div class="row form-group fv-row mb-2">
-            <label class="col-sm-12 col-xl-2 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->libelle }}</label>
-            <div class="col-sm-12 col-xl-10 checkbox-inline">
+            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->libelle }}</label>
+            <div class="col-md-10 col-12 checkbox-inline">
                 @foreach($menu->actions as $action)
                   @php
                     $isChecked = in_array($menu->id . '|' . $action->id, $currentPermissions);

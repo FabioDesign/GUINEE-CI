@@ -37,13 +37,13 @@
 						<!--begin::Title-->
 						<div class="title-left">
 							<img alt="Logo" src="/assets/img/amoirie.png" class="h-100px" />
-							<h2 class="text-white m-0">AmbaGui-CI</h2>
+							<h2 class="text-white m-0">République de Guinée</h2>
 						</div>
 						<div class="body-left">
 							<h1 class="text-white m-0">Gestion de documents consulaires</h1>
 						</div>
 						<div class="footer-left">
-							<h3 class="text-white fw-normal m-0">Portail officiel des démarches consulaires de l'Ambassade de la Guinée en Côte d'Ivoire.</h3>
+							<h3 class="text-white fw-normal m-0">Portail officiel des démarches consulaires des Ambassades de la Guinée.</h3>
 						</div>
 						<div class="footer-button">
 							@foreach($query as $data)

@@ -5,19 +5,23 @@ namespace App\Http\Controllers;
 use Session;
 use Myhelper;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use App\Models\{Town, File, Profile};
+use Illuminate\Support\Facades\{Auth, Log};
+use App\Models\{Document, File, Profile, Town};
 
 class StatusController extends Controller
 {
     public function update($type, $uid)
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
         try {
             // 🔁 Mapping dynamique
             $models = [
+                'documents' => [
+                    'model' => Document::class,
+                    'label' => 'Document'
+                ],
                 'files' => [
                     'model' => File::class,
                     'label' => 'Pièce à fournir'
@@ -58,9 +62,8 @@ class StatusController extends Controller
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
-                "{$label}: " . $item->libelle,
-                $action,
-                'success',
+                "{$label}: " . $item->libelle . " " .$action,
+				'Modifier',
                 Session::get('avatar')
             );
             return "1|{$label} " . Str::lower($action) . " avec succès.";

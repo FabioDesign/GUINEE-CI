@@ -1,6 +1,6 @@
 //Nombre entier
-function verif_num(champ) {
-  var chiffres = new RegExp('[0-9.]');
+function verif_int(champ) {
+  var chiffres = new RegExp('[0-9]');
   for(x = 0; x < champ.value.length; x++) {
     verif = chiffres.test(champ.value.charAt(x));
     if (verif == false) {
@@ -143,7 +143,7 @@ $(document).on('click', '.submitForm', function(e) {
   let hasError = false;
   $('.msgError').html('');
   let submitForm = $(this).html();
-  $('.fieldError').removeClass('fieldError');
+  $('.is-invalid').removeClass('is-invalid');
   let rootForm = $('#rootForm').val();
   let datasT = new FormData();
   $('.formField').find('input, select, textarea').each(function() {
@@ -164,7 +164,7 @@ $(document).on('click', '.submitForm', function(e) {
   $('.formField .requiredField').each(function() {
     if (jQuery.trim($(this).val()) === '') {
       $('.msgError').html("Veuillez renseigner les champs obligatoires !");
-      $(this).addClass('fieldError');
+      $(this).addClass('is-invalid');
       hasError = true;
     }
   });
@@ -172,7 +172,7 @@ $(document).on('click', '.submitForm', function(e) {
     if (!hasError) {
       if (!iCheck) {
         $('.msgError').html('Veuillez cocher au moins une case.');
-        $(this).addClass('fieldError');
+        $(this).addClass('is-invalid');
         hasError = true;
       }
     }
@@ -183,7 +183,7 @@ $(document).on('click', '.submitForm', function(e) {
       let regex = /^[0-9\s]*$/;
       if ((value != '')&&(!regex.test(value))) {
         $('.msgError').html("Téléphone non valide.");
-        $(this).addClass('fieldError');
+        $(this).addClass('is-invalid');
         hasError = true;
       }
     }
@@ -193,7 +193,7 @@ $(document).on('click', '.submitForm', function(e) {
       let value = jQuery.trim($(this).val());
       let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if ((value != '')&&(!regex.test(value))) {
-        $(this).addClass('fieldError');
+        $(this).addClass('is-invalid');
         $('.msgError').html("Adresse e-mail non valide.");
         hasError = true;
       }
@@ -203,11 +203,11 @@ $(document).on('click', '.submitForm', function(e) {
     if (!hasError) {
       if ($(this).val().length < 5) {
         $('.msgError').html("Les mots de passe doivent être supérieur à 5 caractères");
-        $(this).addClass('fieldError');
+        $(this).addClass('is-invalid');
         hasError = true;
       } else if ($('#newpass').val() !== $('#confirmpass').val()) {
         $('.msgError').html("Les mots de passe ne sont pas identiques");
-        $('#newpass, #confirmpass').addClass('fieldError');
+        $('#newpass, #confirmpass').addClass('is-invalid');
         hasError = true;
       }
     }
@@ -244,7 +244,7 @@ $(document).on('click', '.submitForm', function(e) {
           });
         } else{
           $('.msgError').html(splitter[1]);
-          $(splitter[2]).addClass('fieldError');
+          $(splitter[2]).addClass('is-invalid');
           $('.submitForm').removeClass('not-active').addClass('btn-success').html(submitForm);
         }
       }

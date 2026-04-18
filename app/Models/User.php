@@ -16,7 +16,44 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'title',
+        'lastname',
+        'firstname',
+        'gender',
+        'whatsapp',
+        'number',
+        'email',
+        'password',
+        'password_at',
+        'birthday_at',
+        'birthplace',
+        'size',
+        'hair',
+        'complexion',
+        'profession',
+        'father_fullname',
+        'mother_fullname',
+        'person_fullname',
+        'person_number',
+        'person_address',
+        'arrival_at',
+        'stamp',
+        'signature',
+        'avatar',
+        'login_at',
+        'status',
+        'activated_at',
+        'blocked_at',
+        'created_by',
+        'updated_by',
+        'blocked_by',
+        'activated_by',
+        'town_id',
+        'profile_id',
+        'country_id',
+        'nationality_id',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -62,5 +99,11 @@ class User extends Authenticatable
     public function town()
     {
         return $this->belongsTo(Town::class, 'town_id');
+    }
+
+    // Relation avec le Pays
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

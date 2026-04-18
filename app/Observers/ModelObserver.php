@@ -8,21 +8,21 @@ class ModelObserver
 {
     public function creating($model)
     {
-        if (auth()->check()) {
+        if (Auth::check()) {
             $model->created_by = Auth::id();
         }
     }
 
     public function updating($model)
     {
-        if (auth()->check()) {
+        if (Auth::check()) {
             $model->updated_by = Auth::id();
         }
     }
 
     public function deleting($model)
     {
-        if (! $model->isForceDeleting() && auth()->check()) {
+        if (! $model->isForceDeleting() && Auth::check()) {
             $model->deleted_by = Auth::id();
             $model->saveQuietly(); // évite boucle infinie 🔥
         }

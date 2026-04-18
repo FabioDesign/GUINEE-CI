@@ -15,7 +15,7 @@ class FileController extends Controller
     //Liste des Pièces à fournir
 	public function index()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -32,7 +32,7 @@ class FileController extends Controller
     //Liste des Pièces à fournir
 	public function create()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -47,7 +47,7 @@ class FileController extends Controller
 	//Add Pièce à fournir
 	public function store(request $request)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		// Validator
@@ -82,7 +82,13 @@ class FileController extends Controller
 		try {
 			File::create($set);
 			DB::commit();
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Pièce à fournir: {$request->libelle}", 'Ajouter', 'success', Session::get('avatar'));
+            Myhelper::logs(
+                Session::get('username'), 
+                Session::get('profil'), 
+                "Pièce à fournir: {$request->libelle}",
+				'Ajouter',
+				Session::get('avatar')
+			);
 			return "1|Pièce à fournir enregistrée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack();
@@ -93,7 +99,7 @@ class FileController extends Controller
 	// Afficher le formulaire d'édition d'une pièce à fournir
 	public function edit($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
@@ -101,20 +107,20 @@ class FileController extends Controller
 		// Menu
 		$currentMenu = 'files';
 		// Vérifier si la pièce à fournir existe
-		$file = File::where('uid', $uid)->first();
-		if (!$file) {
+		$query = File::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("File::edit - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
 			return redirect('/files');
 		}
 		// Modal
 		$addmodal = '<a href="/files" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
-		return view('pages.files.edit', compact('title', 'currentMenu', 'addmodal', 'file'));
+		return view('pages.files.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
 	// Mettre à jour une pièce à fournir
 	public function update(Request $request, $uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		// Validator
@@ -156,7 +162,13 @@ class FileController extends Controller
 			// Mettre à jour la pièce à fournir
 			$file->update($set);
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Pièce à fournir: {$request->libelle}", 'Modifier', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Pièce à fournir: {$request->libelle}",
+				'Modifier',
+				Session::get('avatar')
+			);
 			return "1|Pièce à fournir modifiée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
@@ -167,7 +179,7 @@ class FileController extends Controller
 	// Supprimer une pièce à fournir
 	public function destroy($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		try {
@@ -187,7 +199,13 @@ class FileController extends Controller
 			// Supprimer la pièce à fournir
 			$file->delete();
 			DB::commit();
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Pièce à fournir: " . $file->libelle, 'Supprimer', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'), 
+				Session::get('profil'),
+				"Pièce à fournir: " . $file->libelle,
+				'Supprimer',
+				Session::get('avatar')
+			);
 			return "1|Pièce à fournir supprimée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack();

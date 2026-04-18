@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Country extends Model
+class Nationality extends Model
 {
-    public $table = 'country';
+    public $table = 'nationality';
     
     public $timestamps = false;
 }

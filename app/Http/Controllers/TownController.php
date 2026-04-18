@@ -8,14 +8,14 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\{Country, Town, User};
-use Illuminate\Support\Facades\{Auth, DB, Log, Storage, Validator};
+use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 
 class TownController extends Controller
 {
     //Liste des Villes
 	public function index()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -34,7 +34,7 @@ class TownController extends Controller
     //Liste des villes
 	public function create()
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
@@ -55,7 +55,7 @@ class TownController extends Controller
 	//Add ville
 	public function store(request $request)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		// Validator
@@ -85,7 +85,13 @@ class TownController extends Controller
 		try {
 			Town::create($set);
 			DB::commit();
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Ville: {$request->libelle}", 'Ajouter', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Ville: {$request->libelle}",
+				'Ajouter',
+				Session::get('avatar')
+			);
 			return "1|Ville enregistrée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack();
@@ -96,7 +102,7 @@ class TownController extends Controller
 	// Afficher le formulaire d'édition d'une ville
 	public function edit($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
@@ -104,26 +110,22 @@ class TownController extends Controller
 		// Menu
 		$currentMenu = 'towns';
 		// Vérifier si la ville existe
-		$town = Town::where('uid', $uid)->first();
-		if (!$town) {
+		$query = Town::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("Town::edit - Aucune ville trouvée pour l'UID : {$uid}");
 			return redirect('/towns');
 		}
 		// Modal
-		$addmodal = '<!--begin::Secondary button-->
-		<a href="/towns" class="btn btn-sm fw-bold btn-danger">Retour</a>
-		<!--end::Secondary button-->
-		<!--begin::Primary button-->
-		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>
-		<!--end::Primary button-->';
+		$addmodal = '<a href="/towns" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
 		//Requete Read
-		$query = Country::orderBy('libelle')->get();
-		return view('pages.towns.edit', compact('title', 'currentMenu', 'addmodal', 'town', 'query'));
+		$list = Country::orderBy('libelle')->get();
+		return view('pages.towns.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'list'));
 	}
 	// Mettre à jour une ville
 	public function update(Request $request, $uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		// Validator
@@ -146,8 +148,8 @@ class TownController extends Controller
 			return "0|" . $validator->errors()->first();
 		}
 		// Vérifier si le ville existe
-		$town = Town::where('uid', $uid)->first();
-		if (!$town) {
+		$query = Town::where('uid', $uid)->first();
+		if (!$query) {
 			Log::warning("Town::update - Aucune ville trouvée pour l'UID : {$uid}");
 			return "0|Ville non trouvée.";
 		}
@@ -158,9 +160,15 @@ class TownController extends Controller
 		DB::beginTransaction(); // Démarrer une transaction
 		try {
 			// Mettre à jour la ville
-			$town->update($set);
+			$query->update($set);
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Ville: {$request->libelle}", 'Modifier', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Ville: {$request->libelle}",
+				'Modifier',
+				Session::get('avatar')
+			);
 			return "1|Ville modifiée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
@@ -171,7 +179,7 @@ class TownController extends Controller
 	// Supprimer une ville
 	public function destroy($uid)
 	{
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return 'x';
         }
 		try {
@@ -191,7 +199,13 @@ class TownController extends Controller
 			// Supprimer la ville
 			$town->delete();
 			DB::commit();
-			Myhelper::logs(Session::get('username'), Session::get('profil'), "Ville: " . $town->libelle, 'Supprimer', 'success', Session::get('avatar'));
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Ville: " . $town->libelle,
+				'Supprimer',
+				Session::get('avatar')
+			);
 			return "1|Ville supprimée avec succès.";
 		} catch (\Exception $e) {
 			DB::rollBack();
