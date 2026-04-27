@@ -64,16 +64,19 @@ class FileController extends Controller
 			'libelle.unique' => "Le libellé existe déjà dans la base de données.",
 			'specimen.required' => "Le spécimen est obligatoire.",
 			'specimen.file' => "Le spécimen doit être un fichier.",
-			'specimen.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
+			'specimen.mimes' => "Le spécimen doit être un fichier de type : png, jpg ou jpeg",
 			'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
 		]);
 		// Error field
 		if ($validator->fails()) {
 			Log::warning("File::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
 		}
 		// Enregistrer le fichier
-		$path = $request->file('specimen')->store('files', 'public');
+		$path = $request->file('specimen')->store('specimens', 'public');
 		$set = [
 			'specimen' => $path,
 			'libelle' => $request->libelle,
@@ -89,11 +92,17 @@ class FileController extends Controller
 				'Ajouter',
 				Session::get('avatar')
 			);
-			return "1|Pièce à fournir enregistrée avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Pièce à fournir enregistrée avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("File::store : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de l'enregistrement de la Pièce à fournir.";
+			Log::warning("File::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de l'enregistrement.",
+			]);
 		}
 	}
 	// Afficher le formulaire d'édition d'une pièce à fournir
@@ -123,42 +132,48 @@ class FileController extends Controller
         if (!Auth::check()) {
             return 'x';
         }
-		// Validator
-		$validator = Validator::make($request->all(), [
-			'libelle' => [
-				'required',
-				Rule::unique('files')->where(function ($query) use ($uid) {
-					return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
-				}),
-			],
-			'specimen' => 'required|file|mimes:png,jpg,jpeg|max:2048',
-		], [
-			'libelle.required' => "Le libellé est obligatoire.",
-			'libelle.unique' => "Le libellé existe déjà dans la base de données.",
-			'specimen.required' => "Le spécimen est obligatoire.",
-			'specimen.file' => "Le spécimen doit être un fichier.",
-			'specimen.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
-			'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
-		]);
-		// Error field
-		if ($validator->fails()) {
-			Log::warning("File::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
-		}
-		// Vérifier si le pièce à fournir existe
-		$file = File::where('uid', $uid)->first();
-		if (!$file) {
-			Log::warning("File::update - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
-			return "0|Pièce à fournir non trouvée.";
-		}
-		// Enregistrer le fichier
-		$path = $request->file('specimen')->store('files', 'public');
-		$set = [
-			'specimen' => $path,
-			'libelle' => $request->libelle,
-		];
-		DB::beginTransaction(); // Démarrer une transaction
-		try {
+        try {
+			// Vérifier si le pièce à fournir existe
+			$file = File::where('uid', $uid)->first();
+			if (!$file) {
+				Log::warning("File::update - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
+				return response()->json([
+					'status' => 0,
+					'message' => "Pièce à fournir non trouvée.",
+				]);
+			}
+			// Validator
+			$validator = Validator::make($request->all(), [
+				'libelle' => [
+					'required',
+					Rule::unique('files')->where(function ($query) use ($uid) {
+						return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+					}),
+				],
+				'specimen' => 'required|file|mimes:png,jpg,jpeg|max:2048',
+			], [
+				'libelle.required' => "Le libellé est obligatoire.",
+				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+				'specimen.required' => "Le spécimen est obligatoire.",
+				'specimen.file' => "Le spécimen doit être un fichier.",
+				'specimen.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
+				'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
+			]);
+			// Error field
+			if ($validator->fails()) {
+				Log::warning("File::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+				return response()->json([
+					'status' => 0,
+					'message' => $validator->errors()->first(),
+				]);
+			}
+			// Enregistrer le fichier
+			$path = $request->file('specimen')->store('specimens', 'public');
+			$set = [
+				'specimen' => $path,
+				'libelle' => $request->libelle,
+			];
+			DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour la pièce à fournir
 			$file->update($set);
 			DB::commit(); // Valider la transaction
@@ -169,11 +184,17 @@ class FileController extends Controller
 				'Modifier',
 				Session::get('avatar')
 			);
-			return "1|Pièce à fournir modifiée avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Pièce à fournir modifiée avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("File::update : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la modification de la Pièce à fournir.";
+			Log::warning("File::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la modification.",
+			]);
 		}
 	}
 	// Supprimer une pièce à fournir
@@ -187,13 +208,19 @@ class FileController extends Controller
 			$file = File::where('uid', $uid)->first();
 			if (!$file) {
 				Log::warning("File::destroy - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
-				return "0|Pièce à fournir non trouvée.";
+				return response()->json([
+					'status' => 0,
+					'message' => "Pièce à fournir non trouvée.",
+				]);
 			}
 			// Vérifier si des utilisateurs sont associés
 			$fileCount = Attachment::where('file_id', $file->id)->count();
 			if ($fileCount > 0) {
 				Log::warning("File::destroy - Cette pièce à fournir est associée à {$fileCount} documents(s).");
-				return "0|Cette pièce à fournir est associée à {$fileCount} documents(s).";
+				return response()->json([
+					'status' => 0,
+					'message' => "Cette pièce à fournir est associée à {$fileCount} documents(s).",
+				]);
 			}
 			DB::beginTransaction();
 			// Supprimer la pièce à fournir
@@ -206,11 +233,17 @@ class FileController extends Controller
 				'Supprimer',
 				Session::get('avatar')
 			);
-			return "1|Pièce à fournir supprimée avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Pièce à fournir supprimée avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("File::destroy : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la suppression.";
+			Log::warning("File::destroy - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la suppression.",
+			]);
 		}
 	}
 }

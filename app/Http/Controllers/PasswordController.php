@@ -31,7 +31,10 @@ class PasswordController extends Controller
         // Error field
         if ($validator->fails()) {
             Log::warning("Forgotpass::store - Validator : {$validator->errors()->first()} - {$request->email}");
-          return $validator->errors()->first();
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
         }
 		//Requete Read
 		$user = User::join('profiles', 'profiles.id', '=', 'users.profile_id')
@@ -71,40 +74,41 @@ class PasswordController extends Controller
                 'Modifier',
                 $avatar
             );
-		    return "1|Mot de passe envoyé par mail avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Mot de passe envoyé par mail avec succès.",
+			]);
 		} else {
             Log::warning("Forgotpass::store - Adresse e-mail non trouvée : {$request->email}");
-		    return "0|Adresse e-mail non trouvée.";
+			return response()->json([
+				'status' => 0,
+				'message' => "Adresse e-mail non trouvée.",
+			]);
         }
 	}
+    // Liste des utilisateurs
+    public function edit()
+    {
+        if (!Auth::check()) {
+            return redirect('/');
+        }
+		//Title
+		$title = 'Gestion des utilisateurs';
+		//Menu
+		$currentMenu = 'users';
+		//Modal
+		$actionIds = Myhelper::actions(Auth::user()->profile_id, 7);
+		$addmodal = in_array(2, $actionIds) ? '<a href="/users/create" class="btn btn-sm fw-bold btn-primary">Ajouter un utilisateur</a>':'';
+		//Requete Read
+		$query = User::orderByDesc('created_at')->get();
+        return view('pages.users.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
+    }
     //Modification de Mot de passe
-    /**
-    * @OA\Post(
-    *   path="/api/password/editpass",
-    *   tags={"Password"},
-    *   operationId="editpass",
-    *   description="Modification de Mot de passe",
-    *   security={{"bearer":{}}},
-    *   @OA\RequestBody(
-    *      required=true,
-    *      @OA\JsonContent(
-    *         required={"oldpass", "password", "password_confirmation"},
-    *         @OA\Property(property="oldpass", type="string", format="password"),
-    *         @OA\Property(property="password", type="string", format="password"),
-    *         @OA\Property(property="password_confirmation", type="string", format="password")
-    *      )
-    *   ),
-    *   @OA\Response(response=200, description="Mot de passe modifié avec succès."),
-    *   @OA\Response(response=400, description="Serveur indisponible."),
-    *   @OA\Response(response=404, description="Page introuvable.")
-    * )
-    */
-    public function editpass(Request $request){
-        //User
-        $user = Auth::user();
-		App::setLocale($user->lg);
-        //Data
-        Log::notice("ID Utilisateur : {$user->id} - Requête : " . json_encode($request->all()));
+    public function update(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect('x');
+        }
         //Validator
         $validator = Validator::make($request->all(), [
             'oldpass' => 'required|min:8',

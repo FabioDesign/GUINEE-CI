@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +18,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
+        'code',
+        'civility',
         'lastname',
         'firstname',
         'gender',
@@ -29,9 +31,11 @@ class User extends Authenticatable
         'birthday_at',
         'birthplace',
         'size',
-        'hair',
+        'hairs',
         'complexion',
         'profession',
+        'particular_sign',
+        'home_address',
         'father_fullname',
         'mother_fullname',
         'person_fullname',
@@ -47,11 +51,12 @@ class User extends Authenticatable
         'blocked_at',
         'created_by',
         'updated_by',
-        'blocked_by',
+        'deleted_by',
         'activated_by',
+        'blocked_by',
         'town_id',
         'profile_id',
-        'country_id',
+        'embassy_id',
         'nationality_id',
     ];
 
@@ -71,10 +76,12 @@ class User extends Authenticatable
      */
     protected $casts = [
         'birthday_at' => 'date',
+        'arrival_at' => 'date',
         'login_at' => 'datetime',
         'blocked_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
         'password_at' => 'datetime',
         'activated_at' => 'datetime',
     ];
@@ -104,6 +111,12 @@ class User extends Authenticatable
     // Relation avec le Pays
     public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class, 'embassy_id');
+    }
+
+    // Relation avec le Nationality
+    public function nationality()
+    {
+        return $this->belongsTo(Nationality::class, 'nationality_id');
     }
 }

@@ -33,7 +33,7 @@ Route::fallback(function() {
 });
 // Route pour les utilisateurs
 Route::controller(UserController::class)->group(function () {
-  Route::get('/', 'login');
+  Route::get('/', 'login')->name('login');
   Route::get('/logout', 'logout');
   Route::post('/users/auth', 'auth');
 });
@@ -59,9 +59,15 @@ Route::middleware(['auth'])->group(function () {
   Route::controller(UserController::class)->group(function () {
     Route::post('/avatar', 'avatar');
     Route::post('/profil', 'profil');
+    Route::get('/account', 'account');
   });
   // Routes pour les mots de passe
-  Route::post('/editpass', [PasswordController::class, 'editpass']);
+  Route::controller(PasswordController::class)->group(function () {
+    Route::get('/password', 'edit');
+    Route::post('/password', 'updaute');
+  });
+  // Routes pour liste des villes
+  Route::post('/towns/list', [TownController::class, 'list']);
   // Route pour les statuts
   Route::patch('/{type}/status/{uid}', [StatusController::class, 'update']);
   // Route pour les pistes d'audit

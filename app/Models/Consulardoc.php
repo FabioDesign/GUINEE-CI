@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Request extends Model
+class Consulardoc extends Model
 {
     use HasFactory, SoftDeletes;
 

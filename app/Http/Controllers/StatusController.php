@@ -6,7 +6,7 @@ use Session;
 use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{Document, File, Profile, Town};
+use App\Models\{Document, File, Profile, Town, User};
 
 class StatusController extends Controller
 {
@@ -34,10 +34,17 @@ class StatusController extends Controller
                     'model' => Town::class,
                     'label' => 'Ville'
                 ],
+                'users' => [
+                    'model' => User::class,
+                    'label' => 'Utilisateur'
+                ],
             ];
             // Vérifier si le type existe
             if (!isset($models[$type])) {
-                return "0|Type invalide.";
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Type invalide.",
+                ]);
             }
             $modelClass = $models[$type]['model'];
             $label = $models[$type]['label'];
@@ -45,12 +52,18 @@ class StatusController extends Controller
             $item = $modelClass::where('uid', $uid)->first();
             if (!$item) {
                 Log::warning("StatusController - Aucun {$label} trouvé pour UID : {$uid}");
-                return "0|{$label} non trouvé.";
+                return response()->json([
+                    'status' => 0,
+                    'message' => "{$label} non trouvé.",
+                ]);
             }
             // Cas spécifique : Profil admin
             if ($type === 'profiles' && $item->id == 1) {
                 Log::warning("StatusController - Tentative désactivation admin UID : {$uid}");
-                return "0|Le profil administrateur ne peut pas être désactivé.";
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Le profil administrateur ne peut pas être désactivé.",
+                ]);
             }
             // Changement de statut
             $newStatus = $item->status == 1 ? 0 : 1;
@@ -58,7 +71,7 @@ class StatusController extends Controller
             $item->update([
                 'status' => $newStatus,
             ]);
-            // 📝 Log
+            // Log
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
@@ -66,10 +79,16 @@ class StatusController extends Controller
 				'Modifier',
                 Session::get('avatar')
             );
-            return "1|{$label} " . Str::lower($action) . " avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "{$label} " . Str::lower($action) . " avec succès.",
+			]);
         } catch (\Exception $e) {
             Log::warning("StatusController : {$e->getMessage()}");
-            return "0|Erreur lors du changement de statut.";
+            return response()->json([
+                'status' => 0,
+                'message' => "Erreur lors du changement de statut.",
+            ]);
         }
     }
 }

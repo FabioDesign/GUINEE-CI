@@ -215,6 +215,12 @@ class MenuActionSeeder extends Seeder
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 7,
+                'action_id' => 4,
+            ]
+        );
+        MenuAction::firstOrCreate(
+            [
+                'menu_id' => 7,
                 'action_id' => 5,
             ]
         );

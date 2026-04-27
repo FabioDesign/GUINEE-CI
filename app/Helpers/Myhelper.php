@@ -10,6 +10,12 @@
 
 	class Myhelper
 	{
+		//Format Français
+		public static function months($month)
+		{
+			$months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+			return $months[$month-1];
+		}
 		// Recherche de droit d'accès
 		public static function actions($profile, $menu)
 		{

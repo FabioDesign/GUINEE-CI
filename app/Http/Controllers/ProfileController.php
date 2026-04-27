@@ -87,7 +87,7 @@ class ProfileController extends Controller
         if (!Auth::check()) {
             return 'x';
         }
-		//Validator
+		// Validator
 		$validator = Validator::make($request->all(), [
 			'libelle' => [
 				'required',
@@ -107,7 +107,10 @@ class ProfileController extends Controller
 		// Error field
 		if ($validator->fails()) {
 			Log::warning("Profile::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
 		}
 		$set = [
 			'libelle' => $request->libelle,
@@ -137,11 +140,17 @@ class ProfileController extends Controller
 				'Ajouter',
 				Session::get('avatar')
 			);
-			return "1|Profil enregistré avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Profil enregistré avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Profile::store : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de l'enregistrement du Profil.";
+			Log::warning("Profile::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de l'enregistrement.",
+			]);
 		}
 	}
 	// Afficher le formulaire d'édition d'un profil
@@ -183,44 +192,50 @@ class ProfileController extends Controller
         if (!Auth::check()) {
             return 'x';
         }
-		// Validator
-		$validator = Validator::make($request->all(), [
-			'libelle' => [
-				'required',
-				Rule::unique('profiles')->where(function ($query) use ($uid) {
-					return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
-				}),
-			],
-			'description' => 'required',
-			'permissions' => 'required|array',
-		], [
-			'libelle.required' => "Le libellé est obligatoire.",
-			'libelle.unique' => "Le libellé existe déjà dans la base de données.",
-			'description.required' => "La description est obligatoire.",
-			'permissions.required' => "Cocher au moins une case.",
-			'permissions.array' => "Format des permissions invalide.",
-		]);
-		// Error field
-		if ($validator->fails()) {
-			Log::warning("Profile::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
-		}
-		// Vérifier si le profil existe
-		$query = Profile::where('uid', $uid)->first();
-		if (!$query) {
-			Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
-			return "0|Profil non trouvé.";
-		}
-		$set = [
-			'libelle' => $request->libelle,
-			'description' => $request->description,
-		];
-		DB::beginTransaction(); // Démarrer une transaction
-		try {
+        try {
+			// Vérifier si le profil existe
+			$profile = Profile::where('uid', $uid)->first();
+			if (!$profile) {
+				Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
+				return response()->json([
+					'status' => 0,
+					'message' => "Profil non trouvé.",
+				]);
+			}
+			// Validator
+			$validator = Validator::make($request->all(), [
+				'libelle' => [
+					'required',
+					Rule::unique('profiles')->where(function ($query) use ($uid) {
+						return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+					}),
+				],
+				'description' => 'required',
+				'permissions' => 'required|array',
+			], [
+				'libelle.required' => "Le libellé est obligatoire.",
+				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+				'description.required' => "La description est obligatoire.",
+				'permissions.required' => "Cocher au moins une case.",
+				'permissions.array' => "Format des permissions invalide.",
+			]);
+			// Error field
+			if ($validator->fails()) {
+				Log::warning("Profile::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+				return response()->json([
+					'status' => 0,
+					'message' => $validator->errors()->first(),
+				]);
+			}
+			$set = [
+				'libelle' => $request->libelle,
+				'description' => $request->description,
+			];
+			DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour le profil
-			$query->update($set);
+			$profile->update($set);
 			// Supprimer les anciennes permissions
-			Permission::where('profile_id', $query->id)->delete();
+			Permission::where('profile_id', $profile->id)->delete();
 			// Ajouter les nouvelles permissions
 			if ($request->has('permissions') && is_array($request->permissions)) {
 				foreach ($request->permissions as $permissionValue) {
@@ -229,7 +244,7 @@ class ProfileController extends Controller
 					Permission::firstOrCreate([
 						'menu_id' => $permission[0],
 						'action_id' => $permission[1],
-						'profile_id' => $query->id,
+						'profile_id' => $profile->id,
 					]);
 				}
 			}
@@ -241,11 +256,17 @@ class ProfileController extends Controller
 				'Modifier',
 				Session::get('avatar')
 			);
-			return "1|Profil modifié avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Profil modifié avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Profile::update : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la modification du Profil.";
+			Log::warning("Profile::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la modification.",
+			]);
 		}
 	}
 	// Supprimer un profil
@@ -259,18 +280,27 @@ class ProfileController extends Controller
 			$query = Profile::where('uid', $uid)->first();
 			if (!$query) {
 				Log::warning("Profile::destroy - Aucun profil trouvé pour l'UID : {$uid}");
-				return "0|Profil non trouvé.";
+				return response()->json([
+					'status' => 0,
+					'message' => "Profil non trouvé.",
+				]);
 			}
 			// Ne pas permettre la désactivation du profil admin
 			if ($query->id == 1) {
 				Log::warning("Profile::destroy - Profil administrateur pour l'UID : {$uid}");
-				return "0|Le profil administrateur ne peut pas être supprimé.";
+				return response()->json([
+					'status' => 0,
+					'message' => "Le profil administrateur ne peut pas être supprimé.",
+				]);
 			}
 			// Vérifier si des utilisateurs sont associés
 			$userCount = User::where('profile_id', $query->id)->count();
 			if ($userCount > 0) {
 				Log::warning("Profile::destroy - Ce profil est associé à {$userCount} utilisateur(s).");
-				return "0|Ce profil est associé à {$userCount} utilisateur(s).";
+				return response()->json([
+					'status' => 0,
+					'message' => "Ce profil est associé à {$userCount} utilisateur(s).",
+				]);
 			}
 			DB::beginTransaction();
 			// Supprimer les permissions associées
@@ -285,11 +315,17 @@ class ProfileController extends Controller
 				'Supprimer',
 				Session::get('avatar')
 			);
-			return "1|Profil supprimé avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Profil supprimé avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Profile::destroy : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la suppression.";
+			Log::warning("Profile::destroy - Erreur : {$e->getMessage()}");
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la suppression.",
+			]);
 		}
 	}
 }

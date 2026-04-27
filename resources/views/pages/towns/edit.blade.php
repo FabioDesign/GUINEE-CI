@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('styles')
+    <link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
+@endsection
+
 @section('content')
 <div class="card">
   <div class="card-body py-4">
@@ -12,7 +16,7 @@
             <select id="country_id" name="country_id" class="form-control">
               <option value="" selected disabled>Sélectionner</option>
               @foreach($list as $data)
-                <option value="{{ $data->id }}" @php echo $data->id == $query->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
               @endforeach
             </select>
           </div>
@@ -28,13 +32,47 @@
 @endsection
 
 @section('scripts')
-	<script src="/assets/js/custom/select2.js"></script>
-    <script>
+  <script src="/assets/js/custom/select2.js"></script>
+  <script>
     $(document).ready(function() {
       $('#country_id').select2({
-        placeholder: "Sélectionner le pays",
-        width: '100%'
+        placeholder: "Sélectionner un pays",
+        width: '100%',
+
+        templateResult: formatCountry,
+        templateSelection: formatCountrySelection,
+
+        escapeMarkup: function (markup) {
+          return markup;
+        }
       });
+      function formatCountry(country) {
+        if (!country.id) return country.text;
+
+        let code = $(country.element).data('code');
+        let flag = $(country.element).data('alpha').toLowerCase();
+
+        return `
+          <span>
+              <span class="fi fi-${flag}" style="margin-right:8px;"></span>
+              ${country.text} (${code})
+          </span>
+        `;
+      }
+
+      function formatCountrySelection(country) {
+        if (!country.id) return country.text;
+
+        let code = $(country.element).data('code');
+        let flag = $(country.element).data('alpha').toLowerCase();
+
+        return `
+          <span>
+              <span class="fi fi-${flag}" style="margin-right:5px;"></span>
+              ${country.text} (${code})
+          </span>
+        `;
+      }
     });
-</script>
+  </script>
 @endsection

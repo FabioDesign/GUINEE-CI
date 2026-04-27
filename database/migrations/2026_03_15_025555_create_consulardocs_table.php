@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('consulardocs', function (Blueprint $table) {
             $table->id();
             $table->uuid('uid');
             $table->string('code', 50)->unique();
@@ -26,9 +26,10 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable();
             $table->foreignId('updated_by')->nullable();
             $table->foreignId('deleted_by')->nullable();
-            $table->integer('transmitted_by')->default('0');
-            $table->integer('validated_by')->default('0');
-            $table->integer('rejeted_by')->default('0');
+            $table->foreignId('transmitted_by')->nullable();
+            $table->foreignId('validated_by')->nullable();
+            $table->foreignId('rejeted_by')->nullable();
+            $table->integer('user_id');
             $table->integer('document_id');
         });
     }
@@ -38,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('consulardocs');
     }
 };

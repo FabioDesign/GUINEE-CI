@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('number', 50);
             $table->date('delivered_at');
-            $table->string('filename', 255);
+            $table->string('filename');
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->nullable();

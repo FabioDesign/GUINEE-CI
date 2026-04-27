@@ -35,7 +35,7 @@
   font-size: 15px !important;
 }
 .fa-size {
-  font-size: 18px !important;
+  font-size: 15px !important;
 }
 .text-justify {
   text-align: justify !important;
@@ -195,4 +195,21 @@
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+}
+.iti {
+  width: 100%;
+}
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+.btn-remove {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

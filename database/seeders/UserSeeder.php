@@ -14,22 +14,24 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['whatsapp' => '2250102030405'],
+            ['number' => '0102030405'],
             [
-                'title' => 'M.',
+                'code' => '225',
+                'civility' => 'M.',
                 'lastname' => 'OGOU',
                 'firstname' => 'Fabrice',
                 'gender' => 'M',
-                'number' => '',
                 'email' => 'fabio225@yopmail.com',
                 'password' => Hash::make('Azerty@123'),
                 'password_at' => now(),
+                'profession' => 'Ingénieur',
                 'birthday_at' => '1990-05-15',
                 'birthplace' => 'Cocody',
                 'size' => '1.75',
-                'hair' => 'Brun',
+                'hairs' => 'Brun',
                 'complexion' => 'Clair',
-                'profession' => 'Ingénieur',
+                'particular_sign' => 'Sportif',
+                'home_address' => 'Riviera Anono, Abidjan',
                 'father_fullname' => 'Léon OGOU',
                 'mother_fullname' => 'Apo KOUASSI',
                 'person_fullname' => 'JB OGOU',
@@ -42,7 +44,7 @@ class UserSeeder extends Seeder
                 'activated_by' => 1,
                 'town_id' => 2,
                 'profile_id' => 1,
-                'country_id' => 53,
+                'embassy_id' => 53,
                 'nationality_id' => 49,
             ]
         );

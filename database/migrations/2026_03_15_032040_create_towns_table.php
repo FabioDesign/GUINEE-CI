@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('towns', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uid');
-            $table->string('libelle', 255);
+            $table->string('libelle');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();

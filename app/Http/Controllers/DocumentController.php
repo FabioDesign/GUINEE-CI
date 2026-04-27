@@ -91,7 +91,10 @@ class DocumentController extends Controller
 		// Error field
 		if ($validator->fails()) {
 			Log::warning("Document::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
 		}
 		$set = [
 			'day' => $request->day,
@@ -111,11 +114,17 @@ class DocumentController extends Controller
 				'Ajouter',
 				Session::get('avatar')
 			);
-			return "1|Document enregistré avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Document enregistré avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Document::store : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de l'enregistrement du document.";
+			Log::warning("Document::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de l'enregistrement.",
+			]);
 		}
 	}
 	// Afficher le formulaire d'édition d'un document
@@ -166,13 +175,19 @@ class DocumentController extends Controller
 		// Error field
 		if ($validator->fails()) {
 			Log::warning("Document::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
-			return "0|" . $validator->errors()->first();
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
 		}
 		// Vérifier si le document existe
 		$query = Document::where('uid', $uid)->first();
 		if (!$query) {
 			Log::warning("Document::update - Aucune document trouvé pour l'UID : {$uid}");
-			return "0|Document non trouvé.";
+			return response()->json([
+				'status' => 0,
+				'message' => "Document non trouvé.",
+			]);
 		}
 		$set = [
 			'day' => $request->day,
@@ -192,11 +207,17 @@ class DocumentController extends Controller
 				'Modifier',
 				Session::get('avatar')
 			);
-			return "1|Document modifié avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Document modifié avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Document::update : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la modification du document.";
+			Log::warning("Document::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la modification.",
+			]);
 		}
 	}
 	// Supprimer un document
@@ -210,24 +231,36 @@ class DocumentController extends Controller
 			$document = Document::where('uid', $uid)->first();
 			if (!$document) {
 				Log::warning("Document::destroy - Aucune document trouvé pour l'UID : {$uid}");
-				return "0|Document non trouvé.";
+				return response()->json([
+					'status' => 0,
+					'message' => "Document non trouvé.",
+				]);
 			}
 			// Vérifier si des utilisateurs sont associés
 			$documentCount = User::where('document_id', $document->id)->count();
 			if ($documentCount > 0) {
 				Log::warning("Document::destroy - Cet document est associé à {$documentCount} utilisateur(s).");
-				return "0|Cet document est associé à {$documentCount} utilisateur(s).";
+				return response()->json([
+					'status' => 0,
+					'message' => "Cet document est associé à {$documentCount} utilisateur(s).",
+				]);
 			}
 			DB::beginTransaction();
 			// Supprimer le document
 			$document->delete();
 			DB::commit();
 			Myhelper::logs(Session::get('username'), Session::get('profil'), "Document: " . $document->libelle, 'Supprimer', 'success', Session::get('avatar'));
-			return "1|Document supprimé avec succès.";
+			return response()->json([
+				'status' => 1,
+				'message' => "Document supprimé avec succès.",
+			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Document::destroy : {$e->getMessage()} " . json_encode($request->all()));
-			return "0|Erreur lors de la suppression.";
+			Log::warning("Document::destroy - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la suppression.",
+			]);
 		}
 	}
 }

@@ -33,7 +33,7 @@ $('.viewPass, .backPass').on('click', function() {
   if (password.attr('type') == 'password') {
     password.attr('type', 'text');
     $(this).removeClass('fa-eye-slash').addClass('fa-eye');
-  } else{
+  } else {
     password.attr('type', 'password');
     $(this).removeClass('fa-eye').addClass('fa-eye-slash');
   }
@@ -41,7 +41,7 @@ $('.viewPass, .backPass').on('click', function() {
 $('#specimen').on('change', function() {
   let file = this.files[0];
   if (file) {
-    // ✅ Vérifier que c’est bien une image
+    // Vérifier que c’est bien une image
     if (!file.type.startsWith('image/')) {
       $('.msgError').html("Veuillez sélectionner une image valide !");
       $(this).val('');
@@ -55,11 +55,84 @@ $('#specimen').on('change', function() {
     reader.readAsDataURL(file);
   }
 });
+// Signature
+$('#signature').on('change', function() {
+  let file = this.files[0];
+  if (file) {
+    // Vérifier que c’est bien une image
+    if (!file.type.startsWith('image/')) {
+      $('.msgError').html("Veuillez sélectionner une image valide !");
+      $(this).val('');
+      $('#previewSignature').hide();
+      return;
+    }
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      $('#remove_sig').css('display', 'flex').data('status', 0);
+      $('#previewSignature').attr('src', e.target.result).fadeIn(); // effet sympa
+    }
+    reader.readAsDataURL(file);
+  }
+});
+$(document).on('click', '#remove_sig', function () {
+    $('#signature').val('');
+    $(this).hide().data('status', 0);
+    $('#previewSignature').attr('src', '');
+});
+
+// Cachet
+$('#stamp').on('change', function() {
+  let file = this.files[0];
+  if (file) {
+    // Vérifier que c’est bien une image
+    if (!file.type.startsWith('image/')) {
+      $('.msgError').html("Veuillez sélectionner une image valide !");
+      $(this).val('');
+      $('#previewStamp').hide();
+      return;
+    }
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      $('#remove_sta').css('display', 'flex').data('status', 0);
+      $('#previewStamp').attr('src', e.target.result).fadeIn(); // effet sympa
+    }
+    reader.readAsDataURL(file);
+  }
+});
+$(document).on('click', '#remove_sta', function () {
+    $('#stamp').val('');
+    $(this).hide().data('status', 0);
+    $('#previewStamp').attr('src', '');
+});
 //X-CSRF-TOKEN
 $.ajaxSetup({
   headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
+});
+$('#pays_id').on('change', function() {
+  let dataString = { country_id: $(this).val() };
+  $.ajax({
+    type: 'POST',
+    data: dataString,
+    url: '/towns/list',
+    success: function(response) {
+      if (response === 'x') {
+        window.location.href = '/';
+        return;
+      }
+      if (response.status == 1) {
+        // Vider avant de recharger
+        $("#town_id").empty().append('<option value="" disabled selected>Sélectionner</option>');
+
+        $.each(response.data, function(i, d) {
+          $("#town_id").append("<option value='" + d.id + "'>" + d.libelle + "</option>");
+        });
+      } else {
+        $('.msgError').html(response.message);
+      }
+    }
+  });
 });
 // Gestionnaire pour le changement de statut
 $(document).on('click', '.status', function(e) {
@@ -98,11 +171,14 @@ $(document).on('click', '.status', function(e) {
           })
         },
         success: function(response) {
-          var splitter = response.split('|');
-          if (splitter[0] == '1') {
+          if (response === 'x') {
+            window.location.href = '/';
+            return;
+          }
+          if (response.status == 1) {
             Swal.fire({
               title: "Félicitation !",
-              text: splitter[1],
+              text: response.message,
               icon: 'success',
               confirmButtonText: "Fermer",
               customClass:{
@@ -111,18 +187,16 @@ $(document).on('click', '.status', function(e) {
             }).then(function() {
               location.reload();
             });
-          } else if (splitter[0] == '0') {
+          } else {
             Swal.fire({
               title: 'Erreur !',
-              text: splitter[1],
+              text: response.message,
               icon: 'error',
               confirmButtonText: 'Fermer',
               customClass: {
                 confirmButton: "btn btn-square font-weight-bold btn-light-success"
               },
             });
-          } else if (response == 'x') {
-            window.location.href = '/';
           }
         },
         error: function(xhr) {
@@ -161,6 +235,11 @@ $(document).on('click', '.submitForm', function(e) {
       }
     } else datasT.append(this.name, $(this).val());
   });
+  if (rootForm.slice(0, 5) === 'users') {
+    datasT.append('code', $('.iti__selected-dial-code').html());
+    datasT.append('img_sta', $('#remove_sta').data('status'));
+    datasT.append('img_sig', $('#remove_sig').data('status'));
+  }
   $('.formField .requiredField').each(function() {
     if (jQuery.trim($(this).val()) === '') {
       $('.msgError').html("Veuillez renseigner les champs obligatoires !");
@@ -223,28 +302,24 @@ $(document).on('click', '.submitForm', function(e) {
         $('.submitForm').addClass('not-active').html('<i class="fa fa-spinner fa-pulse"></i> Patienter...');
       },
       success:function(response) {
-        let splitter = response.split('|');
-        if (splitter[0] == 'x') {
-          location.href = '/';
-        } else if (splitter[0] != 0) {
-          $('#modalform').hide();
+        if (response === 'x') {
+          window.location.href = '/';
+          return;
+        }
+        if (response.status == 1) {
           swal.fire({
             title: "Félicitation !",
-            text: splitter[1],
+            text: response.message,
             icon: 'success',
             confirmButtonText: "Fermer",
             customClass:{
               confirmButton: "btn btn-square font-weight-bold btn-light-success"
             }
           }).then(function() {
-            if (splitter[0] == 1)
-              location.reload();
-            else
-              location.href = '/';
+            location.reload();
           });
-        } else{
-          $('.msgError').html(splitter[1]);
-          $(splitter[2]).addClass('is-invalid');
+        } else {
+          $('.msgError').html(response.message);
           $('.submitForm').removeClass('not-active').addClass('btn-success').html(submitForm);
         }
       }

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 255);
+            $table->string('username');
             $table->string('profil', 50);
-            $table->string('libelle', 255);
+            $table->string('libelle');
             $table->string('action', 20);
             $table->string('color', 10);
             $table->string('avatar', 20);
