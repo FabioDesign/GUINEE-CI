@@ -11,7 +11,7 @@
         <form class="formField">
             <input type="hidden" id="rootForm" value="users">
             <span class="msgError" style="display: none;"></span>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Civilité : <span class="text-danger">*</span></label>
                     <select name="civility" class="form-control requiredField">
@@ -30,7 +30,7 @@
                     <input type="text" name="firstname" class="form-control requiredField" placeholder="Saisir prénoms" />
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
                     <input type="text" id="number" name="number" class="form-control requiredField number" onKeyUp="verif_int(this)">
@@ -44,7 +44,7 @@
                     <input type="text" name="profession" class="form-control requiredField" placeholder="Saisir profession">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
                     <select id="profile_id" name="profile_id" class="form-control">
@@ -73,7 +73,7 @@
 					</select>
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
                     <input type="text" name="birthday_at" class="form-control requiredField date_at" placeholder="Saisir date de naissance">
@@ -97,7 +97,7 @@
 					</select>
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
                     <input type="text" name="birthplace" class="form-control requiredField" placeholder="Saisir lieu de naissance">
@@ -111,7 +111,7 @@
                     <input type="text" name="mother_fullname" class="form-control requiredField" placeholder="Saisir nom et prénoms de la mère">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Taille : <span class="text-danger">*</span></label>
                     <input type="text" name="size" class="form-control requiredField" placeholder="Saisir taille">
@@ -125,7 +125,7 @@
                     <input type="text" name="hairs" class="form-control requiredField" placeholder="Saisir cheveux">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Signes particuliers : <span class="text-danger">*</span></label>
                     <input type="text" name="particular_sign" class="form-control requiredField" placeholder="Saisir signes particuliers">
@@ -156,7 +156,7 @@
 					</select>
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Nom et prénoms : <span class="text-danger">*</span></label>
                     <input type="text" name="birthplace" class="form-control requiredField" placeholder="Saisir nom complet (Personne à prévenir)">
@@ -170,7 +170,7 @@
                     <input type="text" name="mother_fullname" class="form-control requiredField" placeholder="Saisir adresse (Personne à prévenir)">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-2">
+            <div class="row mb-2">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Signature :</label>
                     <input type="file" id="signature" name="signature" class="form-control" accept=".png,.jpg,.jpeg" />
@@ -180,7 +180,7 @@
                     <input type="file" id="stamp" name="stamp" class="form-control" accept=".png,.jpg,.jpeg" />
                 </div>
             </div>
-            <div class="row form-group fv-row mb-2">
+            <div class="row mb-2">
                 <div class="col-md-6 col-12 text-center">
                     <img id="previewSignature" class="img-responsive" />
                 </div>

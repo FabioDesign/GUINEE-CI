@@ -34,8 +34,7 @@ Route::fallback(function() {
 // Route pour les utilisateurs
 Route::controller(UserController::class)->group(function () {
   Route::get('/', 'login')->name('login');
-  Route::get('/logout', 'logout');
-  Route::post('/users/auth', 'auth');
+  Route::post('/auth', 'auth');
 });
 // Routes pour les mots de passe oubliés
 Route::controller(PasswordController::class)->group(function () {
@@ -57,14 +56,13 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/dashboard', [DashboardController::class, 'index']);
   // Route pour les utilisateurs
   Route::controller(UserController::class)->group(function () {
-    Route::post('/avatar', 'avatar');
-    Route::post('/profil', 'profil');
     Route::get('/account', 'account');
+    Route::get('/logout', 'logout');
   });
   // Routes pour les mots de passe
   Route::controller(PasswordController::class)->group(function () {
     Route::get('/password', 'edit');
-    Route::post('/password', 'updaute');
+    Route::put('/password', 'update');
   });
   // Routes pour liste des villes
   Route::post('/towns/list', [TownController::class, 'list']);
@@ -72,4 +70,5 @@ Route::middleware(['auth'])->group(function () {
   Route::patch('/{type}/status/{uid}', [StatusController::class, 'update']);
   // Route pour les pistes d'audit
   Route::get('/logs', [LogsController::class, 'index']);
+  Route::get('/getLogs', [LogsController::class, 'getLogs']);
 });

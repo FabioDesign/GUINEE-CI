@@ -7,34 +7,27 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\{Document, User};
+use App\Models\{Consulardoc, Document, User};
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 
-class DocumentController extends Controller
+class ConsulardocController extends Controller
 {
-    //Liste des documents
+    //Liste des documents consulaires
 	public function index()
 	{
         if (!Auth::check()) {
             return redirect('/');
         }
 		//Title
-		$title = 'Gestion des documents';
+		$title = 'Gestion des documents consulaires';
 		//Menu
-		$currentMenu = 'documents';
+		$currentMenu = 'consulardoc';
 		//Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 3);
-		$addmodal = in_array(2, $actionIds) ? '<a href="/documents/create" class="btn btn-sm fw-bold btn-primary">Ajouter un document</a>':'';
+		$addmodal = in_array(2, $actionIds) ? '<a href="/consulardoc/create" class="btn btn-sm fw-bold btn-primary">Ajouter un document</a>':'';
 		//Requete Read
-		$query = Document::orderByDesc('created_at')->get();
-		Myhelper::logs(
-			Session::get('username'),
-			Session::get('profil'),
-			"Document: Liste",
-			'Consulter',
-			Session::get('avatar')
-		);
-		return view('pages.documents.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
+		$query = Consulardoc::orderByDesc('created_at')->get();
+		return view('pages.consulardoc.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
 	// Afficher le détail d'un document
 	public function show($uid)
@@ -43,18 +36,18 @@ class DocumentController extends Controller
             return redirect('/');
         }
 		// Title
-		$title = 'Détail du document';
+		$title = 'Détail du document consulaire';
 		// Menu
-		$currentMenu = 'documents';
+		$currentMenu = 'consulardoc';
 		// Vérifier si le document existe
-		$query = Document::where('uid', $uid)->first();
+		$query = Consulardoc::where('uid', $uid)->first();
 		if (!$query) {
-			Log::warning("Document::show - Aucun document trouvé pour l'UID : {$uid}");
-			return redirect('/documents');
+			Log::warning("Consulardoc::show - Aucun document trouvé pour l'UID : {$uid}");
+			return redirect('/consulardoc');
 		}
 		// Modal
-		$addmodal = '<a href="/documents" class="btn btn-sm fw-bold btn-danger">Retour</a>';
-		return view('pages.documents.show', compact('title', 'currentMenu', 'addmodal', 'query'));
+		$addmodal = '<a href="/consulardoc" class="btn btn-sm fw-bold btn-danger">Retour</a>';
+		return view('pages.consulardoc.show', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
     //Liste des documents
 	public function create()
@@ -65,11 +58,11 @@ class DocumentController extends Controller
 		//Title
 		$title = "Ajout d'un document";
 		//Menu
-		$currentMenu = 'documents';
+		$currentMenu = 'consulardoc';
 		//Modal
-		$addmodal = '<a href="/documents" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		$addmodal = '<a href="/consulardoc" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
-		return view('pages.documents.create', compact('title', 'currentMenu', 'addmodal'));
+		return view('pages.consulardoc.create', compact('title', 'currentMenu', 'addmodal'));
 	}
 	//Add document
 	public function store(request $request)
@@ -81,7 +74,7 @@ class DocumentController extends Controller
 		$validator = Validator::make($request->all(), [
 			'libelle' => [
 				'required',
-				Rule::unique('documents')->where(function ($query) {
+				Rule::unique('consulardoc')->where(function ($query) {
 					return $query->whereNull('deleted_at');
 				}),
 			],
@@ -97,7 +90,7 @@ class DocumentController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Document::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Consulardoc::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
@@ -112,22 +105,22 @@ class DocumentController extends Controller
 		];
 		DB::beginTransaction();
 		try {
-			Document::create($set);
+			Consulardoc::create($set);
 			DB::commit();
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document: {$request->libelle}",
+				"Document consulaire: {$request->libelle}",
 				'Ajouter',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Document enregistré avec succès.",
+				'message' => "Document consulaire enregistré avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Document::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Consulardoc::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de l'enregistrement.",
@@ -141,19 +134,19 @@ class DocumentController extends Controller
             return redirect('/');
         }
 		// Title
-		$title = 'Modification du document';
+		$title = 'Modification du document consulaire';
 		// Menu
-		$currentMenu = 'documents';
+		$currentMenu = 'consulardoc';
 		// Vérifier si le document existe
-		$query = Document::where('uid', $uid)->first();
+		$query = Consulardoc::where('uid', $uid)->first();
 		if (!$query) {
-			Log::warning("Document::edit - Aucune document trouvé pour l'UID : {$uid}");
-			return redirect('/documents');
+			Log::warning("Consulardoc::edit - Aucune document trouvé pour l'UID : {$uid}");
+			return redirect('/consulardoc');
 		}
 		// Modal
-		$addmodal = '<a href="/documents" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		$addmodal = '<a href="/consulardoc" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
-		return view('pages.documents.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
+		return view('pages.consulardoc.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
 	// Mettre à jour un document
 	public function update(Request $request, $uid)
@@ -165,7 +158,7 @@ class DocumentController extends Controller
 		$validator = Validator::make($request->all(), [
 			'libelle' => [
 				'required',
-				Rule::unique('documents')->where(function ($query) use ($uid) {
+				Rule::unique('consulardoc')->where(function ($query) use ($uid) {
 					return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
 				}),
 			],
@@ -181,19 +174,19 @@ class DocumentController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Document::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Consulardoc::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
 			]);
 		}
 		// Vérifier si le document existe
-		$query = Document::where('uid', $uid)->first();
+		$query = Consulardoc::where('uid', $uid)->first();
 		if (!$query) {
-			Log::warning("Document::update - Aucune document trouvé pour l'UID : {$uid}");
+			Log::warning("Consulardoc::update - Aucune document trouvé pour l'UID : {$uid}");
 			return response()->json([
 				'status' => 0,
-				'message' => "Document non trouvé.",
+				'message' => "Document consulaire non trouvé.",
 			]);
 		}
 		$set = [
@@ -210,17 +203,17 @@ class DocumentController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document: {$request->libelle}",
+				"Document consulaire: {$request->libelle}",
 				'Modifier',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Document modifié avec succès.",
+				'message' => "Document consulaire modifié avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Document::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Consulardoc::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de la modification.",
@@ -235,18 +228,18 @@ class DocumentController extends Controller
         }
 		try {
 			// Vérifier si le document existe
-			$document = Document::where('uid', $uid)->first();
+			$document = Consulardoc::where('uid', $uid)->first();
 			if (!$document) {
-				Log::warning("Document::destroy - Aucune document trouvé pour l'UID : {$uid}");
+				Log::warning("Consulardoc::destroy - Aucune document trouvé pour l'UID : {$uid}");
 				return response()->json([
 					'status' => 0,
-					'message' => "Document non trouvé.",
+					'message' => "Document consulaire non trouvé.",
 				]);
 			}
 			// Vérifier si des utilisateurs sont associés
 			$documentCount = User::where('document_id', $document->id)->count();
 			if ($documentCount > 0) {
-				Log::warning("Document::destroy - Cet document est associé à {$documentCount} utilisateur(s).");
+				Log::warning("Consulardoc::destroy - Cet document est associé à {$documentCount} utilisateur(s).");
 				return response()->json([
 					'status' => 0,
 					'message' => "Cet document est associé à {$documentCount} utilisateur(s).",
@@ -259,17 +252,17 @@ class DocumentController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document: {$document->libelle}",
+				"Document consulaire: {$document->libelle}",
 				'Supprimer',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Document supprimé avec succès.",
+				'message' => "Document consulaire supprimé avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Document::destroy - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Consulardoc::destroy - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de la suppression.",

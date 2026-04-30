@@ -12,6 +12,7 @@
 		<!--begin::Form-->
 		<form class="formField">
 			@method('PUT')
+			<input type="hidden" name="account">
 			<input type="hidden" id="code" value="{{ $query->code }}">
 			<input type="hidden" id="alpha" value="{{ $code->alpha }}">
 			<input type="hidden" id="rootForm" value="users/{{ $query->uid }}">
@@ -52,7 +53,7 @@
 				<!--end::Col-->
 			</div>
 			<!--begin::Input group-->
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5 code">Civilité : <span class="text-danger">*</span></label>
 					<select name="civility" class="form-control requiredField">
@@ -71,7 +72,7 @@
 					<input type="text" name="firstname" value="{{ old('firstname', $query->firstname) }}" class="form-control requiredField" placeholder="Saisir prénoms" />
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
 					<input type="text" id="number" name="number" value="{{ old('number', $query->number) }}" class="form-control requiredField number" onKeyUp="verif_int(this)">
@@ -85,10 +86,10 @@
 					<input type="text" name="profession" value="{{ old('profession', $query->profession) }}" class="form-control requiredField" placeholder="Saisir profession">
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
-					<select id="profile_id" name="profile_id" class="form-control">
+					<select id="profile_id" name="profile_id" class="form-control" disabled>
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($profile as $data)
 							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
@@ -97,7 +98,7 @@
 				</div>
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
-					<select id="embassy_id" name="embassy_id" class="form-control">
+					<select id="embassy_id" name="embassy_id" class="form-control" disabled>
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($country as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
@@ -106,7 +107,7 @@
 				</div>
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
-					<select id="nationality_id" name="nationality_id" class="form-control">
+					<select id="nationality_id" name="nationality_id" class="form-control" disabled>
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($nationality as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
@@ -114,7 +115,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
 					<input type="text" name="birthday_at" value="{{ old('birthday_at', $query->birthday_at) }}" class="form-control requiredField date_at" placeholder="Saisir date de naissance">
@@ -138,7 +139,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
 					<input type="text" name="birthplace" value="{{ old('birthplace', $query->birthplace) }}" class="form-control requiredField" placeholder="Saisir lieu de naissance">
@@ -152,7 +153,7 @@
 					<input type="text" name="mother_fullname" value="{{ old('mother_fullname', $query->mother_fullname) }}" class="form-control requiredField" placeholder="Saisir nom et prénoms de la mère">
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Taille : <span class="text-danger">*</span></label>
 					<input type="text" name="size" value="{{ old('size', $query->size) }}" class="form-control requiredField" placeholder="Saisir taille">
@@ -166,7 +167,7 @@
 					<input type="text" name="hairs" value="{{ old('hairs', $query->hairs) }}" class="form-control requiredField" placeholder="Saisir cheveux">
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Signes particuliers : <span class="text-danger">*</span></label>
 					<input type="text" name="particular_sign" value="{{ old('particular_sign', $query->particular_sign) }}" class="form-control requiredField" placeholder="Saisir signes particuliers">
@@ -180,7 +181,7 @@
 					<input type="text" name="arrival_at" value="{{ old('arrival_at', $query->arrival_at) }}" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-5">
+			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Nom et prénoms : <span class="text-danger">*</span></label>
 					<input type="text" name="person_fullname" value="{{ old('person_fullname', $query->person_fullname) }}" class="form-control requiredField" placeholder="Saisir nom complet (Personne à prévenir)">
@@ -194,7 +195,7 @@
 					<input type="text" name="person_address" value="{{ old('person_address', $query->person_address) }}" class="form-control requiredField" placeholder="Saisir adresse (Personne à prévenir)">
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-2">
+			<div class="row mb-2">
 				<div class="col-md-6 col-12">
 					<label class="fw-bolder text-dark fs-5">Signature :</label>
 					<input type="file" id="signature" name="signature" class="form-control" accept=".png,.jpg,.jpeg" />
@@ -204,7 +205,7 @@
 					<input type="file" id="stamp" name="stamp" class="form-control" accept=".png,.jpg,.jpeg" />
 				</div>
 			</div>
-			<div class="row form-group fv-row mb-2">
+			<div class="row mb-2">
 				<div class="col-md-6 col-12 text-center position-relative">
 					@php $signature = $query->signature ? asset('storage/' . $query->signature) : ''; @endphp
 					<img id="previewSignature" class="img-responsive" src="{{ $signature }}">

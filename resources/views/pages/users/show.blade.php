@@ -11,7 +11,7 @@
         <form class="formField">
             <input type="hidden" id="code" value="{{ $query->code }}">
             <input type="hidden" id="alpha" value="{{ $code->alpha }}">
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5 code">Civilité :</label>
                     <input type="text" value="{{ $query->civility }}" class="form-control" />
@@ -25,7 +25,7 @@
                     <input type="text" value="{{ $query->firstname }}" class="form-control" />
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone :</label>
                     <input type="text" id="number" value="{{ $query->number }}" class="form-control">
@@ -39,7 +39,7 @@
                     <input type="text" value="{{ $query->profession }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil :</label>
                     <input type="text" value="{{ $query->profile->libelle }}" class="form-control">
@@ -57,7 +57,7 @@
 					</select>
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date de naissance :</label>
                     <input type="text" value="{{ $query->birthday_at->format('d-m-Y') }}" class="form-control">
@@ -76,7 +76,7 @@
                     <input type="text" value="{{ $query->town->libelle }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Lieu de naissance :</label>
                     <input type="text" value="{{ $query->birthplace }}" class="form-control">
@@ -90,7 +90,7 @@
                     <input type="text" value="{{ $query->mother_fullname }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Taille :</label>
                     <input type="text" value="{{ $query->size }}" class="form-control">
@@ -104,7 +104,7 @@
                     <input type="text" value="{{ $query->hairs }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Signes particuliers :</label>
                     <input type="text" value="{{ $query->particular_sign }}" class="form-control">
@@ -118,7 +118,7 @@
                     <input type="text" value="{{ $query->arrival_at->format('d-m-Y') }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-5">
+            <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Nom et prénoms :</label>
                     <input type="text" value="{{ $query->person_fullname }}" class="form-control">
@@ -132,7 +132,7 @@
                     <input type="text" value="{{ $query->person_address }}" class="form-control">
                 </div>
             </div>
-            <div class="row form-group fv-row mb-2">
+            <div class="row mb-2">
                 <div class="col-md-6 col-12 text-center position-relative">
                     @php $signature = $query->signature ? asset('storage/' . $query->signature) : ''; @endphp
                     <img id="previewSignature" class="img-responsive" src="{{ $signature }}">

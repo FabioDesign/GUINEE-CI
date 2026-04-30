@@ -29,6 +29,13 @@ class TownController extends Controller
 		$query = Town::select('towns.uid', 'towns.libelle as town', 'towns.status', 'towns.created_at', 'alpha', 'country.libelle AS country')
 		->join('country', 'country.id','=','towns.country_id')
         ->orderByDesc('created_at')->get();
+		Myhelper::logs(
+			Session::get('username'),
+			Session::get('profil'),
+			"Ville: Liste",
+			'Consulter',
+			Session::get('avatar')
+		);
 		return view('pages.towns.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
     //Liste des villes

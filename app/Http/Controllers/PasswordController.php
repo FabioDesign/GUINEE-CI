@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Myhelper;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\{Document, User};
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\{Hash, Log, Validator};
+use Illuminate\Support\Facades\{DB, Hash, Log, Validator, Auth};
 
 class PasswordController extends Controller
 {
@@ -93,15 +95,13 @@ class PasswordController extends Controller
             return redirect('/');
         }
 		//Title
-		$title = 'Gestion des utilisateurs';
-		//Menu
+		$title = 'Changement de mot de passe';
+        //Menu
 		$currentMenu = 'users';
 		//Modal
-		$actionIds = Myhelper::actions(Auth::user()->profile_id, 7);
-		$addmodal = in_array(2, $actionIds) ? '<a href="/users/create" class="btn btn-sm fw-bold btn-primary">Ajouter un utilisateur</a>':'';
-		//Requete Read
-		$query = User::orderByDesc('created_at')->get();
-        return view('pages.users.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
+		$addmodal = '<a href="/dashbord" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
+        return view('pages.password', compact('title', 'currentMenu', 'addmodal'));
     }
     //Modification de Mot de passe
     public function update(Request $request)
@@ -109,38 +109,69 @@ class PasswordController extends Controller
         if (!Auth::check()) {
             return redirect('x');
         }
-        //Validator
+        // Validator
         $validator = Validator::make($request->all(), [
-            'oldpass' => 'required|min:8',
+            'oldpass' => ['required', 'min:8'],
             'password' => [
-                'required', 'confirmed', 'different:oldpass',
+                'required',
+                'confirmed',
+                'different:oldpass',
                 Password::min(8)
-                    ->mixedCase() // Majuscules + minuscules
-                    ->letters()   // Doit contenir des lettres
-                    ->numbers()   // Doit contenir des chiffres
-                    ->symbols()   // Doit contenir des caractères spéciaux
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers(),
             ],
+        ], [
+            'oldpass.required' => "L'ancien mot de passe est obligatoire.",
+            'oldpass.min' => "L'ancien mot de passe doit contenir au moins 8 caractères.",
+            'password.required' => "Le nouveau mot de passe est obligatoire.",
+            'password.confirmed' => "Les mots de passe doivent correspondre.",
+            'password.different' => "Le nouveau mot de passe doit être différent de l'ancien.",
+            'password.min' => "Le mot de passe doit contenir au moins 8 caractères.",
+            'password.mixed' => "Le mot de passe doit contenir au moins des Chiffres, Majuscules, etc.",
         ]);
-        //Error field
-        if($validator->fails()){
-            Log::warning("Validator password edit : " . json_encode($request->all()));
-            return $this->sendSuccess('Champs invalides.', $validator->errors(), 422);
-        }
+		// Error field
+		if ($validator->fails()) {
+			Log::warning("Password::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
+		}
         // Vérification de l'ancien mot de passe
-        if (!Hash::check($request->oldpass, $user->password)) {
-            Log::warning("Ancien mot de passe incorrect pour l'utilisateur ID : {$user->id}");
-            return $this->sendError("Ancien mot de passe incorrect.");
+        if (!Hash::check($request->oldpass, Auth::user()->password)) {
+            Log::warning("Password::update - Ancien mot de passe incorrect pour l'utilisateur ID : " . Auth::user()->id);
+			return response()->json([
+				'status' => 0,
+				'message' => "Ancien mot de passe incorrect.",
+			]);
         }
+        DB::beginTransaction(); // Démarrer une transaction
         try {
             // Mettre à jour du password
-            User::findOrFail($user->id)->update([
-                'password_at' => now(),
+            User::findOrFail(Auth::user()->id)->update([
                 'password' => Hash::make($request->password),
+                'password_at' => now(),
             ]);
-            return $this->sendSuccess("Mot de passe modifié avec succès.", [], 201);
+            DB::commit(); // Valider la transaction
+            Myhelper::logs(
+                Session::get('username'),
+                Session::get('profil'),
+                "Mot de passe: Nouveau",
+                'Modifier',
+                Session::get('avatar')
+            );
+            return response()->json([
+                'status' => 2,
+                'message' => "Mot de passe modifié avec succès.",
+            ]);
         } catch(\Exception $e) {
-            Log::warning("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
-            return $this->sendError("Une erreur est survenue, veuillez réessayer plus tard.");
+            DB::rollBack(); // Annuler la transaction en cas d'erreur
+            Log::warning("Password::update - Erreur : {$e->getMessage()}" . json_encode($request->all()));
+            return response()->json([
+                'status' => 0,
+                'message' => "Erreur lors de la modification.",
+            ]);
         }
     }
 }

@@ -27,6 +27,13 @@ class FileController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/files/create" class="btn btn-sm fw-bold btn-primary">Ajouter une pièce</a>':'';
 		//Requete Read
 		$query = File::orderByDesc('created_at')->get();
+		Myhelper::logs(
+			Session::get('username'),
+			Session::get('profil'),
+			"Pièces à fournir: Liste",
+			'Consulter',
+			Session::get('avatar')
+		);
 		return view('pages.files.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
     //Liste des Pièces à fournir

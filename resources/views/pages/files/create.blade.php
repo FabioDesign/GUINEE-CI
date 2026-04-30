@@ -5,7 +5,7 @@
     <div class="card-body py-4">
         <form class="formField">
             <input type="hidden" id="rootForm" value="files">
-            <div class="row form-group fv-row mb-2">
+            <div class="row mb-2">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
                     <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" />

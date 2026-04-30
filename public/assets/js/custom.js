@@ -306,7 +306,7 @@ $(document).on('click', '.submitForm', function(e) {
           window.location.href = '/';
           return;
         }
-        if (response.status == 1) {
+        if (response.status != 0) {
           swal.fire({
             title: "Félicitation !",
             text: response.message,
@@ -316,7 +316,10 @@ $(document).on('click', '.submitForm', function(e) {
               confirmButton: "btn btn-square font-weight-bold btn-light-success"
             }
           }).then(function() {
-            location.reload();
+            if (response.status == 1)
+              location.reload();
+            else
+              location.href = '/';
           });
         } else {
           $('.msgError').html(response.message);

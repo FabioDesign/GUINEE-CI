@@ -27,6 +27,13 @@ class ProfileController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/profiles/create" class="btn btn-sm fw-bold btn-primary">Ajouter un profil</a>':'';
 		//Requete Read
 		$query = Profile::orderByDesc('created_at')->get();
+		Myhelper::logs(
+			Session::get('username'),
+			Session::get('profil'),
+			"Profil: Liste",
+			'Consulter',
+			Session::get('avatar')
+		);
 		return view('pages.profiles.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
 	// Afficher le détail d'un profil

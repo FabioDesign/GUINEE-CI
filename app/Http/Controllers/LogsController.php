@@ -19,8 +19,15 @@ class LogsController extends Controller
 		$currentMenu = "logs";
 		// Modal
 		$addmodal = '';
-		//Requete Read
+		return view('pages.logs', compact('title', 'currentMenu', 'addmodal'));
+	}
+    //Liste de Pistes d'audit
+	public function getLogs() {
+		//Requete Read-
 		$query = Logs::orderByDesc('created_at')->get();
-		return view('pages.logs', compact('title', 'currentMenu', 'addmodal', 'query'));
+		return response()->json([
+			'status' => true,
+			'data' => $query,
+		]);
 	}
 }

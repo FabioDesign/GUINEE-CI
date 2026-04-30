@@ -27,6 +27,13 @@ class UserController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/users/create" class="btn btn-sm fw-bold btn-primary">Ajouter un utilisateur</a>':'';
 		//Requete Read
 		$query = User::orderByDesc('created_at')->get();
+		Myhelper::logs(
+			Session::get('username'),
+			Session::get('profil'),
+			"Utilisateur: Liste",
+			'Consulter',
+			Session::get('avatar')
+		);
         return view('pages.users.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
     }
     // Détail d'Utilisateur
@@ -249,7 +256,7 @@ class UserController extends Controller
     // Modification
     public function update(Request $request, $uid)
     {
-        dd($request);
+        // dd($request);
         if (!Auth::check()) {
             return 'x';
         }
@@ -354,9 +361,6 @@ class UserController extends Controller
                 'number' => $request->number,
                 'email' => Str::lower($request->email),
                 'profession' => $request->profession,
-                'profile_id' => $request->profile_id,
-                'embassy_id' => $request->embassy_id,
-                'nationality_id' => $request->nationality_id,
                 'birthday_at' => $request->birthday_at,
                 'town_id' => $request->town_id,
                 'birthplace' => $request->birthplace,
@@ -372,6 +376,9 @@ class UserController extends Controller
                 'person_address' => $request->person_address,
                 'arrival_at' => $request->arrival_at,
             ];
+            if ($request->has('profile_id')) $set['profile_id'] = $request->profile_id;
+            if ($request->has('embassy_id')) $set['embassy_id'] = $request->embassy_id;
+            if ($request->has('nationality_id')) $set['nationality_id'] = $request->nationality_id;
             // Enregistrer le fichier
             if ($request->img_sig == 0) {
                 $signature = $request->file('signature') != '' ? $request->file('signature')->store('signatures', 'public') : '';
@@ -381,6 +388,7 @@ class UserController extends Controller
                 $stamp = $request->file('stamp') != '' ? $request->file('stamp')->store('stamps', 'public') : '';
                 $set['stamp'] = $stamp;
             }
+            $avatar = '';
             if ($request->file('avatar') != '') {
                 // Validator
                 $validator = Validator::make($request->all(), [
@@ -398,8 +406,9 @@ class UserController extends Controller
                         'message' => $validator->errors()->first(),
                     ]);
                 }
-                $set['avatar'] = $request->file('avatar')->store('avatars', 'public');
+                $set['avatar'] = $avatar = $request->file('avatar')->store('avatars', 'public');
             }
+            // dd($set);
             DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour l'utilisateur
 			$user->update($set);
@@ -411,6 +420,15 @@ class UserController extends Controller
                 'Modifier',
                 Session::get('avatar')
             );
+            if ($request->has('account')) {
+                // Préparer les données de session
+                $prenom = explode(' ', $firstname);
+                $username = $prenom[0] . ' ' . $lastname;
+                Session::put('username', $username);
+                // Avatar
+                if ($avatar != '')
+                Session::put('avatar', $avatar);
+            }
             return response()->json([
                 'status' => 1,
                 'message' => "Utilisateur modifié avec succès.",
@@ -522,7 +540,10 @@ class UserController extends Controller
         // Error field
         if ($validator->fails()) {
             Log::warning("User::auth - Validator : {$validator->errors()->first()}");
-            return $validator->errors()->first();
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+            ]);
         }
         try {
             // Déterminer si le login est un email ou un numéro de téléphone
@@ -536,26 +557,37 @@ class UserController extends Controller
             // Vérifier d'abord si l'utilisateur existe et son statut
             $user = User::where($loginField, $request->login)->first();
             if (!$user) {
-                return '0|Login ou mot de passe incorrect.';
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Login ou mot de passe incorrect.",
+                ]);
             }
             // Vérifier le statut du compte
             if ($user->status == 0) {
-                return '0|Votre compte est inactif.';
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Votre compte est inactif.",
+                ]);
             }
             if ($user->status == 2) {
-                return '0|Votre compte est bloqué.';
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Votre compte est bloqué.",
+                ]);
             }
             // Vérifier le statut du profil
             if ($user->profile && $user->profile->status == 0) {
-                return '0|Votre profil est désactivé.';
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Votre profil est désactivé.",
+                ]);
             }
             // Vérifier si le compte n'est pas rattaché à une Ambassade
             if ($user->country && $user->country->embassy == 0) {
-                return "0|Votre compte n'est pas rattaché à une Ambassade.";
-			return response()->json([
-				'status' => 0,
-				'message' => $validator->errors()->first(),
-			]);
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Votre compte n'est pas rattaché à une Ambassade.",
+                ]);
             }
             // Tentative de connexion
             if (Auth::attempt($credentials)) {
@@ -579,7 +611,10 @@ class UserController extends Controller
                 if ($menus->isEmpty()) {
                     Log::warning("Aucun menu trouvé pour ce profil : " . $user->profile_id);
                     Auth::logout();
-                    return '0|Aucun menu trouvé pour ce profil.';
+                    return response()->json([
+                        'status' => 0,
+                        'message' => "Aucun menu trouvé pour ce profil.",
+                    ]);
                 }
                 $page = $menus->first()->target ?? '/';
                 // Stocker des informations supplémentaires en session
@@ -602,18 +637,23 @@ class UserController extends Controller
                     'Connecter',
                     $avatar
                 );
-                return '1|' . $page;
+                return response()->json([
+                    'status' => 1,
+                    'data' => $page,
+                ]);
             } else {
                 // Mot de passe incorrect
                 Log::warning("Tentative de connexion échouée pour : {$request->login}");
-                return '0|Login ou mot de passe incorrect.';
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Login ou mot de passe incorrect.",
+                ]);
             }
         } catch (\Exception $e) {
-            Log::warning("Echec de connexion : {$e->getMessage()}");
-            return "0|Service indisponible, veuillez réessayer plus tard !";
+            Log::warning("Echec de connexion : {$e->getMessage()}" . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
-				'message' => $validator->errors()->first(),
+				'message' => "Service indisponible, veuillez réessayer plus tard !",
 			]);
         }
     }

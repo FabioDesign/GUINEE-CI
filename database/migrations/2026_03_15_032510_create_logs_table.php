@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('libelle');
             $table->string('action', 20);
             $table->string('color', 10);
-            $table->string('avatar', 20);
+            $table->text('avatar');
             $table->timestamps();
         });
     }

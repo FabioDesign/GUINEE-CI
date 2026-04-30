@@ -36,10 +36,10 @@ return new class extends Migration
             $table->string('person_fullname')->nullable();
             $table->string('person_number')->nullable();
             $table->string('person_address')->nullable();
-            $table->char('arrival_at', 10)->nullable();
-            $table->string('stamp', 20)->nullable();
-            $table->string('signature', 20)->nullable();
-            $table->string('avatar', 20)->nullable();
+            $table->date('arrival_at')->nullable();
+            $table->text('avatar')->nullable();
+            $table->text('stamp')->nullable();
+            $table->text('signature')->nullable();
             $table->timestamp('login_at')->nullable();
             $table->tinyInteger('status')->default('0');
             $table->timestamps();

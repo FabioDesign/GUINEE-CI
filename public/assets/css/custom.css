@@ -27,11 +27,11 @@
   font-size: 15px !important;
 }
 .backPass {
-  top: 45px;
-  right: 20px;
-  color: #009EF7;
+  top: 37px;
+  right: 42px;
   cursor: pointer;
   position: absolute;
+  color:#009EF7 !important;
   font-size: 15px !important;
 }
 .fa-size {
@@ -202,6 +202,10 @@
 .img-responsive {
   max-width: 100%;
   height: auto;
+}
+.img-logs {
+  max-width: 100%;
+  height: 50px;
 }
 .btn-remove {
   position: absolute;

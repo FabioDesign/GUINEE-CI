@@ -44,13 +44,15 @@
 		//Piste d'audit
 		public static function logs($username, $profil, $libelle, $action, $avatar) {
 			switch ($action) {
+				case 'Consulter' : $color = 'primary';
+					break;
 				case 'Ajouter' : $color = 'success';
 					break;
 				case 'Modifier' : $color = 'warning';
 					break;
 				case 'Supprimer' : $color = 'danger';
 					break;
-				default : $color = 'primary';
+				default : $color = 'info';
 			}
 			$set = [
 				'username' => $username,

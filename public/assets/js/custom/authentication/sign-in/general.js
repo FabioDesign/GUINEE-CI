@@ -68,16 +68,15 @@ var KTSigninGeneral = function() {
                             data: dataString,
                             contentType: false, 
                             processData: false,
-                            url: '/users/auth',
+                            url: '/auth',
                             beforeSend: function() {
                               $('#kt_sign_in_submit').addClass('not-active');
                             },
                             success:function(response) {
-                                var splitter = response.split('|');
-                                if (splitter[0] == 1)
-                                    location.href = splitter[1];
+                                if (response.status == 1)
+                                    location.href = response.data;
                                 else {
-                                    $('.error').addClass('msgError').html(splitter[1]);
+                                    $('.error').addClass('msgError').html(response.message);
                                     $('#kt_sign_in_submit').removeClass('not-active').css('background', '#009688');
                                 }
                             }
