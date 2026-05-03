@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('nationality', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('libelle');
+            $table->string('libelle', 100);
             $table->char('alpha', 2);
             $table->string('code', 10);
         });
