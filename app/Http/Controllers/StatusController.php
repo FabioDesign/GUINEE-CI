@@ -75,7 +75,7 @@ class StatusController extends Controller
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
-                "{$label}: " . $item->libelle . " " .$action,
+                "{$label}: {$item->libelle} {$action}",
 				'Modifier',
                 Session::get('avatar')
             );

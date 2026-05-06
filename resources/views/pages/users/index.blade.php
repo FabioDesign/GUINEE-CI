@@ -45,17 +45,17 @@
             <td class="text-center align-middle">
               <a href="/users/{{ $data->uid }}" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="Voir détail document"><i class="fas fa-eye fa-size text-primary me-1"></i></a>
               @if(in_array(3, $actionIds))
-              <a href="/users/{{ $data->uid }}/edit" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="Modifier la ville"><i class="fas fa-edit fa-size text-warning me-1"></i></a>
+              <a href="/users/{{ $data->uid }}/edit" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="Modifier l'utilisateur"><i class="fas fa-edit fa-size text-warning me-1"></i></a>
               @else
               <a href="#"><i class="fas fa-edit fa-size text-muted me-1"></i></a>
               @endif
               @if(in_array(4, $actionIds))
-              <a href="#" class="status" data-url="/users/status/{{ $data->uid }}" data-type="PATCH" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="{{ $action }} la ville"><i class="fas fa-question fa-size text-info"></i></a>
+              <a href="#" class="status" data-url="/users/status/{{ $data->uid }}" data-type="PATCH" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="{{ $action }} l'utilisateur"><i class="fas fa-question fa-size text-info"></i></a>
               @else
               <a href="#"><i class="fas fa-question fa-size text-muted"></i></a>
               @endif
               @if(in_array(5, $actionIds))
-              <a href="#" class="status" data-url="/users/{{ $data->uid }}" data-type="DELETE" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="Supprimé la ville"><i class="fas fa-trash-alt fa-size text-danger"></i></a>
+              <a href="#" class="status" data-url="/users/{{ $data->uid }}" data-type="DELETE" data-bs-toggle="tooltip" data-bs-theme="dark" data-bs-placement="top" title="Supprimé l'utilisateur"><i class="fas fa-trash-alt fa-size text-danger"></i></a>
               @else
               <a href="#"><i class="fas fa-trash-alt fa-size text-muted"></i></a>
               @endif

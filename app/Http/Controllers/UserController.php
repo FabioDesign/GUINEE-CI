@@ -90,15 +90,15 @@ class UserController extends Controller
 			'firstname' => 'required',
 			'number' => [
 				'required',
-				Rule::unique('users')->where(function ($query) {
-					return $query->whereNull('deleted_at');
-				}),
+                Rule::unique('users')->where(function ($query) use ($uid) {
+                    return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+                }),
 			],
 			'email' => [
 				'required',
-				Rule::unique('users')->where(function ($query) {
-					return $query->whereNull('deleted_at');
-				}),
+                Rule::unique('users')->where(function ($query) use ($uid) {
+                    return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+                }),
 			],
 			'profession' => 'required',
 			'nationality_id' => 'required',
@@ -474,7 +474,7 @@ class UserController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Utilisateur: " . $user->firstname . ' ' . $user->lastname,
+				"Utilisateur: {$user->firstname} {$user->lastname}",
 				'Supprimer',
 				Session::get('avatar')
 			);

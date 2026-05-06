@@ -15,7 +15,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Civilité : <span class="text-danger">*</span></label>
                     <select name="civility" class="form-control requiredField">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($civility as $civil)
 							<option value="{{ $civil }}">{{ $civil }}</option>
 						@endforeach
@@ -48,7 +48,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
                     <select id="profile_id" name="profile_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($profile as $data)
 							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
 						@endforeach
@@ -57,7 +57,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
                     <select id="embassy_id" name="embassy_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($country as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}">{{ $data->libelle }}</option>
 						@endforeach
@@ -66,7 +66,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
                     <select id="nationality_id" name="nationality_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($nationality as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 38 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
 						@endforeach
@@ -81,7 +81,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
                     <select id="pays_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($pays as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
 						@endforeach
@@ -90,7 +90,7 @@
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Préfecture de naissance : <span class="text-danger">*</span></label>
                     <select id="town_id" name="town_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
+						<option value="" selected>Sélectionner</option>
 						@foreach($town as $data)
 							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
 						@endforeach
