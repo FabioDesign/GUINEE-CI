@@ -76,7 +76,7 @@
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                    <input type="text" name="birthday_at" class="form-control requiredField date_at" placeholder="Saisir date de naissance">
+                    <input type="text" name="birthday_at" class="form-control requiredField date_at" readonly>
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
@@ -136,7 +136,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                    <input type="text" name="arrival_at" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
+                    <input type="text" name="arrival_at" class="form-control requiredField date_at" readonly>
                 </div>
             </div>
             <div class="row mb-5">
@@ -193,6 +193,7 @@
                 altInput: true,
                 altFormat: "d-m-Y",
                 dateFormat: "Y-m-d",
+    			defaultDate: "today",
                 maxDate: "today",
             });
             
