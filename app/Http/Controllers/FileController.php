@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\{Auth, DB, Log, Storage, Validator};
 class FileController extends Controller
 {
     //Liste des Pièces à fournir
-	public function index()
-	{
+	public function index() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -37,8 +36,7 @@ class FileController extends Controller
 		return view('pages.files.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
     //Liste des Pièces à fournir
-	public function create()
-	{
+	public function create() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -52,14 +50,13 @@ class FileController extends Controller
 		return view('pages.files.create', compact('title', 'currentMenu', 'addmodal'));
 	}
 	//Add Pièce à fournir
-	public function store(request $request)
-	{
+	public function store(request $request) {
         if (!Auth::check()) {
             return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
-			'libelle' => [
+			'label' => [
 				'required',
 				Rule::unique('files')->where(function ($query) {
 					return $query->whereNull('deleted_at');
@@ -67,8 +64,8 @@ class FileController extends Controller
 			],
 			'specimen' => 'required|file|mimes:png,jpg,jpeg|max:2048',
 		], [
-			'libelle.required' => "Le libellé est obligatoire.",
-			'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+			'label.required' => "Le libellé est obligatoire.",
+			'label.unique' => "Le libellé existe déjà dans la base de données.",
 			'specimen.required' => "Le spécimen est obligatoire.",
 			'specimen.file' => "Le spécimen doit être un fichier.",
 			'specimen.mimes' => "Le spécimen doit être un fichier de type : png, jpg ou jpeg",
@@ -83,10 +80,11 @@ class FileController extends Controller
 			]);
 		}
 		// Enregistrer le fichier
+		$label = Str::upper(Myhelper::valideString($request->label));
 		$path = $request->file('specimen')->store('specimens', 'public');
 		$set = [
+			'label' => $label,
 			'specimen' => $path,
-			'libelle' => $request->libelle,
 		];
 		DB::beginTransaction();
 		try {
@@ -95,7 +93,7 @@ class FileController extends Controller
             Myhelper::logs(
                 Session::get('username'), 
                 Session::get('profil'), 
-                "Pièce à fournir: {$request->libelle}",
+                "Pièce à fournir: {$label}",
 				'Ajouter',
 				Session::get('avatar')
 			);
@@ -113,8 +111,7 @@ class FileController extends Controller
 		}
 	}
 	// Afficher le formulaire d'édition d'une pièce à fournir
-	public function edit($uid)
-	{
+	public function edit($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -123,9 +120,9 @@ class FileController extends Controller
 		// Menu
 		$currentMenu = 'files';
 		// Vérifier si la pièce à fournir existe
-		$query = File::where('uid', $uid)->first();
+		$query = File::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("File::edit - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
+			Log::warning("File::edit - Aucune pièce à fournir trouvée pour l'uUID : {$uuid}");
 			return redirect('/files');
 		}
 		// Modal
@@ -134,16 +131,15 @@ class FileController extends Controller
 		return view('pages.files.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
 	// Mettre à jour une pièce à fournir
-	public function update(Request $request, $uid)
-	{
+	public function update(Request $request, $uuid) {
         if (!Auth::check()) {
             return 'x';
         }
         try {
 			// Vérifier si le pièce à fournir existe
-			$file = File::where('uid', $uid)->first();
+			$file = File::where('uuid', $uuid)->first();
 			if (!$file) {
-				Log::warning("File::update - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
+				Log::warning("File::update - Aucune pièce à fournir trouvée pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Pièce à fournir non trouvée.",
@@ -151,17 +147,16 @@ class FileController extends Controller
 			}
 			// Validator
 			$validator = Validator::make($request->all(), [
-				'libelle' => [
+				'label' => [
 					'required',
-					Rule::unique('files')->where(function ($query) use ($uid) {
-						return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+					Rule::unique('files')->where(function ($query) use ($uuid) {
+						return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 					}),
 				],
-				'specimen' => 'required|file|mimes:png,jpg,jpeg|max:2048',
+				'specimen' => 'sometimes|file|mimes:png,jpg,jpeg|max:2048',
 			], [
-				'libelle.required' => "Le libellé est obligatoire.",
-				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
-				'specimen.required' => "Le spécimen est obligatoire.",
+				'label.required' => "Le libellé est obligatoire.",
+				'label.unique' => "Le libellé existe déjà dans la base de données.",
 				'specimen.file' => "Le spécimen doit être un fichier.",
 				'specimen.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
 				'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
@@ -175,11 +170,13 @@ class FileController extends Controller
 				]);
 			}
 			// Enregistrer le fichier
-			$path = $request->file('specimen')->store('specimens', 'public');
+			$label = Str::upper(Myhelper::valideString($request->label));
 			$set = [
-				'specimen' => $path,
-				'libelle' => $request->libelle,
+				'label' => $label,
 			];
+			if ($request->has('specimen')) {
+				$set['specimen'] = $request->file('specimen')->store('specimens', 'public');
+			}
 			DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour la pièce à fournir
 			$file->update($set);
@@ -187,7 +184,7 @@ class FileController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Pièce à fournir: {$request->libelle}",
+				"Pièce à fournir: {$label}",
 				'Modifier',
 				Session::get('avatar')
 			);
@@ -205,16 +202,15 @@ class FileController extends Controller
 		}
 	}
 	// Supprimer une pièce à fournir
-	public function destroy($uid)
-	{
+	public function destroy($uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		try {
 			// Vérifier si la pièce à fournir existe
-			$file = File::where('uid', $uid)->first();
+			$file = File::where('uuid', $uuid)->first();
 			if (!$file) {
-				Log::warning("File::destroy - Aucune pièce à fournir trouvée pour l'UID : {$uid}");
+				Log::warning("File::destroy - Aucune pièce à fournir trouvée pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Pièce à fournir non trouvée.",
@@ -236,7 +232,7 @@ class FileController extends Controller
 			Myhelper::logs(
 				Session::get('username'), 
 				Session::get('profil'),
-				"Pièce à fournir: " . $file->libelle,
+				"Pièce à fournir: " . $file->label,
 				'Supprimer',
 				Session::get('avatar')
 			);

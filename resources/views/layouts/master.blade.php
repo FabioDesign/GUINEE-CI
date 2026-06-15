@@ -230,7 +230,7 @@
 													<span class="path8"></span>
 												</i>
 											</span>
-											<span class="menu-title">{{ $menu['libelle'] }}</span>
+											<span class="menu-title">{{ $menu['label'] }}</span>
 										</a>
 										<!--end:Menu link-->
 									</div>

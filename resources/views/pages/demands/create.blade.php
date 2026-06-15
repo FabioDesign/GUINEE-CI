@@ -8,7 +8,7 @@
             <div class="row mb-5">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-                    <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" />
+                    <input type="text" name="label" class="form-control requiredField" placeholder="Saisir le libellé" />
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>

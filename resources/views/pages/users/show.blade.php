@@ -42,18 +42,18 @@
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil :</label>
-                    <input type="text" value="{{ $query->profile->libelle }}" class="form-control">
+                    <input type="text" value="{{ $query->profile->label }}" class="form-control">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Ambassade :</label>
                     <select id="embassy_id" class="form-control">
-						<option data-alpha="{{ $query->country->alpha }}" data-code="+{{ $query->country->code }}">{{ $query->country->libelle }}</option>
+						<option data-alpha="{{ $query->country->alpha }}" data-code="+{{ $query->country->code }}">{{ $query->country->label }}</option>
 					</select>
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Nationalité :</label>
                     <select id="nationality_id" class="form-control">
-						<option data-alpha="{{ $query->nationality->alpha }}" data-code="+{{ $query->nationality->code }}">{{ $query->nationality->libelle }}</option>
+						<option data-alpha="{{ $query->nationality->alpha }}" data-code="+{{ $query->nationality->code }}">{{ $query->nationality->label }}</option>
 					</select>
                 </div>
             </div>
@@ -67,13 +67,13 @@
                     <select id="pays_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($pays as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Préfecture de naissance :</label>
-                    <input type="text" value="{{ $query->town->libelle }}" class="form-control">
+                    <input type="text" value="{{ $query->town->label }}" class="form-control">
                 </div>
             </div>
             <div class="row mb-5">

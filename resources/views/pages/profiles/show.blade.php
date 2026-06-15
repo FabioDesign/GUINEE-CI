@@ -9,7 +9,7 @@
         <div class="row mb-2">
           <div class="col-lg-6">
             <label class="fw-bolder text-dark fs-5">Libellé :</label>
-            <input type="text" class="form-control" value="{{ $query->libelle }}" readonly />
+            <input type="text" class="form-control" value="{{ $query->label }}" readonly />
           </div>
           <div class="col-lg-6">
             <label class="fw-bolder text-dark fs-5">Description :</label>
@@ -23,7 +23,7 @@
         </div>
         @foreach($menusWithActions as $menu)
           <div class="row mb-2">
-            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->libelle }}</label>
+            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->label }}</label>
             <div class="col-md-10 col-12 checkbox-inline">
                 @foreach($menu->actions as $action)
                   @php
@@ -32,7 +32,7 @@
                   @endphp
                   <label class="boxcheck">
                     <input type="checkbox" class="iCheck" {{ $check }}>
-                    <span style="margin: 0 15px 0 3px;">{{ $action->libelle }}</span>
+                    <span style="margin: 0 15px 0 3px;">{{ $action->label }}</span>
                   </label>
                 @endforeach
             </div>

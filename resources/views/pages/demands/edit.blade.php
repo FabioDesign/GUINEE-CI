@@ -5,11 +5,11 @@
     <div class="card-body py-4">
         <form class="formField">
             @method('PUT')
-            <input type="hidden" id="rootForm" value="documents/{{ $query->uid }}">
+            <input type="hidden" id="rootForm" value="documents/{{ $query->uuid }}">
             <div class="row mb-5">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-                    <input type="text" name="libelle" value="{{ old('libelle', $query->libelle) }}" class="form-control requiredField" placeholder="Saisir le libellé" />
+                    <input type="text" name="label" value="{{ old('label', $query->label) }}" class="form-control requiredField" placeholder="Saisir le libellé" />
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>

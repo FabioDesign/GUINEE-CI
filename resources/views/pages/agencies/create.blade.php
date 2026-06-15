@@ -8,10 +8,10 @@
 <div class="card">
     <div class="card-body py-4">
         <form class="formField">
-            <input type="hidden" id="rootForm" value="towns">
+            <input type="hidden" id="rootForm" value="agencies">
             <div class="row mb-2">
                 <div class="col-md-6 col-12">
-                    <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
+                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
                     <select id="country_id" name="country_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($query as $data)
@@ -20,8 +20,8 @@
 					</select>
                 </div>
                 <div class="col-md-6 col-12">
-                    <label class="fw-bolder text-dark fs-5">Ville : <span class="text-danger">*</span></label>
-                    <input type="text" name="label" class="form-control requiredField" placeholder="Saisir la ville" />
+                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
+                    <input type="text" name="label" class="form-control requiredField" placeholder="Saisir l'agence" />
                 </div>
             </div>
             <span class="msgError" style="display: none;"></span>

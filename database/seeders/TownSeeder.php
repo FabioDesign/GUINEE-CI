@@ -14,79 +14,79 @@ class TownSeeder extends Seeder
      */
     public function run() {
         Town::firstOrCreate(
-            ['libelle' => "CONAKRY"],
+            ['label' => "CONAKRY"],
             [
-                'country_id' => 90,
+                'country_id' => 61,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "COCODY (ABIDJAN)"],
+            ['label' => "COCODY (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "PLATEAU (ABIDJAN)"],
+            ['label' => "PLATEAU (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "YOPOUGON (ABIDJAN)"],
+            ['label' => "YOPOUGON (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "MARCORY (ABIDJAN)"],
+            ['label' => "MARCORY (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "ABOBO (ABIDJAN)"],
+            ['label' => "ABOBO (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "ATTECOUBE (ABIDJAN)"],
+            ['label' => "ATTECOUBE (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "ADJAME (ABIDJAN)"],
+            ['label' => "ADJAME (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "KOUMASSI (ABIDJAN)"],
+            ['label' => "KOUMASSI (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "PORT-BOUET (ABIDJAN)"],
+            ['label' => "PORT-BOUET (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );
         Town::firstOrCreate(
-            ['libelle' => "TREICHVILLE (ABIDJAN)"],
+            ['label' => "TREICHVILLE (ABIDJAN)"],
             [
-                'country_id' => 53,
+                'country_id' => 41,
                 'created_by' => 1,
             ]
         );

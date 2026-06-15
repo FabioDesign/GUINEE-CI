@@ -45,30 +45,39 @@
                 </div>
             </div>
             <div class="row mb-5">
-                <div class="col-md-4 col-12">
+                <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
                     <select id="profile_id" name="profile_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($profile as $data)
-							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
-                <div class="col-md-4 col-12">
-                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
-                    <select id="embassy_id" name="embassy_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($country as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}">{{ $data->libelle }}</option>
-						@endforeach
-					</select>
-                </div>
-                <div class="col-md-4 col-12">
+                <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
                     <select id="nationality_id" name="nationality_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($nationality as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 38 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->nationality }}</option>
+						@endforeach
+					</select>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
+                    <select id="embassy_id" name="embassy_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($country as $data)
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 41 ? 'selected':'' @endphp>{{ $data->country }}</option>
+						@endforeach
+					</select>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
+                    <select id="agency_id" name="agency_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($agency as $data)
+							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -83,7 +92,7 @@
                     <select id="pays_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($pays as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -92,7 +101,7 @@
                     <select id="town_id" name="town_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($town as $data)
-							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -245,7 +254,8 @@
             }
             const selectFields = [
                 { selector: '#profile_id', placeholder: "Sélectionner le profil" },
-                { selector: '#town_id', placeholder: "Sélectionner la préfecture" }
+                { selector: '#town_id', placeholder: "Sélectionner la préfecture" },
+                { selector: '#agency_id', placeholder: "Sélectionner l'agence" },
             ];
 
             selectFields.forEach(field => {

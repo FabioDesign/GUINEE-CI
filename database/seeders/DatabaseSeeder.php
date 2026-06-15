@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 // Action
                 ActionSeeder::class,
+                // Agence
+                AgencySeeder::class,
                 // Pays
                 CountrySeeder::class,
                 // Menu
                 MenuSeeder::class,
-                // Nationalité
-                NationalitySeeder::class,
                 // Profil
                 ProfileSeeder::class,
                 // Menu-Action

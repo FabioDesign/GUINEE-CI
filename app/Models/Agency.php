@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Document extends Model
+class Agency extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-
+    
     protected static function boot() {
         parent::boot();
 
@@ -22,8 +22,9 @@ class Document extends Model
             }
         });
     }
-
-    public function files() {
-        return $this->hasMany(File::class, 'document_id');
+    
+    // Relation avec le Pays
+    public function country() {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

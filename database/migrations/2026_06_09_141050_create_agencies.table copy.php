@@ -11,25 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('agencies', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->uuid('uuid');
-            $table->string('label', 50);
-            $table->text('description')->nullable();
+            $table->string('label');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->nullable();
             $table->foreignId('updated_by')->nullable();
             $table->foreignId('deleted_by')->nullable();
+            $table->integer('country_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('agencies');
     }
 };

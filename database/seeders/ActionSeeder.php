@@ -14,31 +14,31 @@ class ActionSeeder extends Seeder
      */
     public function run(){
         Action::firstOrCreate(
-            ['libelle' => "Voir"]
+            ['label' => "Voir"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Ajouter"]
+            ['label' => "Ajouter"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Modifier"]
+            ['label' => "Modifier"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Supprimer"]
+            ['label' => "Supprimer"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Activer/Désactiver"]
+            ['label' => "Activer/Désactiver"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Transmettre"]
+            ['label' => "Transmettre"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Valider"]
+            ['label' => "Valider"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Rejeter"]
+            ['label' => "Rejeter"]
         );
         Action::firstOrCreate(
-            ['libelle' => "Imprimer"]
+            ['label' => "Imprimer"]
         );
     }
 }

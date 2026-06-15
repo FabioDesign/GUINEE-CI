@@ -67,8 +67,7 @@
     {{ $rows->render() }}
 @endsection
 
-@section('modals')
-    {{-- DELETE MODAL --}}
+@section('modals') {{-- DELETE MODAL --}}
     <div class="modal fade" id="delete-log-modal" tabindex="-1" aria-labelledby="delete-log-modal-label" aria-hidden="true">
         <div class="modal-dialog">
             <form id="delete-log-form" action="{{ route('log-viewer::logs.delete') }}" method="POST">

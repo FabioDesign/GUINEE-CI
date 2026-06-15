@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('country', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('libelle', 100);
+            $table->string('country', 100);
+            $table->string('nationality', 100);
             $table->char('alpha', 2);
             $table->string('code', 10);
-            $table->tinyInteger('embassy');
+            $table->tinyInteger('embassy')->default('0');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('country');
+        Schema::dropIfExists('countries');
     }
 };

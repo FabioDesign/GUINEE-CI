@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->uuid('uid');
-            $table->string('libelle');
+            $table->uuid('uuid');
+            $table->string('label');
             $table->text('specimen');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();

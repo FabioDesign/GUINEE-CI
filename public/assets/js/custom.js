@@ -110,6 +110,7 @@ $.ajaxSetup({
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
 });
+// Récupération des préfectures
 $('#pays_id').on('change', function() {
   let dataString = { country_id: $(this).val() };
   $.ajax({
@@ -126,7 +127,32 @@ $('#pays_id').on('change', function() {
         $("#town_id").empty().append('<option value="" disabled selected>Sélectionner</option>');
 
         $.each(response.data, function(i, d) {
-          $("#town_id").append("<option value='" + d.id + "'>" + d.libelle + "</option>");
+          $("#town_id").append("<option value='" + d.id + "'>" + d.label + "</option>");
+        });
+      } else {
+        $('.msgError').html(response.message);
+      }
+    }
+  });
+});
+// Récupération des agences
+$('#embassy_id').on('change', function() {
+  let dataString = { country_id: $(this).val() };
+  $.ajax({
+    type: 'POST',
+    data: dataString,
+    url: '/agencies/list',
+    success: function(response) {
+      if (response === 'x') {
+        window.location.href = '/';
+        return;
+      }
+      if (response.status == 1) {
+        // Vider avant de recharger
+        $("#agency_id").empty().append('<option value="" disabled selected>Sélectionner</option>');
+
+        $.each(response.data, function(i, d) {
+          $("#agency_id").append("<option value='" + d.id + "'>" + d.label + "</option>");
         });
       } else {
         $('.msgError').html(response.message);

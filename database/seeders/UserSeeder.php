@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 'father_fullname' => 'Léon OGOU',
                 'mother_fullname' => 'Apo KOUASSI',
                 'person_fullname' => 'JB OGOU',
-                'person_number' => '2250102030406',
+                'person_number' => '0102030406',
                 'person_address' => '10 rue de Cocody, 75001 Abidjan',
                 'arrival_at' => '2000-05-00',
                 'status' => 1,
@@ -43,9 +43,10 @@ class UserSeeder extends Seeder
                 'created_by' => 1,
                 'activated_by' => 1,
                 'town_id' => 2,
+                'agency_id' => 1,
                 'profile_id' => 1,
-                'embassy_id' => 53,
-                'nationality_id' => 49,
+                'embassy_id' => 41,
+                'nationality_id' => 41,
             ]
         );
     }

@@ -3,29 +3,27 @@ namespace App\Http\Controllers;
 
 use Session;
 use Myhelper;
-use \Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\{DB, Hash, Log, Validator, Auth};
-use App\Models\{Country, Document, Logs, Nationality, Consulardoc, Permission, Profile, Town, User};
+use Illuminate\Support\Facades\{Auth,DB, Hash, Log, Validator};
+use App\Models\{Agency, Country, Document, Logs, Consulardoc, Permission, Profile, Town, User};
 
 class UserController extends Controller
-{    
+{
     // Liste des utilisateurs
-    public function index()
-    {
+    public function index() {
         if (!Auth::check()) {
             return redirect('/');
         }
-		//Title
+		// Title
 		$title = 'Gestion des utilisateurs';
-		//Menu
+		// Menu
 		$currentMenu = 'users';
-		//Modal
-		$actionIds = Myhelper::actions(Auth::user()->profile_id, 7);
+		// Modal
+		$actionIds = Myhelper::actions(Auth::user()->profile_id, 8);
 		$addmodal = in_array(2, $actionIds) ? '<a href="/users/create" class="btn btn-sm fw-bold btn-primary">Ajouter un utilisateur</a>':'';
-		//Requete Read
+		// Requete Read
 		$query = User::orderByDesc('created_at')->get();
 		Myhelper::logs(
 			Session::get('username'),
@@ -37,8 +35,7 @@ class UserController extends Controller
         return view('pages.users.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
     }
     // Détail d'Utilisateur
-	public function show($uid)
-	{
+	public function show($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -47,42 +44,41 @@ class UserController extends Controller
 		// Menu
 		$currentMenu = 'users';
 		// Vérifier si l'utilisateur existe
-		$query = User::where('uid', $uid)->first();
+		$query = User::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("User::show - Aucun utilisateur trouvée pour l'UID : {$uid}");
+			Log::warning("User::show - Aucun utilisateur trouvée pour l'uUID : {$uuid}");
 			return redirect('/users');
 		}
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>';
-		$pays = Country::orderBy('libelle')->get();
+		$pays = Country::orderBy('label')->get();
 		$code = Country::where('code', $query->code)->first();
 		$ville = Town::where('id', $query->town_id)->first();
 		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'pays'));
 	}
-    //Liste des utilisateurs
-	public function create()
-	{
+    // Liste des utilisateurs
+	public function create() {
         if (!Auth::check()) {
             return redirect('/');
         }
-		//Title
+		// Title
 		$title = "Ajout d'un utilisateur";
-		//Menu
+		// Menu
 		$currentMenu = 'users';
-		//Modal
+		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
-		$pays = Country::orderBy('libelle')->get();
-		$nationality = Nationality::orderBy('libelle')->get();
-		$town = Town::where('country_id', 61)->orderBy('libelle')->get();
-		$country = Country::where('embassy', 1)->orderBy('libelle')->get();
-		$profile = Profile::where('id', '!=', 1)->orderBy('libelle')->get();
-		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'pays', 'profile', 'country', 'nationality'));
+		$pays = Country::orderBy('country')->get();
+		$agency = Agency::where('country_id', 41)->orderBy('label')->get();
+		$nationality = Country::orderBy('nationality')->get();
+		$town = Town::where('country_id', 61)->orderBy('label')->get();
+		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
+		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'pays', 'profile', 'country', 'nationality', 'agency'));
 	}
     // Account creation
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
 		// Validator
 		$validator = Validator::make($request->all(), [
 			'civility' => 'required|in:M.,Mme,Mlle',
@@ -90,19 +86,24 @@ class UserController extends Controller
 			'firstname' => 'required',
 			'number' => [
 				'required',
-                Rule::unique('users')->where(function ($query) use ($uid) {
-                    return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+                'regex:/^\d{10}$/',
+                Rule::unique('users')->where(function ($query) {
+					return $query->whereNull('deleted_at');
                 }),
 			],
 			'email' => [
 				'required',
-                Rule::unique('users')->where(function ($query) use ($uid) {
-                    return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+				'email',
+                Rule::unique('users')->where(function ($query) {
+					return $query->whereNull('deleted_at');
                 }),
 			],
 			'profession' => 'required',
-			'nationality_id' => 'required',
-            'town_id' => 'required',
+            'profile_id' => 'required|exists:profiles,id',
+			'nationality_id' => 'required|exists:countries,id',
+            'embassy_id' => 'required|exists:countries,id',
+            'agency_id' => 'required|exists:agencies,id',
+            'town_id' => 'required|exists:towns,id',
             'birthday_at' => 'required|date|date_format:Y-m-d',
             'birthplace' => 'required',
             'father_fullname' => 'required',
@@ -124,14 +125,24 @@ class UserController extends Controller
 			'lastname.required' => "Le nom est obligatoire.",
 			'firstname.required' => "Les prénoms sont obligatoires.",
 			'number.required' => "Le numéro de téléphone est obligatoire.",
+            'number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
 			'number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
-			'email.required' => "L'email est obligatoire.",
-			'email.unique' => "L'email existe déjà dans la base de données.",
+			'email.required' => "Adresse e-mail est obligatoire.",
+            'email.email' => "Adresse e-mail non valide.",
+			'email.unique' => "Adresse e-mail existe déjà dans la base de données.",
 			'profession.required' => "La profession est obligatoire.",
+            'profile_id.required' => "Le profil est obligatoire.",
+            'profile_id.exists' => "Le profil n'existe pas dans la base de données.",
+            'embassy_id.required' => "L'ambassade est obligatoire.",
+            'embassy_id.exists' => "L'ambassade n'existe pas dans la base de données.",
+            'agency_id.required' => "L'agence est obligatoire.",
+            'agency_id.exists' => "L'agence n'existe pas dans la base de données.",
 			'nationality_id.required' => "La nationalité est obligatoire.",
+			'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
 			'birthday_at.required' => "La date de naissance est obligatoire.",
 			'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
 			'town_id.required' => "La prefecture est obligatoire.",
+			'town_id.exists' => "La prefecture n'existe pas dans la base de données.",
 			'birthplace.required' => "Le lieu de naissance est obligatoire.",
 			'father_fullname.required' => "Le nom et prénoms du père est obligatoire.",
 			'mother_fullname.required' => "Le nom et prénoms de la mère est obligatoire.",
@@ -179,6 +190,7 @@ class UserController extends Controller
             'profession' => $request->profession,
             'profile_id' => $request->profile_id,
             'embassy_id' => $request->embassy_id,
+            'agency_id' => $request->agency_id,
             'nationality_id' => $request->nationality_id,
             'birthday_at' => $request->birthday_at,
             'town_id' => $request->town_id,
@@ -225,8 +237,7 @@ class UserController extends Controller
         }
     }
 	// Afficher le formulaire d'édition d'un utilisateur
-	public function edit($uid)
-	{
+	public function edit($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -235,36 +246,37 @@ class UserController extends Controller
 		// Menu
 		$currentMenu = 'users';
 		// Vérifier si l'utilisateur existe
-		$query = User::where('uid', $uid)->first();
+		$query = User::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("User::edit - Aucun utilisateur trouvée pour l'UID : {$uid}");
+			Log::warning("User::edit - Aucun utilisateur trouvée pour l'uUID : {$uuid}");
 			return redirect('/users');
 		}
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
-		$pays = Country::orderBy('libelle')->get();
+		$pays = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
-		$nationality = Nationality::orderBy('libelle')->get();
+		$nationality = Country::orderBy('nationality')->get();
+		$agency = Agency::where('id', $query->agency_id)->first();
+		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
 		$ville = Town::where('id', $query->town_id)->first();
-		$town = Town::where('country_id', $ville->country_id)->orderBy('libelle')->get();
-		$country = Country::where('embassy', 1)->orderBy('libelle')->get();
-		$profile = Profile::where('id', '!=', 1)->orderBy('libelle')->get();
-		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'pays', 'profile', 'country', 'nationality'));
+		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
+		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
+		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'pays', 'profile', 'country', 'nationality', 'agency', 'agencies'));
 	}
     // Modification
-    public function update(Request $request, $uid)
-    {
+    public function update(Request $request, $uuid) {
         // dd($request);
         if (!Auth::check()) {
             return 'x';
         }
         try {
             // Vérifier si l'utilisateur existe
-            $user = User::where('uid', $uid)->first();
+            $user = User::where('uuid', $uuid)->first();
             if (!$user) {
-                Log::warning("User::update - Aucun utilisateur trouvé pour l'UID : {$uid}");
+                Log::warning("User::update - Aucun utilisateur trouvé pour l'uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
                     'message' => "Utilisateur non trouvé.",
@@ -277,19 +289,19 @@ class UserController extends Controller
                 'firstname' => 'required',
                 'number' => [
                     'required',
-                    Rule::unique('users')->where(function ($query) use ($uid) {
-                        return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+                    Rule::unique('users')->where(function ($query) use ($uuid) {
+                        return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
                     }),
                 ],
                 'email' => [
                     'required',
-                    Rule::unique('users')->where(function ($query) use ($uid) {
-                        return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+                    Rule::unique('users')->where(function ($query) use ($uuid) {
+                        return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
                     }),
                 ],
                 'profession' => 'required',
-                'nationality_id' => 'required',
-                'town_id' => 'required',
+                'nationality_id' => 'required|exists:countries,id',
+                'town_id' => 'required|exists:towns,id',
                 'birthday_at' => 'required|date|date_format:Y-m-d',
                 'birthplace' => 'required',
                 'father_fullname' => 'required',
@@ -316,9 +328,11 @@ class UserController extends Controller
                 'email.unique' => "L'email existe déjà dans la base de données.",
                 'profession.required' => "La profession est obligatoire.",
                 'nationality_id.required' => "La nationalité est obligatoire.",
+                'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
                 'birthday_at.required' => "La date de naissance est obligatoire.",
                 'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
                 'town_id.required' => "La prefecture est obligatoire.",
+                'town_id.exists' => "La prefecture n'existe pas dans la base de données.",
                 'birthplace.required' => "Le lieu de naissance est obligatoire.",
                 'father_fullname.required' => "Le nom et prénoms du père est obligatoire.",
                 'mother_fullname.required' => "Le nom et prénoms de la mère est obligatoire.",
@@ -443,16 +457,15 @@ class UserController extends Controller
         }
 	}
 	// Supprimer un utilisateur
-	public function destroy($uid)
-	{
+	public function destroy($uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		try {
             // Vérifier si l'utilisateur existe
-            $user = User::where('uid', $uid)->first();
+            $user = User::where('uuid', $uuid)->first();
             if (!$user) {
-                Log::warning("User::destroy - Aucun utilisateur trouvé pour l'UID : {$uid}");
+                Log::warning("User::destroy - Aucun utilisateur trouvé pour l'uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
                     'message' => "Utilisateur non trouvé.",
@@ -508,27 +521,25 @@ class UserController extends Controller
         // Avatar
         if ($query->avatar == '')
         $query->avatar = $query->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-		$pays = Country::orderBy('libelle')->get();
+		$pays = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
-		$nationality = Nationality::orderBy('libelle')->get();
+		$nationality = Country::orderBy('nationality')->get();
 		$ville = Town::where('id', $query->town_id)->first();
-		$town = Town::where('country_id', $ville->country_id)->orderBy('libelle')->get();
-		$country = Country::where('embassy', 1)->orderBy('libelle')->get();
+		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
+		$country = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::all();
 		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'pays', 'profile', 'country', 'nationality'));
 	}
     // Connexion
-	public function login()
-    {
-        //Requete Read
+	public function login() {
+        // Requete Read
         $query = Document::where('status', 1)
         ->orderBy('position')
         ->get();
         return view('login', compact('query'));
 	}
     // Authentification avec Laravel Auth
-    public function auth(Request $request)
-    {
+    public function auth(Request $request) {
         // Validator
         $validator = Validator::make($request->all(), [
             'login' => 'required',
@@ -583,7 +594,7 @@ class UserController extends Controller
                 ]);
             }
             // Vérifier si le compte n'est pas rattaché à une Ambassade
-            if ($user->country && $user->country->embassy == 0) {
+            if ($user->embassy && $user->embassy->embassy == 0) {
                 return response()->json([
                     'status' => 0,
                     'message' => "Votre compte n'est pas rattaché à une Ambassade.",
@@ -591,17 +602,15 @@ class UserController extends Controller
             }
             // Tentative de connexion
             if (Auth::attempt($credentials)) {
-                // Connexion réussie
-                $user = Auth::user();
                 // Mise à jour de la dernière connexion
                 $user->update([
                     'login_at' => now(),
                 ]);
                 // Préparer les données de session
                 $prenom = explode(' ', $user->firstname);
-                $username = $prenom[0] . ' ' . $user->lastname;
+                $username = "{$prenom[0]} {$user->lastname}";
                 // Récupération des menus
-                $menus = Permission::select('menus.id', 'libelle', 'target', 'icone')
+                $menus = Permission::select('menus.id', 'label', 'target', 'icone')
                     ->join('menus', 'menus.id', '=', 'permissions.menu_id')
                     ->where('profile_id', $user->profile_id)
                     ->where('status', 1)
@@ -609,7 +618,7 @@ class UserController extends Controller
                     ->orderBy('position')
                     ->get();
                 if ($menus->isEmpty()) {
-                    Log::warning("Aucun menu trouvé pour ce profil : " . $user->profile_id);
+                    Log::warning("User::auth - Aucun menu trouvé pour ce profil : {$user->profile_id}");
                     Auth::logout();
                     return response()->json([
                         'status' => 0,
@@ -619,9 +628,9 @@ class UserController extends Controller
                 $page = $menus->first()->target ?? '/';
                 // Stocker des informations supplémentaires en session
                 Session::put('username', $username);
-                Session::put('profil', $user->profile->libelle ?? '');
-                Session::put('embassy', $user->country->libelle ?? '');
-                Session::put('map', $user->country->alpha ?? '');
+                Session::put('profil', $user->profile->label ?? '');
+                Session::put('embassy', $user->embassy->country ?? '');
+                Session::put('map', $user->embassy->alpha ?? '');
                 Session::put('menus', $menus);
                 // Avatar
                 if ($user->avatar != '')
@@ -632,8 +641,8 @@ class UserController extends Controller
                 // Log de connexion
                 Myhelper::logs(
                     $username,
-                    $user->profile->libelle ?? '',
-                    $menus->first()->libelle,
+                    $user->profile->label ?? '',
+                    $menus->first()->label,
                     'Connecter',
                     $avatar
                 );
@@ -643,14 +652,14 @@ class UserController extends Controller
                 ]);
             } else {
                 // Mot de passe incorrect
-                Log::warning("Tentative de connexion échouée pour : {$request->login}");
+                Log::warning("User::auth - Tentative de connexion échouée pour : {$request->login}");
                 return response()->json([
                     'status' => 0,
                     'message' => "Login ou mot de passe incorrect.",
                 ]);
             }
         } catch (\Exception $e) {
-            Log::warning("Echec de connexion : {$e->getMessage()}" . json_encode($request->all()));
+            Log::warning("User::auth - Echec de connexion : {$e->getMessage()}" . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Service indisponible, veuillez réessayer plus tard !",
@@ -658,8 +667,7 @@ class UserController extends Controller
         }
     }
     // Déconnexion avec Laravel Auth
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
         if (Auth::check()) {
             Myhelper::logs(
                 Session::get('username'), 
@@ -675,17 +683,5 @@ class UserController extends Controller
             $request->session()->regenerateToken();
         }
         return redirect('/');
-    }
-    // Middleware pour vérifier les permissions
-    public function checkPermission($permission)
-    {
-        $user = Auth::user();
-        if (!$user) return false;
-        
-        return Permission::where('profile_id', $user->profile_id)
-            ->whereHas('menu', function($query) use ($permission) {
-                $query->where('libelle', $permission);
-            })
-            ->exists();
     }
 }

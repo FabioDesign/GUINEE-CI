@@ -56,6 +56,7 @@ class User extends Authenticatable
         'town_id',
         'profile_id',
         'embassy_id',
+        'agency_id',
         'nationality_id',
     ];
 
@@ -85,37 +86,29 @@ class User extends Authenticatable
         'activated_at' => 'datetime',
     ];
     // Génération de UUID unique
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::creating(function ($model) {
-            if (empty($model->uid)) {
-                $model->uid = Str::uuid()->toString();
+            if (empty($model->uuid)) {
+                $model->uuid = Str::uuid()->toString();
             }
         });
     }
     // Relation avec le profil
-    public function profile()
-    {
+    public function profile() {
         return $this->belongsTo(Profile::class, 'profile_id');
     }
-
     // Relation avec la ville
-    public function town()
-    {
+    public function town() {
         return $this->belongsTo(Town::class, 'town_id');
     }
-
-    // Relation avec le Pays
-    public function country()
-    {
+    // Relation avec l'Ambassade
+    public function embassy() {
         return $this->belongsTo(Country::class, 'embassy_id');
     }
-
-    // Relation avec le Nationality
-    public function nationality()
-    {
-        return $this->belongsTo(Nationality::class, 'nationality_id');
+    // Relation avec la Nationalité
+    public function nationality() {
+        return $this->belongsTo(Country::class, 'nationality_id');
     }
 }

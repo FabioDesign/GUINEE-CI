@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 class ProfileController extends Controller
 {
     //Liste des Profils
-	public function index()
-	{
+	public function index() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -37,8 +36,7 @@ class ProfileController extends Controller
 		return view('pages.profiles.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
 	// Afficher le détail d'un profil
-	public function show($uid)
-	{
+	public function show($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -47,9 +45,9 @@ class ProfileController extends Controller
 		// Menu
 		$currentMenu = 'profiles';
 		// Vérifier si le profil existe
-		$query = Profile::where('uid', $uid)->first();
+		$query = Profile::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
+			Log::warning("Profile::show - Aucun profil trouvé pour l'uUID : {$uuid}");
 			return redirect('/profiles');
 		}
 		// Modal
@@ -69,8 +67,7 @@ class ProfileController extends Controller
 		return view('pages.profiles.show', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions'));
 	}
     //Liste des Profils
-	public function create()
-	{
+	public function create() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -89,14 +86,13 @@ class ProfileController extends Controller
 		return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions'));
 	}
 	//Add/Mod Profil
-	public function store(request $request)
-	{
+	public function store(request $request) {
         if (!Auth::check()) {
             return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
-			'libelle' => [
+			'label' => [
 				'required',
 				Rule::unique('profiles')->where(function ($query) {
 					return $query->whereNull('deleted_at');
@@ -105,8 +101,8 @@ class ProfileController extends Controller
 			'description' => 'required',
 			'permissions' => 'required|array',
 		], [
-			'libelle.required' => "Le libellé est obligatoire.",
-			'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+			'label.required' => "Le libellé est obligatoire.",
+			'label.unique' => "Le libellé existe déjà dans la base de données.",
 			'description.required' => "La description est obligatoire.",
 			'permissions.required' => "Cocher au moins une case.",
 			'permissions.array' => "Format des permissions invalide.",
@@ -120,7 +116,7 @@ class ProfileController extends Controller
 			]);
 		}
 		$set = [
-			'libelle' => $request->libelle,
+			'label' => $request->label,
 			'description' => $request->description,
 		];
 		DB::beginTransaction(); // Démarrer une transaction
@@ -143,7 +139,7 @@ class ProfileController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Profil: {$request->libelle}",
+				"Profil: {$request->label}",
 				'Ajouter',
 				Session::get('avatar')
 			);
@@ -161,8 +157,7 @@ class ProfileController extends Controller
 		}
 	}
 	// Afficher le formulaire d'édition d'un profil
-	public function edit($uid)
-	{
+	public function edit($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -171,9 +166,9 @@ class ProfileController extends Controller
 		// Menu
 		$currentMenu = 'profiles';
 		// Vérifier si le profil existe
-		$query = Profile::where('uid', $uid)->first();
+		$query = Profile::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Profile::edit - Aucun profil trouvé pour l'UID : {$uid}");
+			Log::warning("Profile::edit - Aucun profil trouvé pour l'uUID : {$uuid}");
 			return redirect('/profiles');
 		}
 		// Modal
@@ -194,16 +189,15 @@ class ProfileController extends Controller
 		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions'));
 	}
 	// Mettre à jour un profil
-	public function update(Request $request, $uid)
-	{
+	public function update(Request $request, $uuid) {
         if (!Auth::check()) {
             return 'x';
         }
         try {
 			// Vérifier si le profil existe
-			$profile = Profile::where('uid', $uid)->first();
+			$profile = Profile::where('uuid', $uuid)->first();
 			if (!$profile) {
-				Log::warning("Profile::show - Aucun profil trouvé pour l'UID : {$uid}");
+				Log::warning("Profile::show - Aucun profil trouvé pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Profil non trouvé.",
@@ -211,17 +205,17 @@ class ProfileController extends Controller
 			}
 			// Validator
 			$validator = Validator::make($request->all(), [
-				'libelle' => [
+				'label' => [
 					'required',
-					Rule::unique('profiles')->where(function ($query) use ($uid) {
-						return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+					Rule::unique('profiles')->where(function ($query) use ($uuid) {
+						return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 					}),
 				],
 				'description' => 'required',
 				'permissions' => 'required|array',
 			], [
-				'libelle.required' => "Le libellé est obligatoire.",
-				'libelle.unique' => "Le libellé existe déjà dans la base de données.",
+				'label.required' => "Le libellé est obligatoire.",
+				'label.unique' => "Le libellé existe déjà dans la base de données.",
 				'description.required' => "La description est obligatoire.",
 				'permissions.required' => "Cocher au moins une case.",
 				'permissions.array' => "Format des permissions invalide.",
@@ -235,7 +229,7 @@ class ProfileController extends Controller
 				]);
 			}
 			$set = [
-				'libelle' => $request->libelle,
+				'label' => $request->label,
 				'description' => $request->description,
 			];
 			DB::beginTransaction(); // Démarrer une transaction
@@ -259,7 +253,7 @@ class ProfileController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Profil: {$request->libelle}",
+				"Profil: {$request->label}",
 				'Modifier',
 				Session::get('avatar')
 			);
@@ -277,16 +271,15 @@ class ProfileController extends Controller
 		}
 	}
 	// Supprimer un profil
-	public function destroy($uid)
-	{
+	public function destroy($uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		try {
 			// Vérifier si le profil existe
-			$query = Profile::where('uid', $uid)->first();
+			$query = Profile::where('uuid', $uuid)->first();
 			if (!$query) {
-				Log::warning("Profile::destroy - Aucun profil trouvé pour l'UID : {$uid}");
+				Log::warning("Profile::destroy - Aucun profil trouvé pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Profil non trouvé.",
@@ -294,7 +287,7 @@ class ProfileController extends Controller
 			}
 			// Ne pas permettre la désactivation du profil admin
 			if ($query->id == 1) {
-				Log::warning("Profile::destroy - Profil administrateur pour l'UID : {$uid}");
+				Log::warning("Profile::destroy - Profil administrateur pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Le profil administrateur ne peut pas être supprimé.",
@@ -318,7 +311,7 @@ class ProfileController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Profil: " . $query->libelle,
+				"Profil: " . $query->label,
 				'Supprimer',
 				Session::get('avatar')
 			);

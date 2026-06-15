@@ -94,9 +94,9 @@
                   <th>Libellé</th>
                   <th class="text-center">Montant</th>
                   <th class="text-center">Nombre de jours</th>
-                  <th class="text-center">Date</th>
+                  <th class="text-center w-70">Date</th>
                   <th class="text-center">Statut</th>
-                  <th class="text-center">Action</th>
+                  <th class="text-center w-170">Action</th>
                 </tr>
               </thead>
               <tbody class="text-gray-600 fw-semibold">
@@ -133,7 +133,7 @@
             outTable += `<tr>
               <td>${i}</td>
               <td>${data.code}</td>
-              <td>${data.libelle}</td>
+              <td>${data.label}</td>
               <td class="text-center">${data.amount}</td>
               <td class="text-center">${dateHour}</td>
               <td class="text-center">${dateRDV}</td>

@@ -5,11 +5,12 @@
     <div class="card-body py-4">
         <form class="formField">
             @method('PUT')
-            <input type="hidden" id="rootForm" value="documents/{{ $query->uid }}">
+            <input type="hidden" id="rootForm" value="documents/{{ $query->uuid }}">
+            <span class="msgError" style="display: none;"></span>
             <div class="row mb-5">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-                    <input type="text" name="libelle" value="{{ old('libelle', $query->libelle) }}" class="form-control requiredField" placeholder="Saisir le libellé" />
+                    <input type="text" name="label" value="{{ old('label', $query->label) }}" class="form-control requiredField" placeholder="Saisir le libellé" />
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
@@ -17,7 +18,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Nombre de jours : <span class="text-danger">*</span></label>
-                    <input type="text" name="day" value="{{ old('day', $query->day) }}" class="form-control requiredField" placeholder="Saisir le nombre" onKeyUp="verif_int(this)" />
+                    <input type="text" name="number" value="{{ old('number', $query->number) }}" class="form-control requiredField" placeholder="Saisir le nombre" onKeyUp="verif_int(this)" />
                 </div>
             </div>
             <div class="row mb-2">
@@ -26,7 +27,21 @@
                     <textarea name="description" class="form-control requiredField" placeholder="Saisir la description">{{ old('description', $query->description) }}</textarea>
                 </div>
             </div>
-            <span class="msgError" style="display: none;"></span>
+            <div class="row mb-2">
+                <div class="col-md-12 col-12">
+                    <label class="fw-bolder text-dark fs-5">Pièces jointes : <span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="row mb-2">
+            @foreach ($docFiles as $docFile)
+                <div class="col-md-12 col-12 checkbox-inline">
+                    <label class="boxcheck">
+                        <input type="checkbox" name="file_id[]" value="{{ $docFile->file_id }}" class="iCheck" />
+                        <span style="margin-left: 10px;">{{ $docFile->file->label }}</span>
+                    </label>
+                </div>
+            @endforeach
+            </div>
         </form>
     </div>
 </div>

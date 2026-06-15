@@ -116,7 +116,7 @@
                 </div>
               </td>
               <td>${data.profil}</td>
-              <td>${data.libelle}</td>
+              <td>${data.label}</td>
               <td class="text-center"><span class="badge badge-light-${data.color} fw-bold px-4 py-3">${data.action}</span></td>
               <td class="text-center">${dateHour}</td>
             </tr>`;

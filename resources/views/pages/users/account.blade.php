@@ -15,7 +15,7 @@
 			<input type="hidden" name="account">
 			<input type="hidden" id="code" value="{{ $query->code }}">
 			<input type="hidden" id="alpha" value="{{ $code->alpha }}">
-			<input type="hidden" id="rootForm" value="users/{{ $query->uid }}">
+			<input type="hidden" id="rootForm" value="users/{{ $query->uuid }}">
 			<span class="msgError" style="display: none;"></span>
 			<!--begin::Input group-->
 			<div class="row mb-6">
@@ -92,7 +92,7 @@
 					<select id="profile_id" name="profile_id" class="form-control" disabled>
 						<option value="" selected>Sélectionner</option>
 						@foreach($profile as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -101,7 +101,7 @@
 					<select id="embassy_id" name="embassy_id" class="form-control" disabled>
 						<option value="" selected>Sélectionner</option>
 						@foreach($country as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -110,7 +110,7 @@
 					<select id="nationality_id" name="nationality_id" class="form-control" disabled>
 						<option value="" selected>Sélectionner</option>
 						@foreach($nationality as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->nationality }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -125,7 +125,7 @@
 					<select id="pays_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($pays as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -134,7 +134,7 @@
 					<select id="town_id" name="town_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($town as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->town_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" @php echo $data->id == $query->town_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
 				</div>

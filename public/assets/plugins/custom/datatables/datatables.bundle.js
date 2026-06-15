@@ -59,8 +59,7 @@
 	"use strict";
 
 	
-	var DataTable = function ( selector, options )
-	{
+	var DataTable = function ( selector, options ) {
 		// When creating with `new`, create a new DataTable, returning the API instance
 		if (this instanceof DataTable) {
 			return $(selector).DataTable(options);
@@ -1438,8 +1437,7 @@
 	
 	// Basically the same as _pluck, but rather than looping over `a` we use `order`
 	// as the indexes to pick from `a`
-	var _pluck_order = function ( a, order, prop, prop2 )
-	{
+	var _pluck_order = function ( a, order, prop, prop2 ) {
 		var out = [];
 		var i=0, ien=order.length;
 	
@@ -1462,8 +1460,7 @@
 	};
 	
 	
-	var _range = function ( len, start )
-	{
+	var _range = function ( len, start ) {
 		var out = [];
 		var end;
 	
@@ -1484,8 +1481,7 @@
 	};
 	
 	
-	var _removeEmpty = function ( a )
-	{
+	var _removeEmpty = function ( a ) {
 		var out = [];
 	
 		for ( var i=0, ien=a.length ; i<ien ; i++ ) {
@@ -1539,8 +1535,7 @@
 	 * @return {array} Array of unique items
 	 * @ignore
 	 */
-	var _unique = function ( src )
-	{
+	var _unique = function ( src ) {
 		if ( _areAllUnique( src ) ) {
 			return src.slice();
 		}
@@ -1906,8 +1901,7 @@
 	 *  @param {object} o
 	 *  @memberof DataTable#oApi
 	 */
-	function _fnHungarianMap ( o )
-	{
+	function _fnHungarianMap ( o ) {
 		var
 			hungarian = 'a aa ai ao as b fn i m o s ',
 			match,
@@ -1944,8 +1938,7 @@
 	 *    won't be.
 	 *  @memberof DataTable#oApi
 	 */
-	function _fnCamelToHungarian ( src, user, force )
-	{
+	function _fnCamelToHungarian ( src, user, force ) {
 		if ( ! src._hungarianMap ) {
 			_fnHungarianMap( src );
 		}
@@ -1983,8 +1976,7 @@
 	 *  @param {object} oSettings dataTables settings object
 	 *  @memberof DataTable#oApi
 	 */
-	function _fnLanguageCompat( lang )
-	{
+	function _fnLanguageCompat( lang ) {
 		// Note the use of the Hungarian notation for the parameters in this method as
 		// this is called after the mapping of camelCase to Hungarian
 		var defaults = DataTable.defaults.oLanguage;
@@ -2045,8 +2037,7 @@
 	 * change only.
 	 *  @param {object} init Object to map
 	 */
-	function _fnCompatOpts ( init )
-	{
+	function _fnCompatOpts ( init ) {
 		_fnCompatMap( init, 'ordering',      'bSort' );
 		_fnCompatMap( init, 'orderMulti',    'bSortMulti' );
 		_fnCompatMap( init, 'orderClasses',  'bSortClasses' );
@@ -2086,8 +2077,7 @@
 	 * only.
 	 *  @param {object} init Object to map
 	 */
-	function _fnCompatCols ( init )
-	{
+	function _fnCompatCols ( init ) {
 		_fnCompatMap( init, 'orderable',     'bSortable' );
 		_fnCompatMap( init, 'orderData',     'aDataSort' );
 		_fnCompatMap( init, 'orderSequence', 'asSorting' );
@@ -2106,8 +2096,7 @@
 	 *  @param {object} settings dataTables settings object
 	 *  @memberof DataTable#oApi
 	 */
-	function _fnBrowserDetect( settings )
-	{
+	function _fnBrowserDetect( settings ) {
 		// We don't need to do this every time DataTables is constructed, the values
 		// calculated are specific to the browser and OS configuration which we
 		// don't expect to change between initialisations

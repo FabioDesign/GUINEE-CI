@@ -49,7 +49,7 @@
 							@foreach($query as $data)
 							<a href="{{ asset('storage/' . $data->specimen) }}" target="_blank">
 								<button class="btn">
-									<i class="{{ $data->icone }}"></i><span>{{ $data->libelle }}</span>
+									<i class="{{ $data->icone }}"></i><span>{{ $data->label }}</span>
 								</button>
 							</a>
 							@endforeach

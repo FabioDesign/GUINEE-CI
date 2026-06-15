@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\{DB, Hash, Log, Validator, Auth};
 class PasswordController extends Controller
 {
     // Connexion
-	public function index()
-    {
+	public function index() {
         //Requete Read
         $query = Document::where('status', 1)
         ->orderBy('position')
@@ -22,8 +21,7 @@ class PasswordController extends Controller
         return view('forgotpass', compact('query'));
 	}
 	//Logic Forgot password
-	public function store(request $request)
-    {
+	public function store(request $request) {
 		//Validator
 		$validator = Validator::make($request->all(), [
         	'email' => 'required|email',
@@ -71,7 +69,7 @@ class PasswordController extends Controller
                 $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 			Myhelper::logs(
                 $username,
-                $user->libelle,
+                $user->label,
                 'Mot de passe oublié',
                 'Modifier',
                 $avatar
@@ -89,8 +87,7 @@ class PasswordController extends Controller
         }
 	}
     // Liste des utilisateurs
-    public function edit()
-    {
+    public function edit() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -104,8 +101,7 @@ class PasswordController extends Controller
         return view('pages.password', compact('title', 'currentMenu', 'addmodal'));
     }
     //Modification de Mot de passe
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         if (!Auth::check()) {
             return redirect('x');
         }

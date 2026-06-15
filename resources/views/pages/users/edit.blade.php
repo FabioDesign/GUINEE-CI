@@ -12,7 +12,7 @@
             @method('PUT')
             <input type="hidden" id="code" value="{{ $query->code }}">
             <input type="hidden" id="alpha" value="{{ $code->alpha }}">
-            <input type="hidden" id="rootForm" value="users/{{ $query->uid }}">
+            <input type="hidden" id="rootForm" value="users/{{ $query->uuid }}">
             <span class="msgError" style="display: none;"></span>
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
@@ -48,30 +48,39 @@
                 </div>
             </div>
             <div class="row mb-5">
-                <div class="col-md-4 col-12">
+                <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
                     <select id="profile_id" name="profile_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($profile as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
-                <div class="col-md-4 col-12">
-                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
-                    <select id="embassy_id" name="embassy_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($country as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
-						@endforeach
-					</select>
-                </div>
-                <div class="col-md-4 col-12">
+                <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
                     <select id="nationality_id" name="nationality_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($nationality as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->nationality }}</option>
+						@endforeach
+					</select>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
+                    <select id="embassy_id" name="embassy_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($country as $data)
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $agency->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
+						@endforeach
+					</select>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
+                    <select id="agency_id" name="agency_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($agencies as $data)
+							<option value="{{ $data->id }}" @php echo $data->id == $query->agency_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -79,14 +88,14 @@
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                    <input type="text" name="birthday_at" value="{{ old('birthday_at', $query->birthday_at) }}" class="form-control requiredField date_at" placeholder="Saisir date de naissance">
+                    <input type="text" name="birthday_at" value="{{ old('birthday_at', $query->birthday_at ? $query->birthday_at->format('d-m-Y') : '') }}" class="form-control requiredField date_at">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
                     <select id="pays_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($pays as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -95,7 +104,7 @@
                     <select id="town_id" name="town_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($town as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->town_id ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" @php echo $data->id == $query->town_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -139,7 +148,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                    <input type="text" name="arrival_at" value="{{ old('arrival_at', $query->arrival_at) }}" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
+                    <input type="text" name="arrival_at" value="{{ old('arrival_at', $query->arrival_at ? $query->arrival_at->format('d-m-Y') : '') }}" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
                 </div>
             </div>
             <div class="row mb-5">
@@ -251,6 +260,7 @@
             const selectFields = [
                 { selector: '#profile_id', placeholder: "Sélectionner le profil" },
                 { selector: '#town_id', placeholder: "Sélectionner la préfecture" }
+                { selector: '#agency_id', placeholder: "Sélectionner l'agence" },
             ];
 
             selectFields.forEach(field => {

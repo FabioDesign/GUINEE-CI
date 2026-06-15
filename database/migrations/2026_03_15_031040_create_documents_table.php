@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid('uid');
+            $table->uuid('uuid');
             $table->string('icone', 50);
-            $table->string('libelle', 50);
+            $table->string('label', 50);
             $table->decimal('amount', 10, 0);
-            $table->tinyInteger('day');
+            $table->tinyInteger('number');
             $table->text('description')->nullable();
             $table->tinyInteger('position')->default('0');
             $table->tinyInteger('status')->default('1');

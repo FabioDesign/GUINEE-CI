@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Observers\ModelObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use App\Models\{Document, File, Profile, Town, User};
+use App\Models\{Agency, Document, File, Profile, Town, User};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         // Fix for MySQL < 5.7.7 and MariaDB < 10.2.2
         Schema::defaultStringLength(255); //Update defaultStringLength
         $models = [
+            Agency::class,
             Document::class,
             File::class,
             Profile::class,

@@ -7,11 +7,11 @@
     <div class="card-body py-4">
       <form class="formField">
         @method('PUT')
-        <input type="hidden" id="rootForm" value="profiles/{{ $query->uid }}">
+        <input type="hidden" id="rootForm" value="profiles/{{ $query->uuid }}">
         <div class="row mb-2">
           <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
-            <input type="text" name="libelle" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('libelle', $query->libelle) }}" />
+            <input type="text" name="label" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('label', $query->label) }}" />
           </div>
           <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Description : <span class="text-danger">*</span></label>
@@ -25,7 +25,7 @@
         </div>
         @foreach($menusWithActions as $menu)
           <div class="row mb-2">
-            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->libelle }}</label>
+            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->label }}</label>
             <div class="col-md-10 col-12 checkbox-inline">
                 @foreach($menu->actions as $action)
                   @php
@@ -35,7 +35,7 @@
                   @endphp
                   <label class="boxcheck">
                     <input type="checkbox" name="permissions[]" value="{{ $menu->id . '|' . $action->id }}" class="iCheck checked {{ $class }}" {{ $check }}>
-                    <span style="margin: 0 15px 0 3px;">{{ $action->libelle }}</span>
+                    <span style="margin: 0 15px 0 3px;">{{ $action->label }}</span>
                   </label>
                 @endforeach
             </div>

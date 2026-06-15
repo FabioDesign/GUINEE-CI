@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actions', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('label', 50);
+        Schema::create('doc_files', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('file_id');
+            $table->integer('document_id');
+            $table->unique(['file_id', 'document_id']);
         });
     }
 
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actions');
+        Schema::dropIfExists('doc_files');
     }
 };

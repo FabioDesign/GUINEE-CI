@@ -7,7 +7,7 @@
         <div class="row mb-5">
             <div class="col-md-6 col-12">
                 <label class="fw-bolder text-dark fs-5">Libellé :</label>
-                <input type="text" value="{{ $query->libelle }}" class="form-control" />
+                <input type="text" value="{{ $query->label }}" class="form-control" />
             </div>
             <div class="col-md-3 col-12">
                 <label class="fw-bolder text-dark fs-5">Montant :</label>

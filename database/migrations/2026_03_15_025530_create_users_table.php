@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid('uid');
+            $table->uuid('uuid');
             $table->string('code', 5);
             $table->string('civility', 5);
             $table->string('lastname');
@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreignId('blocked_by')->nullable();
             $table->foreignId('activated_by')->nullable();
             $table->integer('town_id');
+            $table->integer('agency_id');
             $table->integer('profile_id')->default('0');
             $table->integer('embassy_id')->default('0');
             $table->integer('nationality_id');

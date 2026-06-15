@@ -50,7 +50,7 @@
                     <select id="profile_id" name="profile_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($profile as $data)
-							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -59,7 +59,7 @@
                     <select id="country_id" name="country_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($country as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}">{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -68,7 +68,7 @@
                     <select id="nationality_id" name="nationality_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($nationality as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 38 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 38 ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -83,7 +83,7 @@
                     <select id="pays_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($pays as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>
@@ -92,7 +92,7 @@
                     <select id="town_id" name="town_id" class="form-control">
 						<option value="" selected disabled>Sélectionner</option>
 						@foreach($town as $data)
-							<option value="{{ $data->id }}">{{ $data->libelle }}</option>
+							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>

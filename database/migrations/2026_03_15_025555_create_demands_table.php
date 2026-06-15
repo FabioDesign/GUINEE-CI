@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('demands', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uid');
+            $table->uuid('uuid');
             $table->string('code', 50)->unique();
             $table->tinyInteger('day');
             $table->decimal('amount', 10, 0);

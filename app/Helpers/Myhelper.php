@@ -42,7 +42,7 @@
       		return $string;
     	}
 		//Piste d'audit
-		public static function logs($username, $profil, $libelle, $action, $avatar) {
+		public static function logs($username, $profil, $label, $action, $avatar) {
 			switch ($action) {
 				case 'Consulter' : $color = 'primary';
 					break;
@@ -57,7 +57,7 @@
 			$set = [
 				'username' => $username,
 				'profil' => $profil,
-				'libelle' => $libelle,
+				'label' => $label,
 				'action' => $action,
 				'color' => $color,
 				'avatar' => $avatar,

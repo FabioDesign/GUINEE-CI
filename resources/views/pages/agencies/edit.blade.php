@@ -9,20 +9,19 @@
   <div class="card-body py-4">
     <form class="formField">
       @method('PUT')
-      <input type="hidden" id="rootForm" value="towns/{{ $query->uuid }}">
+      <input type="hidden" id="rootForm" value="agencies/{{ $query->uuid }}">
         <div class="row mb-2">
           <div class="col-md-6 col-12">
-            <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
-            <select id="country_id" name="country_id" class="form-control">
-              <option value="" selected disabled>Sélectionner</option>
+            <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
+            <select id="country_id" class="form-control" disabled>
               @foreach($list as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->country_id ? 'selected' : ''; @endphp>{{ $data->country }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-md-6 col-12">
-            <label class="fw-bolder text-dark fs-5">Ville : <span class="text-danger">*</span></label>
-            <input type="text" name="label" value="{{ old('label', $query->label) }}" class="form-control requiredField" placeholder="Saisir la ville" />
+            <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
+            <input type="text" name="label" value="{{ old('label', $query->label) }}" class="form-control requiredField" placeholder="Saisir l'agence" />
           </div>
       </div>
       <span class="msgError" style="display: none;"></span>

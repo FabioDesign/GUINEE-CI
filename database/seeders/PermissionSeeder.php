@@ -186,7 +186,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Gestion des Profils
+        // Agences
         Permission::firstOrCreate(
             [
                 'menu_id' => 6,
@@ -222,7 +222,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Gestion des Utilisateurs
+        // Gestion des Profils
         Permission::firstOrCreate(
             [
                 'menu_id' => 7,
@@ -247,6 +247,42 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(
             [
                 'menu_id' => 7,
+                'action_id' => 4,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 7,
+                'action_id' => 5,
+                'profile_id' => 1,
+            ]
+        );
+        // Gestion des Utilisateurs
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 8,
+                'action_id' => 1,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 8,
+                'action_id' => 2,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 8,
+                'action_id' => 3,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 8,
                 'action_id' => 5,
                 'profile_id' => 1,
             ]
@@ -254,7 +290,7 @@ class PermissionSeeder extends Seeder
         // Piste d'audit
         Permission::firstOrCreate(
             [
-                'menu_id' => 8,
+                'menu_id' => 9,
                 'action_id' => 1,
                 'profile_id' => 1,
             ]

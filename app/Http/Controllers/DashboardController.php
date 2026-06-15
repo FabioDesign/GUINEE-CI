@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\{Auth};
 class DashboardController extends Controller
 {
 	//Tableau de bord
-  	public function index(request $request)
-	{
+  	public function index(request $request) {
         if (!Auth::check()) {
             return redirect('/');
         }

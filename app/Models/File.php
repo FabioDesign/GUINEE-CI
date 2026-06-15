@@ -18,13 +18,12 @@ class File extends Model
      */
     protected $guarded = [];
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::creating(function ($model) {
-            if (empty($model->uid)) {
-                $model->uid = Str::uuid()->toString();
+            if (empty($model->uuid)) {
+                $model->uuid = Str::uuid()->toString();
             }
         });
     }

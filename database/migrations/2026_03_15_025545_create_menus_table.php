@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('libelle', 50);
+            $table->string('label', 50);
             $table->string('target', 50)->nullable();
             $table->string('icone', 50)->nullable();
             $table->tinyInteger('position');

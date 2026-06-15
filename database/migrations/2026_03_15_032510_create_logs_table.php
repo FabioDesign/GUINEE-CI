@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->string('profil', 50);
-            $table->string('libelle');
+            $table->string('label');
             $table->string('action', 20);
             $table->string('color', 10);
             $table->text('avatar');

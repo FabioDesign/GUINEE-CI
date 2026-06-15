@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MenuAction extends Model
 {
-    public $table = 'menu_actions';
+    use HasFactory;
 
     protected $guarded = [];
     

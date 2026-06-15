@@ -14,7 +14,7 @@ class ProfileSeeder extends Seeder
      */
     public function run(){
         Profile::firstOrCreate(
-            ['libelle' => "Administrateur"],
+            ['label' => "Administrateur"],
             [
                 'description' => "Administrateur du système.",
                 'created_by' => 1,

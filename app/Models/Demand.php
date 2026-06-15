@@ -29,24 +29,21 @@ class Demand extends Model
         'transmitted_at' => 'datetime',
     ];
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::creating(function ($model) {
-            if (empty($model->uid)) {
-                $model->uid = Str::uuid()->toString();
+            if (empty($model->uuid)) {
+                $model->uuid = Str::uuid()->toString();
             }
         });
     }
     // Relation avec le Document
-    public function document()
-    {
+    public function document() {
         return $this->belongsTo(Document::class, 'document_id');
     }
     // Relation avec l'utilisateur
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -13,8 +13,7 @@ class Menu extends Model
     
     public $timestamps = false;
 
-    public function actions()
-    {
+    public function actions() {
         return $this->belongsToMany(Action::class, 'menu_actions');
     }
 }

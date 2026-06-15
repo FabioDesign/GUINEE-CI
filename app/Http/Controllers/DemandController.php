@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 class DemandController extends Controller
 {
     // Liste des demandes consulaires
-	public function index()
-	{
+	public function index() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -37,9 +36,9 @@ class DemandController extends Controller
 		->get();
 		// Transformer les données
 		$demands = $query->map(fn($data) => [
-			'uid' => $data->uid,
+			'uuid' => $data->uuid,
 			'code' => $data->code,
-			'libelle' => $data->document->libelle,
+			'label' => $data->document->label,
 			'number' => $data->number,
 			'email' => $data->email,
 			'company' => $data->company,
@@ -56,8 +55,7 @@ class DemandController extends Controller
 		]);
 	}
 	// Afficher le détail d'une demande
-	public function show($uid)
-	{
+	public function show($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -66,9 +64,9 @@ class DemandController extends Controller
 		// Menu
 		$currentMenu = 'demands';
 		// Vérifier si le document existe
-		$query = Demand::where('uid', $uid)->first();
+		$query = Demand::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::show - Aucune demande trouvée pour l'UID : {$uid}");
+			Log::warning("Demand::show - Aucune demande trouvée pour l'uUID : {$uuid}");
 			return redirect('/demands');
 		}
 		// Modal
@@ -76,8 +74,7 @@ class DemandController extends Controller
 		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
     //Liste des demandes
-	public function create()
-	{
+	public function create() {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -91,14 +88,13 @@ class DemandController extends Controller
 		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal'));
 	}
 	//Add document
-	public function store(request $request)
-	{
+	public function store(request $request) {
         if (!Auth::check()) {
             return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
-			'libelle' => [
+			'label' => [
 				'required',
 				Rule::unique('demands')->where(function ($query) {
 					return $query->whereNull('deleted_at');
@@ -108,8 +104,8 @@ class DemandController extends Controller
 			'day' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
-			'libelle.required' => "Le document est obligatoire.",
-			'libelle.unique' => "Le document existe déjà dans la base de données.",
+			'label.required' => "Le document est obligatoire.",
+			'label.unique' => "Le document existe déjà dans la base de données.",
 			'amount.*' => "Le montant est obligatoire et doit être un entier.",
 			'day.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
@@ -127,7 +123,7 @@ class DemandController extends Controller
 			'amount' => $request->amount,
 			'icone' => "far fa-address-card",
 			'description' => $request->description,
-			'libelle' => Str::upper(Myhelper::valideString($request->libelle)),
+			'label' => Str::upper(Myhelper::valideString($request->label)),
 		];
 		DB::beginTransaction();
 		try {
@@ -136,7 +132,7 @@ class DemandController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document consulaire: {$request->libelle}",
+				"Document consulaire: {$request->label}",
 				'Ajouter',
 				Session::get('avatar')
 			);
@@ -154,8 +150,7 @@ class DemandController extends Controller
 		}
 	}
 	// Afficher le formulaire d'édition d'une demande
-	public function edit($uid)
-	{
+	public function edit($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -164,9 +159,9 @@ class DemandController extends Controller
 		// Menu
 		$currentMenu = 'demands';
 		// Vérifier si le document existe
-		$query = Demand::where('uid', $uid)->first();
+		$query = Demand::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::edit - Aucune document trouvé pour l'UID : {$uid}");
+			Log::warning("Demand::edit - Aucune document trouvé pour l'uUID : {$uuid}");
 			return redirect('/demands');
 		}
 		// Modal
@@ -175,25 +170,24 @@ class DemandController extends Controller
 		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
 	// Mettre à jour une demande
-	public function update(Request $request, $uid)
-	{
+	public function update(Request $request, $uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
-			'libelle' => [
+			'label' => [
 				'required',
-				Rule::unique('demands')->where(function ($query) use ($uid) {
-					return $query->where('uid', '!=', $uid)->whereNull('deleted_at');
+				Rule::unique('demands')->where(function ($query) use ($uuid) {
+					return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 				}),
 			],
 			'amount' => 'required|integer|min:1',
 			'day' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
-			'libelle.required' => "Le document est obligatoire.",
-			'libelle.unique' => "Le document existe déjà dans la base de données.",
+			'label.required' => "Le document est obligatoire.",
+			'label.unique' => "Le document existe déjà dans la base de données.",
 			'amount.*' => "Le montant est obligatoire et doit être un entier.",
 			'day.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
@@ -207,9 +201,9 @@ class DemandController extends Controller
 			]);
 		}
 		// Vérifier si le document existe
-		$query = Demand::where('uid', $uid)->first();
+		$query = Demand::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::update - Aucune document trouvé pour l'UID : {$uid}");
+			Log::warning("Demand::update - Aucune document trouvé pour l'uUID : {$uuid}");
 			return response()->json([
 				'status' => 0,
 				'message' => "Document consulaire non trouvé.",
@@ -219,7 +213,7 @@ class DemandController extends Controller
 			'day' => $request->day,
 			'amount' => $request->amount,
 			'description' => $request->description,
-			'libelle' => Str::upper(Myhelper::valideString($request->libelle)),
+			'label' => Str::upper(Myhelper::valideString($request->label)),
 		];
 		DB::beginTransaction(); // Démarrer une transaction
 		try {
@@ -229,7 +223,7 @@ class DemandController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document consulaire: {$request->libelle}",
+				"Document consulaire: {$request->label}",
 				'Modifier',
 				Session::get('avatar')
 			);
@@ -247,16 +241,15 @@ class DemandController extends Controller
 		}
 	}
 	// Supprimer une demande
-	public function destroy($uid)
-	{
+	public function destroy($uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		try {
 			// Vérifier si le document existe
-			$document = Demand::where('uid', $uid)->first();
+			$document = Demand::where('uuid', $uuid)->first();
 			if (!$document) {
-				Log::warning("Demand::destroy - Aucune document trouvé pour l'UID : {$uid}");
+				Log::warning("Demand::destroy - Aucune document trouvé pour l'uUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
 					'message' => "Document consulaire non trouvé.",
@@ -278,7 +271,7 @@ class DemandController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document consulaire: {$document->libelle}",
+				"Document consulaire: {$document->label}",
 				'Supprimer',
 				Session::get('avatar')
 			);

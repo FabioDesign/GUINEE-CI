@@ -14,14 +14,18 @@ class Town extends Model
     protected $guarded = [];
     
     // Génération de UUID unique
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::creating(function ($model) {
-            if (empty($model->uid)) {
-                $model->uid = Str::uuid()->toString();
+            if (empty($model->uuid)) {
+                $model->uuid = Str::uuid()->toString();
             }
         });
+    }
+    
+    // Relation avec le Pays
+    public function country() {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

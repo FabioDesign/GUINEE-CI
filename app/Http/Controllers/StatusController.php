@@ -6,18 +6,21 @@ use Session;
 use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{Document, File, Profile, Town, User};
+use App\Models\{Agency, Document, File, Profile, Town, User};
 
 class StatusController extends Controller
 {
-    public function update($type, $uid)
-    {
+    public function update($type, $uuid) {
         if (!Auth::check()) {
             return 'x';
         }
         try {
             // 🔁 Mapping dynamique
             $models = [
+                'agencies' => [
+                    'model' => Agency::class,
+                    'label' => 'Agence'
+                ],
                 'documents' => [
                     'model' => Document::class,
                     'label' => 'Document'
@@ -49,9 +52,9 @@ class StatusController extends Controller
             $modelClass = $models[$type]['model'];
             $label = $models[$type]['label'];
             // Récupération de l'enregistrement
-            $item = $modelClass::where('uid', $uid)->first();
+            $item = $modelClass::where('uuid', $uuid)->first();
             if (!$item) {
-                Log::warning("StatusController - Aucun {$label} trouvé pour UID : {$uid}");
+                Log::warning("StatusController - Aucun {$label} trouvé pour uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
                     'message' => "{$label} non trouvé.",
@@ -59,7 +62,7 @@ class StatusController extends Controller
             }
             // Cas spécifique : Profil admin
             if ($type === 'profiles' && $item->id == 1) {
-                Log::warning("StatusController - Tentative désactivation admin UID : {$uid}");
+                Log::warning("StatusController - Tentative désactivation admin uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
                     'message' => "Le profil administrateur ne peut pas être désactivé.",
@@ -75,7 +78,7 @@ class StatusController extends Controller
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
-                "{$label}: {$item->libelle} {$action}",
+                "{$label}: {$item->label} {$action}",
 				'Modifier',
                 Session::get('avatar')
             );
