@@ -87,7 +87,7 @@ class DocumentController extends Controller
 				}),
 			],
 			'file_id' => 'required|array',
-			'amount' => 'required|integer|min:1',
+			'price' => 'required|integer|min:1',
 			'number' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
@@ -95,7 +95,7 @@ class DocumentController extends Controller
 			'label.unique' => "Le document existe déjà dans la base de données.",
 			'file_id.required' => "Les pièces jointes sont obligatoires.",
 			'file_id.array' => "Les pièces jointes doivent être un tableau.",
-			'amount.*' => "Le montant est obligatoire et doit être un entier.",
+			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
@@ -112,7 +112,7 @@ class DocumentController extends Controller
 		$set = [
 			'label' => $label,
 			'number' => $request->number,
-			'amount' => $request->amount,
+			'price' => $request->price,
 			'icone' => "far fa-address-card",
 			'description' => $request->description,
 		];
@@ -165,8 +165,10 @@ class DocumentController extends Controller
 		$addmodal = '<a href="/documents" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
 		// Requete Read
+		$files = File::orderBy('label')->get();
+		// Requete Read
 		$docFiles = DocFile::where('document_id', $query->id)->get();
-		return view('pages.documents.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'docFiles'));
+		return view('pages.documents.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'files', 'docFiles'));
 	}
 	// Mettre à jour un document
 	public function update(Request $request, $uuid) {
@@ -181,13 +183,16 @@ class DocumentController extends Controller
 					return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 				}),
 			],
-			'amount' => 'required|integer|min:1',
+			'file_id' => 'required|array',
+			'price' => 'required|integer|min:1',
 			'number' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
 			'label.required' => "Le document est obligatoire.",
 			'label.unique' => "Le document existe déjà dans la base de données.",
-			'amount.*' => "Le montant est obligatoire et doit être un entier.",
+			'file_id.required' => "Les pièces jointes sont obligatoires.",
+			'file_id.array' => "Les pièces jointes doivent être un tableau.",
+			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
@@ -210,7 +215,7 @@ class DocumentController extends Controller
 		}
 		$set = [
 			'number' => $request->number,
-			'amount' => $request->amount,
+			'price' => $request->price,
 			'description' => $request->description,
 			'label' => Str::upper(Myhelper::valideString($request->label)),
 		];
@@ -218,6 +223,15 @@ class DocumentController extends Controller
 		try {
 			// Mettre à jour le document
 			$query->update($set);
+			// Supprimer les anciennes pièces jointes
+			DocFile::where('document_id', $query->id)->delete();
+			// Ajouter les nouvelles pièces jointes
+			foreach ($request->file_id as $file_id) {
+				DocFile::create([
+					'file_id' => $file_id,
+					'document_id' => $query->id,
+				]);
+			}
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
 				Session::get('username'),
@@ -286,5 +300,23 @@ class DocumentController extends Controller
 				'message' => "Erreur lors de la suppression.",
 			]);
 		}
+	}
+	// Récupérer un document
+	public function getDocs($id) {
+		// dd($id);
+		// Requete Read
+		$data['docs'] = Document::select('label', 'number', 'price', 'description')
+		->where('id', $id)
+		->first();
+		$files = DocFile::where('document_id', $id)->get();
+		// Transformer les données
+		$data['files'] = $files->map(fn($data) => [
+			'label' => $data->file->label,
+			'path' => $data->file->path,
+		]);
+		return response()->json([
+			'status' => true,
+			'data' => $data,
+		]);
 	}
 }

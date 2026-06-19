@@ -42,6 +42,8 @@ Route::controller(PasswordController::class)->group(function () {
   Route::get('forgotpass', 'index');
   Route::post('forgotpass', 'store');
 });
+// Route pour les documents
+Route::get('getDocs/{id}', [DocumentController::class, 'getDocs']);
 // Routes protégées par authentification
 Route::middleware(['auth'])->group(function () {
   // Route pour Tableau de bord

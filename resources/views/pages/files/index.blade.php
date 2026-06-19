@@ -49,8 +49,8 @@
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">{{ $data->label }}</td>
             <td class="align-middle">
-              @if($data->specimen)
-                <a href="{{ asset('storage/' . $data->specimen) }}" target="_blanc"><img src="{{ asset('storage/' . $data->specimen) }}" alt="{{ $data->label }}" class="specimen h-50px"></a>
+              @if($data->path)
+                <a href="{{ asset('storage/' . $data->path) }}" target="_blanc"><img src="{{ asset('storage/' . $data->path) }}" alt="{{ $data->label }}" class="specimen h-50px"></a>
               @endif
             </td>
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>

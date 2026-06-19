@@ -15,7 +15,7 @@ return new class extends Migration
             $table->smallIncrements('id');
             $table->uuid('uuid');
             $table->string('label');
-            $table->text('specimen');
+            $table->text('path');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();

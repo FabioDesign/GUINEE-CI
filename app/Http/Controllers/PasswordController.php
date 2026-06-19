@@ -16,7 +16,7 @@ class PasswordController extends Controller
 	public function index() {
         //Requete Read
         $query = Document::where('status', 1)
-        ->orderBy('position')
+        ->orderBy('label')
         ->get();
         return view('forgotpass', compact('query'));
 	}

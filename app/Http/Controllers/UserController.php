@@ -534,7 +534,7 @@ class UserController extends Controller
 	public function login() {
         // Requete Read
         $query = Document::where('status', 1)
-        ->orderBy('position')
+        ->orderBy('label')
         ->get();
         return view('login', compact('query'));
 	}

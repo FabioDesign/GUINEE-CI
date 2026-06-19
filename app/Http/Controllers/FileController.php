@@ -62,14 +62,14 @@ class FileController extends Controller
 					return $query->whereNull('deleted_at');
 				}),
 			],
-			'specimen' => 'required|file|mimes:png,jpg,jpeg|max:2048',
+			'path' => 'required|file|mimes:png,jpg,jpeg|max:2048',
 		], [
 			'label.required' => "Le libellé est obligatoire.",
 			'label.unique' => "Le libellé existe déjà dans la base de données.",
-			'specimen.required' => "Le spécimen est obligatoire.",
-			'specimen.file' => "Le spécimen doit être un fichier.",
-			'specimen.mimes' => "Le spécimen doit être un fichier de type : png, jpg ou jpeg",
-			'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
+			'path.required' => "Le spécimen est obligatoire.",
+			'path.file' => "Le spécimen doit être un fichier.",
+			'path.mimes' => "Le spécimen doit être un fichier de type : png, jpg ou jpeg",
+			'path.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -81,10 +81,10 @@ class FileController extends Controller
 		}
 		// Enregistrer le fichier
 		$label = Str::upper(Myhelper::valideString($request->label));
-		$path = $request->file('specimen')->store('specimens', 'public');
+		$path = $request->file('path')->store('specimens', 'public');
 		$set = [
 			'label' => $label,
-			'specimen' => $path,
+			'path' => $path,
 		];
 		DB::beginTransaction();
 		try {
@@ -153,13 +153,13 @@ class FileController extends Controller
 						return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 					}),
 				],
-				'specimen' => 'sometimes|file|mimes:png,jpg,jpeg|max:2048',
+				'path' => 'sometimes|file|mimes:png,jpg,jpeg|max:2048',
 			], [
 				'label.required' => "Le libellé est obligatoire.",
 				'label.unique' => "Le libellé existe déjà dans la base de données.",
-				'specimen.file' => "Le spécimen doit être un fichier.",
-				'specimen.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
-				'specimen.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
+				'path.file' => "Le spécimen doit être un fichier.",
+				'path.mimes' => "Le spécimen doit être un fichier de type : png,jpg ou jpeg",
+				'path.max' => "Le spécimen ne doit pas être supérieur à 2Mo.",
 			]);
 			// Error field
 			if ($validator->fails()) {
@@ -174,8 +174,8 @@ class FileController extends Controller
 			$set = [
 				'label' => $label,
 			];
-			if ($request->has('specimen')) {
-				$set['specimen'] = $request->file('specimen')->store('specimens', 'public');
+			if ($request->has('path')) {
+				$set['path'] = $request->file('path')->store('specimens', 'public');
 			}
 			DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour la pièce à fournir

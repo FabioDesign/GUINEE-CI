@@ -16,10 +16,9 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->string('icone', 50);
             $table->string('label', 50);
-            $table->decimal('amount', 10, 0);
+            $table->decimal('price', 10, 0);
             $table->tinyInteger('number');
             $table->text('description')->nullable();
-            $table->tinyInteger('position')->default('0');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();

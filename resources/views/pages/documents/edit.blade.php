@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
-                    <input type="text" name="amount" value="{{ old('amount', $query->amount) }}" class="form-control requiredField" placeholder="Saisir le montant" onKeyUp="verif_int(this)" />
+                    <input type="text" name="price" value="{{ old('price', $query->price) }}" class="form-control requiredField" placeholder="Saisir le montant" onKeyUp="verif_int(this)" />
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Nombre de jours : <span class="text-danger">*</span></label>
@@ -33,12 +33,19 @@
                 </div>
             </div>
             <div class="row mb-2">
-            @foreach ($docFiles as $docFile)
+            @php $selectedFileIds = $docFiles->pluck('file_id')->all(); @endphp
+            @foreach ($files as $file)
+                @php $check = in_array($file->id, $selectedFileIds, true) ? 'checked' : ''; @endphp
                 <div class="col-md-12 col-12 checkbox-inline">
                     <label class="boxcheck">
-                        <input type="checkbox" name="file_id[]" value="{{ $docFile->file_id }}" class="iCheck" />
-                        <span style="margin-left: 10px;">{{ $docFile->file->label }}</span>
+                        <input type="checkbox" name="file_id[]" value="{{ $file->id }}" class="iCheck" {{ $check }} />
+                        <span style="margin-left: 10px;">{{ $file->label }}</span>
                     </label>
+                    <span style="margin-left: 10px;">
+                        <a href="{{ asset('storage/' . $file->path) }}" target="_blank">
+                            (Voir le spécimen)
+                        </a>
+                    </span>
                 </div>
             @endforeach
             </div>

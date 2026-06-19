@@ -100,13 +100,13 @@ class DemandController extends Controller
 					return $query->whereNull('deleted_at');
 				}),
 			],
-			'amount' => 'required|integer|min:1',
+			'price' => 'required|integer|min:1',
 			'day' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
 			'label.required' => "Le document est obligatoire.",
 			'label.unique' => "Le document existe déjà dans la base de données.",
-			'amount.*' => "Le montant est obligatoire et doit être un entier.",
+			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'day.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
@@ -120,7 +120,7 @@ class DemandController extends Controller
 		}
 		$set = [
 			'day' => $request->day,
-			'amount' => $request->amount,
+			'price' => $request->price,
 			'icone' => "far fa-address-card",
 			'description' => $request->description,
 			'label' => Str::upper(Myhelper::valideString($request->label)),
@@ -182,13 +182,13 @@ class DemandController extends Controller
 					return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 				}),
 			],
-			'amount' => 'required|integer|min:1',
+			'price' => 'required|integer|min:1',
 			'day' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
 			'label.required' => "Le document est obligatoire.",
 			'label.unique' => "Le document existe déjà dans la base de données.",
-			'amount.*' => "Le montant est obligatoire et doit être un entier.",
+			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'day.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
@@ -211,7 +211,7 @@ class DemandController extends Controller
 		}
 		$set = [
 			'day' => $request->day,
-			'amount' => $request->amount,
+			'price' => $request->price,
 			'description' => $request->description,
 			'label' => Str::upper(Myhelper::valideString($request->label)),
 		];

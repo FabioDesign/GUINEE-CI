@@ -47,7 +47,7 @@
 						</div>
 						<div class="footer-button">
 							@foreach($query as $data)
-							<a href="{{ asset('storage/' . $data->specimen) }}" target="_blank">
+							<a href="#" onclick="getDocs('{{ $data->id }}')">
 								<button class="btn">
 									<i class="{{ $data->icone }}"></i><span>{{ $data->label }}</span>
 								</button>
@@ -130,9 +130,80 @@
 			<!--end::Authentication - Sign-in-->
 		</div>
 		<!--end::Root-->
+		<!--begin::Modal - New Target-->
+		<div class="modal fade" id="kt_modal_new_target" tabindex="-1" aria-hidden="true">
+			<!--begin::Modal dialog-->
+			<div class="modal-dialog modal-dialog-centered mw-650px">
+				<!--begin::Modal content-->
+				<div class="modal-content rounded">
+					<!--begin::Modal header-->
+					<div class="modal-header pb-0 border-0 justify-content-end">
+						<!--begin::Close-->
+						<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+							<i class="ki-duotone ki-cross fs-1 text-danger">
+								<span class="path1"></span>
+								<span class="path2"></span>
+							</i>
+						</div>
+						<!--end::Close-->
+					</div>
+					<!--begin::Modal header-->
+					<!--begin::Modal body-->
+					<div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+						<!--begin::Heading-->
+						<div class="mb-5 text-center">
+							<!--begin::Title-->
+							<h1 id="modal-title" class="mb-3">Titre</h1>
+							<!--end::Title-->
+							<!--begin::Description-->
+							<div id="modal-description" class="text-muted fw-semibold fs-5">Description</div>
+							<!--end::Description-->
+						</div>
+						<!--end::Heading-->
+						<!--begin::Input group-->
+						<div class="row g-9 mb-5">
+							<!--begin::Col-->
+							<div class="col-md-6 fv-row">
+								<label class="fs-6 fw-semibold mb-2">Montant (FCFA) :</label>
+								<!--begin::Input-->
+								<span id="modal-price">10000</span>
+								<!--end::Input-->
+							</div>
+							<!--end::Col-->
+							<!--begin::Col-->
+							<div class="col-md-6 fv-row">
+								<label class="fs-6 fw-semibold mb-2">Nombre de jours :</label>
+								<!--begin::Input-->
+								<span id="modal-number">5</span>
+								<!--end::Input-->
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="row g-9 mb-5">
+							<!--begin::Col-->
+							<div class="col-md-12 fv-row">
+								<label class="fs-6 mb-3 fw-semibold">Pièce à fournir :</label>
+								<div id="modal-files" class="ps-5">
+									<!--begin::Wrapper-->
+									<u class="text-decoration-none mb-2">
+										<li class="fw-semibold">ATTESTATION DE RESIDENCE</li>
+									</u>
+									<!--end::Wrapper-->
+								</div>
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Input group-->
+					</div>
+				</div>
+			</div>
+		</div>
 		<!--begin::Javascript-->
 		<script>var hostUrl = "/assets/";</script>
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 		<script src="/assets/plugins/global/plugins.bundle.js"></script>
 		<script src="/assets/js/scripts.bundle.js"></script>
 		<!--end::Global Javascript Bundle-->
@@ -141,6 +212,26 @@
 		<script src="/assets/js/custom/icheck.js"></script>
 		<script src="/assets/js/custom.js?v20126.03.29.02.45"></script>
 		<!--end::Custom Javascript-->
+		<script>
+			const getDocs = async (id) => {
+				if (!id) return;
+				try {
+					const response = await axios.get(`/getDocs/${id}`);
+					const data = response.data?.data || null;
+					if (data) {
+						console.log(data);
+						$('#modal-title').text(data.docs.label);
+						$('#modal-price').text(data.docs.price);
+						$('#modal-number').text(data.docs.number);
+						$('#modal-description').text(data.docs.description);
+						$('#modal-files').html(data.files.map(file => `<li>${file.label} <a href="/storage/${file.path}" target="_blank">(Voir le spécimen)</a></li>`).join(''));
+						$('#kt_modal_new_target').modal('show');
+					}
+				} catch (e) {
+					console.error(e);
+				}
+			}
+		</script>
 		<!--end::Javascript-->
 	</body>
 	<!--end::Body-->

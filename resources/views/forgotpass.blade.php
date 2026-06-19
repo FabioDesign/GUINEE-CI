@@ -47,7 +47,7 @@
 						</div>
 						<div class="footer-button">
 							@foreach($query as $data)
-							<a href="{{ asset('storage/' . $data->specimen) }}" target="_blank">
+							<a href="{{ asset('storage/' . $data->path) }}" target="_blank">
 								<button class="btn">
 									<i class="{{ $data->icone }}"></i><span>{{ $data->label }}</span>
 								</button>

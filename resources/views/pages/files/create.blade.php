@@ -13,7 +13,7 @@
 
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Spécimen : <span class="text-danger">*</span></label>
-                    <input type="file" id="specimen" name="specimen" class="form-control requiredField" accept=".png,.jpg,.jpeg" />
+                    <input type="file" id="path" name="path" class="form-control requiredField" accept=".png,.jpg,.jpeg" />
                 </div>
             </div>
             <span class="msgError" style="display: none;"></span>

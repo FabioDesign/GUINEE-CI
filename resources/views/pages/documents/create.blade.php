@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
-                    <input type="text" name="amount" class="form-control requiredField" placeholder="Saisir le montant" onKeyUp="verif_int(this)" />
+                    <input type="text" name="price" class="form-control requiredField" placeholder="Saisir le montant" onKeyUp="verif_int(this)" />
                 </div>
                 <div class="col-md-3 col-12">
                     <label class="fw-bolder text-dark fs-5">Nombre de jours : <span class="text-danger">*</span></label>
@@ -38,6 +38,11 @@
                         <input type="checkbox" name="file_id[]" value="{{ $data->id }}" class="iCheck" />
                         <span style="margin-left: 10px;">{{ $data->label }}</span>
                     </label>
+                    <span style="margin-left: 10px;">
+                        <a href="{{ asset('storage/' . $data->path) }}" target="_blank">
+                            (Voir le spécimen)
+                        </a>
+                    </span>
                 </div>
             @endforeach
             </div>

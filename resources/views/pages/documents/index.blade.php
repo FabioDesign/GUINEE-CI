@@ -49,7 +49,7 @@
           <tr>
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">{{ $data->label }}</td>
-            <td class="text-center align-middle">{{ $data->amount }}</td>
+            <td class="text-center align-middle">{{ $data->price }}</td>
             <td class="text-center align-middle">{{ $data->number }}</td>
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>

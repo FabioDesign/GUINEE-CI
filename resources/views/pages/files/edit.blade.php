@@ -16,14 +16,14 @@
 
             <div class="col-md-6 col-12">
                 <label class="fw-bolder text-dark fs-5">Spécimen : <span class="text-danger">*</span></label>
-                <input type="file" id="specimen" name="specimen" class="form-control" accept=".png,.jpg,.jpeg" />
+                <input type="file" id="path" name="path" class="form-control" accept=".png,.jpg,.jpeg" />
             </div>
         </div>
         <span class="msgError" style="display: none;"></span>
         <!-- Aperçu image -->
         <div class="mt-3 text-center">
-          @php $style = $query->specimen ? "" : "display: none;"; @endphp
-          <img id="previewImage" src="{{ asset('storage/' . $query->specimen) }}" alt="{{ $query->label }}" style="{{ $style }}">
+          @php $style = $query->path ? "" : "display: none;"; @endphp
+          <img id="previewImage" src="{{ asset('storage/' . $query->path) }}" alt="{{ $query->label }}" style="{{ $style }}">
         </div>
       </form>
     </div>

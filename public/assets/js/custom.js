@@ -38,7 +38,7 @@ $('.viewPass, .backPass').on('click', function() {
     $(this).removeClass('fa-eye').addClass('fa-eye-slash');
   }
 });
-$('#specimen').on('change', function() {
+$('#path').on('change', function() {
   let file = this.files[0];
   if (file) {
     // Vérifier que c’est bien une image
