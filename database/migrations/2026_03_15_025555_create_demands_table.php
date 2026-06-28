@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('code', 50)->unique();
-            $table->tinyInteger('day');
+            $table->tinyInteger('number');
+            $table->tinyInteger('copy');
             $table->decimal('amount', 10, 0);
             $table->text('motif')->nullable();
             $table->tinyInteger('status')->default('0');
@@ -34,7 +35,8 @@ return new class extends Migration
             $table->foreignId('rejeted_by')->nullable();
             $table->foreignId('retrieved_by')->nullable();
             $table->foreignId('user_id');
-            $table->integer('document_id');
+            $table->foreignId('agency_id');
+            $table->foreignId('document_id');
         });
     }
 

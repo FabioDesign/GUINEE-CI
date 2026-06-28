@@ -47,7 +47,7 @@
 						</div>
 						<div class="footer-button">
 							@foreach($query as $data)
-							<a href="#" onclick="getDocs('{{ $data->id }}')">
+							<a onclick="getDocs('{{ $data->id }}')">
 								<button class="btn">
 									<i class="{{ $data->icone }}"></i><span>{{ $data->label }}</span>
 								</button>
@@ -164,7 +164,7 @@
 						<div class="row g-9 mb-5">
 							<!--begin::Col-->
 							<div class="col-md-6 fv-row">
-								<label class="fs-6 fw-semibold mb-2">Montant (FCFA) :</label>
+								<label class="fs-6 fw-semibold mb-2">Montant (Fr CFA) :</label>
 								<!--begin::Input-->
 								<span id="modal-price">10000</span>
 								<!--end::Input-->

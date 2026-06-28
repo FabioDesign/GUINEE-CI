@@ -628,8 +628,9 @@ class UserController extends Controller
                 $page = $menus->first()->target ?? '/';
                 // Stocker des informations supplémentaires en session
                 Session::put('username', $username);
+                Session::put('agency', $user->agency_id);
                 Session::put('profil', $user->profile->label ?? '');
-                Session::put('embassy', $user->embassy->country ?? '');
+                Session::put('embassy', ($user->embassy->country ?? '') . ' - ' . ($user->agency->label ?? ''));
                 Session::put('map', $user->embassy->alpha ?? '');
                 Session::put('menus', $menus);
                 // Avatar

@@ -107,6 +107,10 @@ class User extends Authenticatable
     public function embassy() {
         return $this->belongsTo(Country::class, 'embassy_id');
     }
+    // Relation avec l'Agence
+    public function agency() {
+        return $this->belongsTo(Agency::class, 'agency_id');
+    }
     // Relation avec la Nationalité
     public function nationality() {
         return $this->belongsTo(Country::class, 'nationality_id');
