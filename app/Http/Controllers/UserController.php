@@ -630,7 +630,7 @@ class UserController extends Controller
                 Session::put('username', $username);
                 Session::put('agency', $user->agency_id);
                 Session::put('profil', $user->profile->label ?? '');
-                Session::put('embassy', ($user->embassy->country ?? '') . ' - ' . ($user->agency->label ?? ''));
+                Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '');
                 Session::put('map', $user->embassy->alpha ?? '');
                 Session::put('menus', $menus);
                 // Avatar

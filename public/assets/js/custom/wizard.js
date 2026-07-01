@@ -3,26 +3,48 @@
 // Class definition
 var KTContactsAdd = function () {
 	// Base elements
-	var _wizardEl;
+	var _stepperEl;
 	var _formEl;
-	var _wizard;
-	var _avatar;
+	var _stepper;
 	var _validations = [];
+	var _hasValidation = true;
+
+	// Gère l'affichage Previous/Next/Submit selon l'étape active
+	var updateActionButtons = function (stepper) {
+		var totalSteps = stepper.getTotalStepsNumber ? stepper.getTotalStepsNumber() : stepper.totatStepsNumber;
+		var currentIndex = stepper.getCurrentStepIndex();
+
+		var btnPrev = _stepperEl.querySelector('[data-kt-stepper-action="previous"]');
+		var btnNext = _stepperEl.querySelector('[data-kt-stepper-action="next"]');
+		var btnSubmit = _stepperEl.querySelector('[data-kt-stepper-action="submit"]');
+
+		if (btnPrev) btnPrev.style.display = (currentIndex === 1) ? 'none' : 'inline-block';
+		if (btnNext) btnNext.style.display = (currentIndex === totalSteps) ? 'none' : 'inline-block';
+		if (btnSubmit) btnSubmit.style.display = (currentIndex === totalSteps) ? 'inline-block' : 'none';
+	}
 
 	// Private functions
-	var initWizard = function () {
-		// Initialize form wizard
-		_wizard = new KTWizard(_wizardEl, {
-			startStep: 1, // initial active step number
-			clickableSteps: true  // allow step clicking
-		});
+	var initStepper = function () {
+		// Initialiser le stepper (API Metronic v8 - remplace KTWizard)
+		_stepper = new KTStepper(_stepperEl);
 
-		// Validation before going to next page
-		_wizard.on('beforeNext', function (wizard) {
-			_validations[wizard.getStep() - 1].validate().then(function (status) {
+		// État initial des boutons (étape 1)
+		updateActionButtons(_stepper);
+
+		// Validation avant de passer à l'étape suivante
+		_stepper.on('kt.stepper.next', function (stepper) {
+			var currentStepIndex = stepper.getCurrentStepIndex() - 1;
+
+			if (!_hasValidation || !_validations[currentStepIndex]) {
+				stepper.goNext();
+				(typeof KTUtil !== "undefined" && KTUtil.scrollTop) ? KTUtil.scrollTop() : window.scrollTo({ top: 0, behavior: "smooth" });
+				return;
+			}
+
+			_validations[currentStepIndex].validate().then(function (status) {
 				if (status == 'Valid') {
-					_wizard.goNext();
-					KTUtil.scrollTop();
+					stepper.goNext();
+					(typeof KTUtil !== "undefined" && KTUtil.scrollTop) ? KTUtil.scrollTop() : window.scrollTo({ top: 0, behavior: "smooth" });
 				} else {
 					Swal.fire({
 						text: "Sorry, looks like there are some errors detected, please try again.",
@@ -33,17 +55,28 @@ var KTContactsAdd = function () {
 							confirmButton: "btn font-weight-bold btn-light"
 						}
 					}).then(function () {
-						KTUtil.scrollTop();
+						(typeof KTUtil !== "undefined" && KTUtil.scrollTop) ? KTUtil.scrollTop() : window.scrollTo({ top: 0, behavior: "smooth" });
 					});
 				}
 			});
-
-			_wizard.stop();  // Don't go to the next step
 		});
 
-		// Change Event
-		_wizard.on('change', function (wizard) {
-			KTUtil.scrollTop();
+		// Étape précédente
+		_stepper.on('kt.stepper.previous', function (stepper) {
+			stepper.goPrevious();
+			(typeof KTUtil !== "undefined" && KTUtil.scrollTop) ? KTUtil.scrollTop() : window.scrollTo({ top: 0, behavior: "smooth" });
+		});
+
+		// Soumission finale (dernière étape)
+		_stepper.on('kt.stepper.submit', function () {
+			// Place ici la logique de soumission finale du formulaire (ex: form.submit() ou requête AJAX)
+			console.log('Form submitted');
+		});
+
+		// Changement d'étape
+		_stepper.on('kt.stepper.changed', function (stepper) {
+			updateActionButtons(stepper);
+			(typeof KTUtil !== "undefined" && KTUtil.scrollTop) ? KTUtil.scrollTop() : window.scrollTo({ top: 0, behavior: "smooth" });
 		});
 	}
 
@@ -197,19 +230,18 @@ var KTContactsAdd = function () {
 		));
 	}
 
-	var initAvatar = function () {
-		_avatar = new KTImageInput('kt_contact_add_avatar');
-	}
-
 	return {
 		// public functions
 		init: function () {
-			_wizardEl = KTUtil.getById('kt_contact_add');
-			_formEl = KTUtil.getById('kt_contact_add_form');
+			_stepperEl = document.getElementById('kt_contact_add');
+			_formEl = document.getElementById('kt_contact_add_form');
 
-			initWizard();
-			initValidation();
-			initAvatar();
+			_hasValidation = !(_formEl && _formEl.dataset && _formEl.dataset.wizardValidation === 'false');
+
+			initStepper();
+			if (_hasValidation) {
+				initValidation();
+			}
 		}
 	};
 }();

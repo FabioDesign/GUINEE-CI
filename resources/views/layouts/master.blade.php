@@ -26,7 +26,7 @@
 		<link href="/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 		<!--end::Page Vendor Stylesheets-->
 		<link href="/assets/css/skins/all.css" rel="stylesheet" type="text/css" />
-		<link href="/assets/css/custom.css?v20126.03.29.02.45" rel="stylesheet" type="text/css" />
+		<link href="/assets/css/custom.css?v={{ time() }}" rel="stylesheet" type="text/css" />
     	@yield('styles')
 	</head>
 	<!--end::Head-->
@@ -78,7 +78,7 @@
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title" style="font-size: 18px;">{{ Session::get('embassy') }}</span>
+											<span class="menu-title" style="font-size: 18px;">AMBASSADE DE GUINÉE - {{ Session::get('embassy') }}</span>
 										</span>
 										<!--end:Menu link-->
 									</div>
@@ -191,7 +191,7 @@
 						</div>
 						<!--end::Logo-->
 						<!--begin::sidebar menu-->
-						<div class="app-sidebar-menu overflow-hidden flex-column-fluid">
+						<div class="app-sidebar-menu overflow-hidden flex-column-fluid position-relative">
 							<!--begin::Menu wrapper-->
 							<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
 								<!--begin::User-->
@@ -240,6 +240,9 @@
 								<!--end::Menu-->
 							</div>
 							<!--end::Menu wrapper-->
+							<!--begin::Avatar-->
+							<img alt="Logo" src="/assets/map/gn.png" class="h-80px position-absolute m-auto" style=" bottom: 10px; left: 0; right: 0;" />
+							<!--end::Avatar-->
 						</div>
 						<!--end::sidebar menu-->
 					</div>
@@ -287,7 +290,7 @@
 							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack">
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
-									<span class="text-muted fw-semibold me-1">2026&copy;</span>
+									<span class="text-muted fw-semibold me-1">2026&nbsp;&nbsp;&copy;</span>
 									<a href="#" class="text-gray-800 text-hover-primary">Ambassade de la République de Guinée</a>
 								</div>
 								<!--end::Copyright-->
@@ -329,7 +332,7 @@
 		<!--end::Page Vendors Javascript-->
 		<!--begin::Custom Javascript(used for this page only)-->
 		<script src="/assets/js/custom/icheck.js"></script>
-		<script src="/assets/js/custom.js?v20126.03.29.02.45"></script>
+		<script src="/assets/js/custom.js?v={{ time() }}"></script>
 		<script>
 			"use strict";
 			//DataTable

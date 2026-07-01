@@ -35,9 +35,10 @@
 					<!--begin::Aside-->
 					<div class="d-flex flex-column-fluid flex-lg-start flex-column">
 						<!--begin::Title-->
-						<div class="title-left">
+						<div class="title-left" style="display: flex; align-items: center; width: 100%;">
 							<img alt="Logo" src="/assets/img/amoirie.png" class="h-100px" />
-							<h2 class="text-white m-0">République de Guinée</h2>
+							<h2 class="text-white m-0" style="flex: 1; text-align: center;">République de Guinée</h2>
+							<img alt="Logo" src="/assets/img/nimba.png" class="h-100px" />
 						</div>
 						<div class="body-left">
 							<h1 class="text-white m-0">Gestion de documents consulaires</h1>

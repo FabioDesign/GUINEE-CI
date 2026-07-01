@@ -1,3 +1,46 @@
+/* ─────────────────────────────────────────────────────────────
+   RÈGLES POUR KTStepper (Metronic v8) : classes .current/.pending
+   KTStepper applique .current, .pending, .completed directement
+   sur les éléments data-kt-stepper-element="content" et "nav"
+   ───────────────────────────────────────────────────────────── */
+.wizard [data-kt-stepper-element="content"] {
+  display: none; }
+.wizard [data-kt-stepper-element="content"].current {
+    display: block; }
+
+/* ─────────────────────────────────────────────────────────────
+   RÈGLE MANQUANTE : gestion de l'affichage des boutons d'action
+   selon l'état global du wizard (step-first / between / step-last)
+   ───────────────────────────────────────────────────────────── */
+
+/* Par défaut : Previous et Submit cachés, Next visible */
+.wizard [data-wizard-type="action-prev"],
+.wizard [data-wizard-type="action-submit"] {
+  display: none; }
+
+.wizard [data-wizard-type="action-next"] {
+  display: inline-block; }
+
+/* Sur la 1ère étape (step-first) : pas de bouton Previous */
+.wizard[data-wizard-state="step-first"] [data-wizard-type="action-prev"] {
+  display: none; }
+
+/* Entre les étapes (between) : Previous + Next visibles */
+.wizard[data-wizard-state="between"] [data-wizard-type="action-prev"] {
+  display: inline-block; }
+.wizard[data-wizard-state="between"] [data-wizard-type="action-next"] {
+  display: inline-block; }
+.wizard[data-wizard-state="between"] [data-wizard-type="action-submit"] {
+  display: none; }
+
+/* Sur la dernière étape (step-last) : Previous + Submit visibles, pas de Next */
+.wizard[data-wizard-state="step-last"] [data-wizard-type="action-prev"] {
+  display: inline-block; }
+.wizard[data-wizard-state="step-last"] [data-wizard-type="action-next"] {
+  display: none; }
+.wizard[data-wizard-state="step-last"] [data-wizard-type="action-submit"] {
+  display: inline-block; }
+
 .wizard.wizard-1 .wizard-nav .wizard-steps {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -59,6 +102,31 @@
       .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-arrow svg:hover g [fill], .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-arrow svg:hover g [fill] {
         -webkit-transition: fill 0.3s ease;
         transition: fill 0.3s ease; }
+
+/* ─────────────────────────────────────────────────────────────
+   RÈGLES NAV POUR KTStepper : mêmes styles que data-wizard-state
+   mais ciblant les classes .current / .completed posées par
+   KTStepper sur les éléments data-kt-stepper-element="nav"
+   ───────────────────────────────────────────────────────────── */
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.completed .wizard-label .wizard-icon,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.current .wizard-label .wizard-icon {
+  color: #3699FF; }
+  .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.completed .wizard-label .wizard-icon svg g [fill],
+  .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.current .wizard-label .wizard-icon svg g [fill] {
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+    fill: #3699FF; }
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.completed .wizard-label .wizard-title,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.current .wizard-label .wizard-title {
+  color: #3699FF; }
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.completed .wizard-arrow,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.current .wizard-arrow {
+  color: #3699FF; }
+  .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.completed .wizard-arrow svg g [fill],
+  .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step.current .wizard-arrow svg g [fill] {
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+    fill: #3699FF; }
 
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-label {
