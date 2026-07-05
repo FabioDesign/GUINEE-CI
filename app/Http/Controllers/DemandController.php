@@ -288,4 +288,32 @@ class DemandController extends Controller
 			]);
 		}
 	}
+    //Rechercher les utilisateurs
+	public function searchUsers(Request $request) {
+		//Requete Read-
+		$search = '%' . $request->search . '%';
+		$query = User::select('id', 'firstname', 'lastname', 'gender', 'avatar', 'nationality_id')
+		->with('nationality')
+		->where(function ($q) use ($search) {
+			$q->where('lastname', 'like', $search)
+			->orWhere('firstname', 'like', $search);
+		})
+		->where('profile_id', '!=', 1)
+		->orderBy('lastname')
+		->orderBy('firstname')
+		->get();
+
+		$users = $query->map(fn($data) => [
+			'id'       => $data->id,
+			'username' => $data->firstname . ' ' . $data->lastname,
+			'nationality' => optional($data->nationality)->nationality ?? '',
+			'avatar'   => $data->avatar != ''
+							? $data->avatar
+							: ($data->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg'),
+		]);
+		return response()->json([
+			'status' => true,
+			'data' => $users,
+		]);
+	}
 }
