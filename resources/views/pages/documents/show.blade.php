@@ -9,12 +9,16 @@
                 <label class="fw-bolder text-dark fs-5">Libellé :</label>
                 <input type="text" value="{{ $query->label }}" class="form-control" />
             </div>
-            <div class="col-md-3 col-12">
+            <div class="col-md-2 col-12">
+                <label class="fw-bolder text-dark fs-5">Code :</label>
+                <input type="text" value="{{ $query->code }}" class="form-control" />
+            </div>
+            <div class="col-md-2 col-12">
                 <label class="fw-bolder text-dark fs-5">Montant :</label>
                 <input type="text" value="{{ $query->price }}" class="form-control" />
             </div>
-            <div class="col-md-3 col-12">
-                <label class="fw-bolder text-dark fs-5">Nombre de jours :</label>
+            <div class="col-md-2 col-12">
+                <label class="fw-bolder text-dark fs-5">Nombre :</label>
                 <input type="text" value="{{ $query->number }}" class="form-control" />
             </div>
         </div>

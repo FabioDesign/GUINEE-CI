@@ -22,8 +22,4 @@ class Document extends Model
             }
         });
     }
-
-    public function files() {
-        return $this->hasMany(File::class, 'document_id');
-    }
 }

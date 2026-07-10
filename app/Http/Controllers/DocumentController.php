@@ -87,6 +87,7 @@ class DocumentController extends Controller
 				}),
 			],
 			'file_id' => 'required|array',
+			'code' => 'required|string|max:5',
 			'price' => 'required|integer|min:1',
 			'number' => 'required|integer|min:1',
 			'description' => 'required',
@@ -95,6 +96,7 @@ class DocumentController extends Controller
 			'label.unique' => "Le document existe déjà dans la base de données.",
 			'file_id.required' => "Les pièces jointes sont obligatoires.",
 			'file_id.array' => "Les pièces jointes doivent être un tableau.",
+			'code.*' => "Le code est obligatoire et doit être une chaîne de caractères de 5 caractères.",
 			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
@@ -111,6 +113,7 @@ class DocumentController extends Controller
 		$label = Str::upper(Myhelper::valideString($request->label));
 		$set = [
 			'label' => $label,
+			'code' => $request->code,
 			'number' => $request->number,
 			'price' => $request->price,
 			'icone' => "far fa-address-card",
@@ -184,6 +187,7 @@ class DocumentController extends Controller
 				}),
 			],
 			'file_id' => 'required|array',
+			'code' => 'required|string|max:5',
 			'price' => 'required|integer|min:1',
 			'number' => 'required|integer|min:1',
 			'description' => 'required',
@@ -192,6 +196,7 @@ class DocumentController extends Controller
 			'label.unique' => "Le document existe déjà dans la base de données.",
 			'file_id.required' => "Les pièces jointes sont obligatoires.",
 			'file_id.array' => "Les pièces jointes doivent être un tableau.",
+			'code.*' => "Le code est obligatoire et doit être une chaîne de caractères de 5 caractères.",
 			'price.*' => "Le montant est obligatoire et doit être un entier.",
 			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
@@ -214,6 +219,7 @@ class DocumentController extends Controller
 			]);
 		}
 		$set = [
+			'code' => $request->code,
 			'number' => $request->number,
 			'price' => $request->price,
 			'description' => $request->description,
@@ -305,14 +311,15 @@ class DocumentController extends Controller
 	public function getDocs($id) {
 		// dd($id);
 		// Requete Read
-		$data['docs'] = Document::select('label', 'number', 'price', 'description')
+		$data['docs'] = Document::select('id', 'label', 'code', 'number', 'price', 'description')
 		->where('id', $id)
 		->first();
 		$files = DocFile::where('document_id', $id)->get();
 		// Transformer les données
 		$data['files'] = $files->map(fn($data) => [
-			'label' => $data->file->label,
-			'path' => $data->file->path,
+			'id' => $data->files->id,
+			'label' => $data->files->label,
+			'path' => $data->files->path,
 		]);
 		return response()->json([
 			'status' => true,

@@ -23,7 +23,7 @@ class User extends Authenticatable
         'lastname',
         'firstname',
         'gender',
-        'number',
+        'phone_number',
         'email',
         'password',
         'password_at',
@@ -103,16 +103,20 @@ class User extends Authenticatable
     public function town() {
         return $this->belongsTo(Town::class, 'town_id');
     }
-    // Relation avec l'Ambassade
-    public function embassy() {
-        return $this->belongsTo(Country::class, 'embassy_id');
-    }
     // Relation avec l'Agence
     public function agency() {
         return $this->belongsTo(Agency::class, 'agency_id');
     }
+    // Relation avec l'Ambassade
+    public function embassy() {
+        return $this->belongsTo(Country::class, 'embassy_id');
+    }
     // Relation avec la Nationalité
     public function nationality() {
         return $this->belongsTo(Country::class, 'nationality_id');
+    }
+    // Relation avec le pays
+    public function country() {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

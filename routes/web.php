@@ -64,14 +64,14 @@ Route::middleware(['auth'])->group(function () {
   Route::post('agencies/list', [AgencyController::class, 'list']);
   // Route pour les statuts
   Route::patch('{type}/status/{uuid}', [StatusController::class, 'update']);
+  // Route pour les demandes:
+  Route::controller(DemandController::class)->group(function () {
+    Route::post('searchUsers', 'searchUsers');
+  });
   // Route pour les pistes d'audit:
   Route::controller(LogsController::class)->group(function () {
     Route::get('logs', 'index');
     Route::get('getLogs', 'getLogs');
-  });
-  // Route pour les demandes:
-  Route::controller(DemandController::class)->group(function () {
-    Route::post('searchUsers', 'searchUsers');
   });
   // Route des ressources
   Route::resources([

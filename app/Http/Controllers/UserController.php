@@ -51,7 +51,7 @@ class UserController extends Controller
 		}
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>';
-		$pays = Country::orderBy('label')->get();
+		$pays = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
 		$ville = Town::where('id', $query->town_id)->first();
 		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'pays'));
@@ -84,7 +84,7 @@ class UserController extends Controller
 			'civility' => 'required|in:M.,Mme,Mlle',
 			'lastname' => 'required',
 			'firstname' => 'required',
-			'number' => [
+			'phone_number' => [
 				'required',
                 'regex:/^\d{10}$/',
                 Rule::unique('users')->where(function ($query) {
@@ -124,9 +124,9 @@ class UserController extends Controller
 			'civility.in' => "La civilité est incorrecte.",
 			'lastname.required' => "Le nom est obligatoire.",
 			'firstname.required' => "Les prénoms sont obligatoires.",
-			'number.required' => "Le numéro de téléphone est obligatoire.",
-            'number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
-			'number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
+			'phone_number.required' => "Le numéro de téléphone est obligatoire.",
+            'phone_number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
+			'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
 			'email.required' => "Adresse e-mail est obligatoire.",
             'email.email' => "Adresse e-mail non valide.",
 			'email.unique' => "Adresse e-mail existe déjà dans la base de données.",
@@ -185,7 +185,7 @@ class UserController extends Controller
             'lastname' => $lastname,
             'firstname' => $firstname,
             'gender' => $gender,
-            'number' => $request->number,
+            'phone_number' => $request->phone_number,
             'email' => Str::lower($request->email),
             'profession' => $request->profession,
             'profile_id' => $request->profile_id,
@@ -287,7 +287,7 @@ class UserController extends Controller
                 'civility' => 'required|in:M.,Mme,Mlle',
                 'lastname' => 'required',
                 'firstname' => 'required',
-                'number' => [
+                'phone_number' => [
                     'required',
                     Rule::unique('users')->where(function ($query) use ($uuid) {
                         return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
@@ -322,8 +322,8 @@ class UserController extends Controller
                 'civility.in' => "La civilité est incorrecte.",
                 'lastname.required' => "Le nom est obligatoire.",
                 'firstname.required' => "Les prénoms sont obligatoires.",
-                'number.required' => "Le numéro de téléphone est obligatoire.",
-                'number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
+                'phone_number.required' => "Le numéro de téléphone est obligatoire.",
+                'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
                 'email.required' => "L'email est obligatoire.",
                 'email.unique' => "L'email existe déjà dans la base de données.",
                 'profession.required' => "La profession est obligatoire.",
@@ -372,7 +372,7 @@ class UserController extends Controller
                 'lastname' => $lastname,
                 'firstname' => $firstname,
                 'gender' => $gender,
-                'number' => $request->number,
+                'phone_number' => $request->phone_number,
                 'email' => Str::lower($request->email),
                 'profession' => $request->profession,
                 'birthday_at' => $request->birthday_at,
@@ -558,7 +558,7 @@ class UserController extends Controller
         }
         try {
             // Déterminer si le login est un email ou un numéro de téléphone
-            $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'number';
+            $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
             // Tentative de connexion avec Laravel Auth
             $credentials = [
                 $loginField => $request->login,

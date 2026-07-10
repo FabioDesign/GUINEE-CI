@@ -15,6 +15,8 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<link href="/assets/img/favicon.png" rel="icon" type="image/x-icon">
 		<!--begin::Fonts(mandatory for all pages)-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+		<link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
@@ -331,6 +333,9 @@
 		<script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
 		<!--end::Page Vendors Javascript-->
 		<!--begin::Custom Javascript(used for this page only)-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+		<script src="/assets/js/custom/flatpickr_fr.js"></script>
+		<script src="/assets/js/custom/select2.js"></script>
 		<script src="/assets/js/custom/icheck.js"></script>
 		<script src="/assets/js/custom.js?v={{ time() }}"></script>
 		<script>

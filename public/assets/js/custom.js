@@ -8,6 +8,81 @@ function verif_int(champ) {
     }
   }
 }
+// Calendrier
+$(".date_at").flatpickr({
+  locale: "fr",
+  altInput: true,
+  altFormat: "d-m-Y",
+  dateFormat: "Y-m-d",
+  defaultDate: "today",
+  maxDate: "today",
+});
+// Configuration pour les champs de numéro de téléphone
+const phoneConfig = {
+  initialCountry: "gn",
+  separateDialCode: true,
+  preferredCountries: ["gn", "ci"],
+  utilsScript: "/assets/js/custom/utils.js"
+};
+const phoneInstances = {};
+["phone_number", "person_number"].forEach(function (id) {
+  const el = document.getElementById(id);
+  if (el) {
+      phoneInstances[id] = window.intlTelInput(el, phoneConfig);
+  }
+});
+// Select2
+$('#embassy_id, #pays_id, #nationality_id').select2({
+  placeholder: "Sélectionner un pays",
+  width: '100%',
+
+  templateResult: formatCountry,
+  templateSelection: formatCountrySelection,
+
+  escapeMarkup: function (markup) {
+      return markup;
+  }
+});
+function formatCountry(country) {
+  if (!country.id) return country.text;
+
+  let code = $(country.element).data('code');
+  let flag = $(country.element).data('alpha').toLowerCase();
+
+  return `
+      <span>
+          <span class="fi fi-${flag}" style="margin-right:8px;"></span>
+          ${country.text} (${code})
+      </span>
+  `;
+}
+
+function formatCountrySelection(country) {
+  if (!country.id) return country.text;
+
+  let code = $(country.element).data('code');
+  let flag = $(country.element).data('alpha').toLowerCase();
+
+  return `
+      <span>
+          <span class="fi fi-${flag}" style="margin-right:5px;"></span>
+          ${country.text} (${code})
+      </span>
+  `;
+}
+const selectFields = [
+  { selector: '#profile_id', placeholder: "Sélectionner le profil" },
+  { selector: '#town_id', placeholder: "Sélectionner la préfecture" },
+  { selector: '#agency_id', placeholder: "Sélectionner l'agence" },
+  { selector: '#document_id', placeholder: "Sélectionner le document" },
+];
+
+selectFields.forEach(field => {
+  $(field.selector).select2({
+    width: '100%',
+    placeholder: field.placeholder
+  });
+});
 //Cocher afficher
 $(document).on('ifChecked', '.check', function(event) {
   $(this).parents('.boxcheck').siblings().find('.show').each(function() {

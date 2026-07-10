@@ -13,7 +13,7 @@ class DocFile extends Model
     
     public $timestamps = false;
 
-    public function file() {
+    public function files() {
         return $this->belongsTo(File::class, 'file_id');
     }
 }

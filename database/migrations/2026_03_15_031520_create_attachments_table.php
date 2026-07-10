@@ -14,13 +14,9 @@ return new class extends Migration
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
             $table->text('filename');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->foreignId('created_by')->nullable();
-            $table->foreignId('updated_by')->nullable();
-            $table->foreignId('deleted_by')->nullable();
-            $table->integer('file_id');
             $table->integer('demand_id');
+            $table->integer('file_id');
+            $table->unique(['file_id', 'demand_id']);
         });
     }
 

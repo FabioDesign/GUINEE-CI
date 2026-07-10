@@ -37,7 +37,7 @@
 						<!--begin::Title-->
 						<div class="title-left" style="display: flex; align-items: center; width: 100%;">
 							<img alt="Logo" src="/assets/img/amoirie.png" class="h-100px" />
-							<h2 class="text-white m-0" style="flex: 1; text-align: center;">République de Guinée</h2>
+							<h2 class="text-white m-0" style="flex: 1; text-align: center;">Ambassade de la République de Guinée</h2>
 							<img alt="Logo" src="/assets/img/nimba.png" class="h-100px" />
 						</div>
 						<div class="body-left">
@@ -156,6 +156,9 @@
 							<!--begin::Title-->
 							<h1 id="modal-title" class="mb-3">Titre</h1>
 							<!--end::Title-->
+							<!--begin::Code-->
+							<div id="modal-code" class="fw-semibold fs-5">Code</div>
+							<!--end::Code-->
 							<!--begin::Description-->
 							<div id="modal-description" class="text-muted fw-semibold fs-5">Description</div>
 							<!--end::Description-->
@@ -220,8 +223,8 @@
 					const response = await axios.get(`/getDocs/${id}`);
 					const data = response.data?.data || null;
 					if (data) {
-						console.log(data);
 						$('#modal-title').text(data.docs.label);
+						$('#modal-code').text(`(${data.docs.code})`);
 						$('#modal-price').text(data.docs.price);
 						$('#modal-number').text(data.docs.number);
 						$('#modal-description').text(data.docs.description);

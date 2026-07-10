@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @section('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
 	<link href="/assets/css/wizard/wizard.css?v={{ time() }}" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -12,7 +14,7 @@
             <div class="kt-grid__item">
                 <!--begin::Wizard Nav-->
                 <div class="wizard-nav border-bottom">
-                    <div class="wizard-steps p-8 p-lg-10">
+                    <div class="wizard-steps p-8">
                         <div class="wizard-step header-step1" data-wizard-type="step" data-kt-stepper-element="nav" data-wizard-state="current">
                             <div class="wizard-label">
                                 <span class="svg-icon svg-icon-4x wizard-icon">
@@ -125,14 +127,16 @@
                 </div>
                 <!--end::Wizard Nav-->
             </div>
-            <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
+            <div class="row justify-content-center my-10 px-8 px-lg-10">
                 <div class="col-xl-12 col-xxl-7">
                     <!--begin::Form Wizard Form-->
                     <form class="form" id="kt_contact_add_form" data-wizard-validation="false">
                         <input type="hidden" id="rootForm" value="demands">
                         <input type="hidden" id="user_id" name="user_id" value="0">
+                        <input type="hidden" id="step2" value="0">
+                        <input type="hidden" id="step3" value="0">
                         <!--begin::Form Wizard Step 1-->
-                        <div class="body-step1 pb-5 current" data-wizard-type="step-content" data-kt-stepper-element="content">
+                        <div class="body-step1 pb-5 m-auto w-75 current" data-wizard-type="step-content" data-kt-stepper-element="content">
                             <div class="row">
                                 <div class="col-xl-12">
                                     <div id="kt_modal_users_search_handler" data-kt-search-keypress="true" data-kt-search-min-length="2" data-kt-search-enter="enter" data-kt-search-layout="inline" data-kt-search="true">
@@ -175,98 +179,295 @@
                         <!--end::Form Wizard Step 1-->
                         <!--begin::Form Wizard Step 2-->
                         <div class="body-step2 pb-5" data-wizard-type="step-content" data-kt-stepper-element="content">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">Language</label>
-                                        <div class="col-lg-9 col-xl-9">
-                                            <select name="language" class="form-control form-control-lg form-control-solid">
-                                                <option value="">Select Language...</option>
-                                                <option value="id">Bahasa Indonesia - Indonesian</option>
-                                                <option value="msa">Bahasa Melayu - Malay</option>
-                                                <option value="ca">Català - Catalan</option>
-                                                <option value="cs">Čeština - Czech</option>
-                                                <option value="da">Dansk - Danish</option>
-                                                <option value="de">Deutsch - German</option>
-                                                <option value="en" selected="selected">English</option>
-                                                <option value="en-gb">English UK - British English</option>
-                                                <option value="es">Español - Spanish</option>
-                                                <option value="eu">Euskara - Basque (beta)</option>
-                                                <option value="fil">Filipino</option>
-                                                <option value="fr">Français - French</option>
-                                                <option value="ga">Gaeilge - Irish (beta)</option>
-                                                <option value="gl">Galego - Galician (beta)</option>
-                                                <option value="hr">Hrvatski - Croatian</option>
-                                                <option value="it">Italiano - Italian</option>
-                                                <option value="hu">Magyar - Hungarian</option>
-                                                <option value="nl">Nederlands - Dutch</option>
-                                                <option value="no">Norsk - Norwegian</option>
-                                                <option value="pl">Polski - Polish</option>
-                                                <option value="pt">Português - Portuguese</option>
-                                                <option value="ro">Română - Romanian</option>
-                                                <option value="sk">Slovenčina - Slovak</option>
-                                                <option value="fi">Suomi - Finnish</option>
-                                                <option value="sv">Svenska - Swedish</option>
-                                                <option value="vi">Tiếng Việt - Vietnamese</option>
-                                                <option value="tr">Türkçe - Turkish</option>
-                                                <option value="el">Ελληνικά - Greek</option>
-                                                <option value="bg">Български език - Bulgarian</option>
-                                                <option value="ru">Русский - Russian</option>
-                                                <option value="sr">Српски - Serbian</option>
-                                                <option value="uk">Українська мова - Ukrainian</option>
-                                                <option value="he">עִבְרִית - Hebrew</option>
-                                                <option value="ur">اردو - Urdu (beta)</option>
-                                                <option value="ar">العربية - Arabic</option>
-                                                <option value="fa">فارسی - Persian</option>
-                                                <option value="mr">मराठी - Marathi</option>
-                                                <option value="hi">हिन्दी - Hindi</option>
-                                                <option value="bn">বাংলা - Bangla</option>
-                                                <option value="gu">ગુજરાતી - Gujarati</option>
-                                                <option value="ta">தமிழ் - Tamil</option>
-                                                <option value="kn">ಕನ್ನಡ - Kannada</option>
-                                                <option value="th">ภาษาไทย - Thai</option>
-                                                <option value="ko">한국어 - Korean</option>
-                                                <option value="ja">日本語 - Japanese</option>
-                                                <option value="zh-cn">简体中文 - Simplified Chinese</option>
-                                                <option value="zh-tw">繁體中文 - Traditional Chinese</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 userError text-danger fw-bold fs-5 text-center"></div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Civilité : <span class="text-danger">*</span></label>
+                                    <select id="civility" name="civility" class="form-control requiredUser" data-valid="1">
+                                        <option value="" selected>Sélectionner</option>
+                                        @foreach($civility as $civil)
+                                            <option value="{{ $civil }}">{{ $civil }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nom : <span class="text-danger">*</span></label>
+                                    <input type="text" name="lastname" class="form-control requiredUser" placeholder="Saisir nom" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Prénoms : <span class="text-danger">*</span></label>
+                                    <input type="text" name="firstname" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
+                                    <input type="text" id="phone_number" name="phone_number" class="form-control requiredUser" onKeyUp="verif_int(this)" data-valid="1">
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Email :</label>
+                                    <input type="text" name="email" class="form-control email" placeholder="Saisir email" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Profession : <span class="text-danger">*</span></label>
+                                    <input type="text" name="profession" class="form-control requiredUser" placeholder="Saisir profession" data-valid="1" />
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-3" col-12">
+                                    <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
+                                    <input type="text" name="birthday_at" class="form-control date_at" readonly>
+                                </div>
+                                <div class="col-md-3" col-12">
+                                    <label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
+                                    <input type="text" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="1" />
+                                </div>
+                                <div class="col-md-3" col-12">
+                                    <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
+                                    <select id="country_id" name="country_id" class="form-control">
+                                        <option value="" selected>Sélectionner</option>
+                                        @foreach($pays as $data)
+                                            <option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->country }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3" col-12">
+                                    <label class="fw-bolder text-dark fs-5">Préfecture de naissance : <span class="text-danger">*</span></label>
+                                    <select id="town_id" name="town_id" class="form-control requiredUser" data-valid="1">
+                                        <option value="" selected>Sélectionner</option>
+                                        @foreach($town as $data)
+                                            <option value="{{ $data->id }}">{{ $data->label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
+                                    <select id="nationality_id" name="nationality_id" class="form-control">
+                                        <option value="" selected>Sélectionner</option>
+                                        @foreach($nationality as $data)
+                                            <option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->nationality }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nom et prénoms du père : <span class="text-danger">*</span></label>
+                                    <input type="text" name="father_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms du père" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nom et prénoms de la mère : <span class="text-danger">*</span></label>
+                                    <input type="text" name="mother_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms de la mère" data-valid="1" />
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Taille : <span class="text-danger">*</span></label>
+                                    <input type="text" name="size" class="form-control requiredUser" placeholder="Saisir taille" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Teint : <span class="text-danger">*</span></label>
+                                    <input type="text" name="complexion" class="form-control requiredUser" placeholder="Saisir teint" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Cheveux : <span class="text-danger">*</span></label>
+                                    <input type="text" name="hairs" class="form-control requiredUser" placeholder="Saisir cheveux" data-valid="1" />
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Signes particuliers : <span class="text-danger">*</span></label>
+                                    <input type="text" name="particular_sign" class="form-control requiredUser" placeholder="Saisir signes particuliers" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Domicile : <span class="text-danger">*</span></label>
+                                    <input type="text" name="home_address" class="form-control requiredUser" placeholder="Saisir domicile" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
+                                    <input type="text" name="arrival_at" class="form-control date_at" readonly>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12 col-12">
+                                    <label class="fw-bolder text-dark fs-4">Personne à prévenir :</label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nom et prénoms : <span class="text-danger">*</span></label>
+                                    <input type="text" name="person_fullname" class="form-control requiredUser" placeholder="Saisir nom complet" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
+                                    <input type="text" id="person_number" name="person_number" class="form-control requiredUser" placeholder="Saisir numéro" data-valid="1" />
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Adresse : <span class="text-danger">*</span></label>
+                                    <input type="text" name="person_address" class="form-control requiredUser" placeholder="Saisir adresse" data-valid="1" />
                                 </div>
                             </div>
                         </div>
                         <!--end::Form Wizard Step 2-->
                         <!--begin::Form Wizard Step 3-->
                         <div class="body-step3 pb-5" data-wizard-type="step-content" data-kt-stepper-element="content">
-                            <div class="form-group">
-                                <label>Address Line 1</label>
-                                <input type="text" class="form-control form-control-lg form-control-solid" name="address1" placeholder="Address Line 1" value="Address Line 1" />
-                                <span class="form-text text-muted">Please enter your Address.</span>
+                            <div class="row mb-5">
+                                <div class="col-md-12 dmdError text-danger fw-bold fs-5 text-center"></div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col-md-4 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Document : <span class="text-danger">*</span></label>
+                                    <select id="document_id" name="document_id" class="form-control">
+                                        <option value="" selected>Sélectionner</option>
+                                        @foreach($documents as $data)
+                                            <option value="{{ $data->id }}" @php echo $data->id == $firstDoc->id ? 'selected':'' @endphp>{{ $data->label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Nombre : <span class="text-danger">*</span></label>
+                                    <input type="text" id="quantity" name="quantity" value="{{ old('number', $firstDoc->number) }}" class="form-control requiredDmd text-center" placeholder="0" onKeyUp="verif_int(this)" data-valid="0" />
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
+                                    <input type="text" id="price" name="price" value="{{ old('price', $firstDoc->price) }}" class="form-control requiredDmd text-center" placeholder="0" onKeyUp="verif_int(this)" data-valid="0" />
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Copie : <span class="text-danger">*</span></label>
+                                    <input type="text" id="copy" name="copy" value="1" class="form-control requiredDmd text-center" onKeyUp="verif_int(this)" data-valid="0" />
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <label class="fw-bolder text-dark fs-5">Total : <span class="text-danger">*</span></label>
+                                    <input type="text" id="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" readonly />
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 col-12">
+                                    <label class="fw-bolder text-dark fs-4">Pièces jointes :</label>
+                                </div>
+                            </div>
+                            <div class="row mb-2 files-list">
+                                @foreach ($docFiles as $data)
+                                    <div class="col-md-6 col-12">
+                                        <input type="hidden" name="file_id[]" value="{{ $data->files->id }}" />
+                                        <label class="fw-bolder text-dark fs-6">
+                                            {{ $data->files->label }} : <span class="text-danger">*</span>
+                                            <a href="/storage/{{ $data->files->path }}" target="_blank">
+                                            <i class="ki-duotone ki-paper-clip fs-2 text-primary"></i>
+                                            </a>
+                                        </label>
+                                        <input type="file" name="filename[]" class="form-control requiredDmd filename" accept=".png,.jpg,.jpeg" data-valid="1" />
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                         <!--end::Form Wizard Step 3-->
                         <!--begin::Form Wizard Step 4-->
                         <div class="body-step4 pb-5" data-wizard-type="step-content" data-kt-stepper-element="content">
-                            <table class="w-100">
-                                <tr>
-                                    <td class="font-weight-bold text-muted">Name:</td>
-                                    <td class="font-weight-bold text-right">Loop Inc CRM App</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-weight-bold text-muted">Phone:</td>
-                                    <td class="font-weight-bold text-right">+61412345678</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-weight-bold text-muted">Email:</td>
-                                    <td class="font-weight-bold text-right">johnwick@reeves.com</td>
-                                </tr>
-                            </table>
+                            <div class="row mb-5">
+                                <div class="col-md-12 text-primary fw-bold fs-2">Information de l'utilisateur</div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-2 col-12">
+                                    <label class="fs-5">Civilité : <span class="civility fw-bold fs-5 text-dark"></span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Numéro de téléphone : <span class="phone_number fw-bold fs-5 text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Email : <span class="email fw-bold fs-5 text-lowercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6" col-12">
+                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6" col-12">
+                                    <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6" col-12">
+                                    <label class="fs-5">Pays de naissance : <span class="country_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6" col-12">
+                                    <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Profession : <span class="profession fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nationalité : <span class="nationality_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nom et prénoms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nom et prénoms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Taille : <span class="size fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Teint : <span class="complexion fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Cheveux : <span class="hairs fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Signes particuliers : <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 col-12">
+                                    <label class="fs-5">Domicile : <span class="home_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12 col-12">
+                                    <label class="fw-bolder text-dark fs-4">Personne à prévenir :</label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nom et prénoms : <span class="person_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Numéro de téléphone : <span class="person_number fw-bold fs-5 text-dark"></span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 col-12">
+                                    <label class="fs-5">Adresse : <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                </div>
+                            </div>
                         </div>
                         <!--end::Form Wizard Step 4-->
                         <!--begin::Wizard Actions-->
                         <div class="d-flex justify-content-between border-top pt-10">
                             <div class="mr-2">
-                                <button type="button" class="btn btn-light-primary font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
+                                <button type="button" class="btn btn-light-danger font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
                             </div>
                             <div>
                                 <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step" data-step="1">Envoyer</button>
@@ -343,8 +544,8 @@
                                                 <!--end::Avatar-->
                                                 <!--begin::Info-->
                                                 <div class="fw-semibold">
-                                                    <span class="fs-6 text-gray-800 me-2">${data.username}</span>
-                                                    <span class="fs-6 badge badge-primary">${data.nationality}</span>
+                                                    <div class="fs-6 text-gray-800 me-2">${data.username}</div>
+                                                    <div class="fs-6 badge badge-primary">${data.nationality}</div>
                                                 </div>
                                                 <!--end::Info-->
                                             </a>
@@ -365,6 +566,39 @@
                     );
                 }
             });
+            // Rechercher les documents
+            $(document).on('change', '#document_id', function() {
+                let id = $(this).val();
+				if (!id) return;
+                const getDocs = async (id) => {
+                    try {
+                        const response = await axios.get( `/getDocs/${id}`);
+                        return response.data?.data || null;
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                getDocs(id).then(
+                    response => {
+                        if (response) {
+                            $('#copy').val(1);
+                            $('#quantity').val(response.docs.number);
+                            $('#price, #total').val(response.docs.price);
+                            $('.files-list').html(response.files.map(file => `<div class="col-md-6 col-12">
+                                <input type="hidden" name="file_id[]" value="${file.id}" />
+                                <label class="fw-bolder text-dark fs-6">
+                                    ${file.label} : <span class="text-danger">*</span>
+                                    <a href="/storage/${file.path}" target="_blank">
+                                    <i class="ki-duotone ki-paper-clip fs-2 text-primary"></i>
+                                    </a>
+                                </label>
+                                <input type="file" name="filename[]" class="form-control requiredDmd filename" accept=".png,.jpg,.jpeg" data-valid="1" />
+                            </div>`).join(''));
+                            dmdForm();
+                        }
+                    }
+                );
+            });
             // Bouton précédent
             $('.btn-previous').on('click', function() {
                 var step = $(this).data('step') - 1;
@@ -375,6 +609,7 @@
                     $('.body-step1').addClass('current');
                     $('.body-step2').removeClass('current');
                     $('.header-step2').removeAttr('data-wizard-state');
+                    $('.btn-next').addClass('btn-primary').removeClass('not-active');
                 }
                 // Step 2
                 if (step == 2) {
@@ -397,16 +632,28 @@
                 // Gestion visibilité des boutons
                 $('.btn-previous').show();
                 var step = $(this).data('step') + 1;
-                // ── Action de data-wizard-type="action-next" ─────────────────
+                // Action de data-wizard-type="action-next"
                 $('.btn-step').data('step', step).attr('data-step', step);
                 // Step 2
                 if (step == 2) {
+                    // let step2 = $('#step2').val();
+                    // if (step2 == 0) {
+                    //     $('.btn-next').addClass('not-active');
+                    // } else {
+                    //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                    // }
                     $('.body-step2').addClass('current');
                     $('.body-step1').removeClass('current');
                     $('.header-step2').attr('data-wizard-state', 'current');
                 }
                 // Step 3
                 if (step == 3) {
+                    // let step3 = $('#step3').val();
+                    // if (step3 == 0) {
+                    //     $('.btn-next').addClass('not-active');
+                    // } else {
+                    //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                    // }
                     $('.body-step3').addClass('current');
                     $('.body-step2').removeClass('current');
                     $('.header-step3').attr('data-wizard-state', 'current');
@@ -420,6 +667,145 @@
                     $('.btn-submit').show();
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            // Changement du pays
+            $(document).on('change', '#country_id', function() {
+                // $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+            });
+            // Changement de la civilité et de la préfecture
+            $(document).on('change', '#civility, #town_id', function() {
+                if ($(this).val() == '') {
+                    $(this).data('valid', 1).attr('data-valid', 1);
+                } else {
+                    $(this).data('valid', 0).attr('data-valid', 0);
+                }
+                userForm();
+            });
+            // Zone de texte Utilisateur
+            $(document).on('keyup', '.requiredUser', function() {
+                if ($(this).val() == '') {
+                    $(this).data('valid', 1).attr('data-valid', 1);
+                } else {
+                    $(this).data('valid', 0).attr('data-valid', 0);
+                }
+                userForm();
+            });
+            // Zone de email
+            $(document).on('keyup', '.email', function() {
+                let value = jQuery.trim($(this).val());
+                if (value != '') {
+                    let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                    if (!regex.test(value)) {
+                        $('#step2').val(0);
+                        $('.userError').show().html("Adresse e-mail non valide.");
+                        $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    } else userForm();
+                } else userForm();
+            });
+            // Validation du formulaire de l'utilisateur
+            function userForm() {
+                var sum = 0;
+                $('.body-step2 .requiredUser').each(function() {
+                    let value = $(this).attr('name') == undefined ? 0 : 1;
+                    if (value == 1) {
+                        sum += $(this).data('valid');
+                    }
+                });
+                // if (sum > 0) {
+                //     $('#step2').val(0);
+                //     $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                // } else {
+                //     $('#step2').val(1);
+                //     $('.userError').hide().html("");
+                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                // }
+            }
+            // Zone de Montant et de Copie
+            $(document).on('keyup', '#price, #copy', function() {
+                let price = parseInt($('#price').val()) || 0;
+                let copy = parseInt($('#copy').val()) || 1;
+                let total = price * copy;
+                $('#total').val(total);
+            });
+            // Validation des fichiers
+            $(document).on('change', '.filename', function() {
+                $('.dmdError').html('');
+                var value = $(this).val();
+                var imgObj = $(this)[0].files[0];
+                var iSize = imgObj.size;
+                var file = value.toLowerCase();
+                var iExt = file.substr((file.lastIndexOf('.')+1));
+                var ValidImageTypes = ['pdf', 'jpg', 'jpeg', 'png'];
+                $(this).data('valid', 1).attr('data-valid', 1);
+                if ($.inArray(iExt, ValidImageTypes) < 0) {
+                    $('.dmdError').html('Les types de fichier autorisés sont : PDF ou Image.');
+                } else if(iSize > 2000000) {
+                    $('.dmdError').html('La taille du fichier doit être inférieure ou égale à 2MB.');
+                } else {
+                    $(this).data('valid', 0).attr('data-valid', 0);
+                }
+                dmdForm();
+            });
+            // Zone de texte Document
+            $(document).on('keyup', '.requiredDmd', function() {
+                if ($(this).val() == '') {
+                    $(this).data('valid', 1).attr('data-valid', 1);
+                } else {
+                    $(this).data('valid', 0).attr('data-valid', 0);
+                }
+                dmdForm();
+            });
+            // Validation du formulaire de l'document
+            function dmdForm() {
+                var sum = 0;
+                $('.body-step3 .requiredDmd').each(function() {
+                    let value = $(this).attr('name') == undefined ? 0 : 1;
+                    if (value == 1) {
+                        sum += $(this).data('valid');
+                    }
+                });
+                // if (sum > 0) {
+                //     $('#step3').val(0);
+                //     $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                // } else {
+                //     $('#step3').val(1);
+                //     $('.dmdError').hide().html("");
+                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                // }
+            }
+            // Champs texte / input
+            var textFields = [
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address',
+            ];
+            $.each(textFields, function (i, field) {
+                $('[name="' + field + '"]').on('input change', function () {
+                    $('.' + field).text($(this).val());
+                });
+            });
+            // Dates : reformatage Y-m-d → d/m/Y
+            var dateFields = ['birthday_at', 'arrival_at'];
+            $.each(dateFields, function (i, field) {
+                $('[name="' + field + '"]').on('change', function () {
+                    var val = $(this).val();
+                    if (val) {
+                        var parts     = val.split('-');
+                        var formatted = parts[2] + '-' + parts[1] + '-' + parts[0];
+                        $('.' + field).text(formatted);
+                    } else {
+                        $('.' + field).text('');
+                    }
+                });
+            });
+            var selectFields = [
+                'civility', 'country_id', 'town_id', 'nationality_id',
+            ];
+            $.each(selectFields, function (i, field) {
+                $('[name="' + field + '"]').on('change', function () {
+                    $('.' + field).text($('option:selected', this).text());
+                });
             });
             // Bouton envoyer
             $('.btn-submit').on('click', function() {

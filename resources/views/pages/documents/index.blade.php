@@ -11,8 +11,9 @@
           <tr class="fw-bolder fs-6 text-gray-800">
             <th>#</th>
             <th>Libellé</th>
+            <th class="text-center">Code</th>
             <th class="text-center">Montant</th>
-            <th class="text-center">Nombre de jours</th>
+            <th class="text-center">Nombre</th>
             <th class="text-center w-70">Date</th>
             <th class="text-center">Statut</th>
             <th class="text-center w-170">Action</th>
@@ -49,6 +50,7 @@
           <tr>
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">{{ $data->label }}</td>
+            <td class="text-center align-middle">{{ $data->code }}</td>
             <td class="text-center align-middle">{{ $data->price }}</td>
             <td class="text-center align-middle">{{ $data->number }}</td>
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>

@@ -7,8 +7,8 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\{Demand, Document, User};
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
+use App\Models\{Agency, Country, Demand, DocFile, Document, File, Profile, Town, User};
 
 class DemandController extends Controller
 {
@@ -85,7 +85,17 @@ class DemandController extends Controller
 		//Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
-		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal'));
+        $civility = ['M.', 'Mme', 'Mlle'];
+		$pays = Country::orderBy('country')->get();
+		$agency = Agency::where('country_id', 41)->orderBy('label')->get();
+		$nationality = Country::orderBy('nationality')->get();
+		$town = Town::where('country_id', 61)->orderBy('label')->get();
+		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
+		$documents = Document::orderBy('label')->get();
+		$firstDoc = $documents->first();
+		$docFiles = DocFile::where('document_id', $firstDoc->id)->get();
+		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'pays', 'profile', 'country', 'nationality', 'agency', 'documents', 'docFiles', 'firstDoc'));
 	}
 	//Add document
 	public function store(request $request) {

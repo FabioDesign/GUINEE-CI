@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['number' => '0102030405'],
+            ['phone_number' => '0102030405'],
             [
                 'code' => '225',
                 'civility' => 'M.',

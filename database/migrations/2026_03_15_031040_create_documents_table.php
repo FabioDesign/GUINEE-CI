@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
+            $table->string('code', 5);
             $table->string('icone', 50);
             $table->string('label', 50);
             $table->decimal('price', 10, 0);

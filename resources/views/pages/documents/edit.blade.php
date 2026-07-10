@@ -12,12 +12,16 @@
                     <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
                     <input type="text" name="label" value="{{ old('label', $query->label) }}" class="form-control requiredField" placeholder="Saisir le libellé" />
                 </div>
-                <div class="col-md-3 col-12">
+                <div class="col-md-2 col-12">
+                    <label class="fw-bolder text-dark fs-5">Code : <span class="text-danger">*</span></label>
+                    <input type="text" name="code" value="{{ old('code', $query->code) }}" class="form-control requiredField" placeholder="Saisir le code" />
+                </div>
+                <div class="col-md-2 col-12">
                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
                     <input type="text" name="price" value="{{ old('price', $query->price) }}" class="form-control requiredField" placeholder="Saisir le montant" onKeyUp="verif_int(this)" />
                 </div>
-                <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Nombre de jours : <span class="text-danger">*</span></label>
+                <div class="col-md-2 col-12">
+                    <label class="fw-bolder text-dark fs-5">Nombre : <span class="text-danger">*</span></label>
                     <input type="text" name="number" value="{{ old('number', $query->number) }}" class="form-control requiredField" placeholder="Saisir le nombre" onKeyUp="verif_int(this)" />
                 </div>
             </div>

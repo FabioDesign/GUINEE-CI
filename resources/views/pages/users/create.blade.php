@@ -1,10 +1,5 @@
 @extends('layouts.master')
 
-@section('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="card">
     <div class="card-body py-4">
@@ -33,7 +28,7 @@
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
-                    <input type="text" id="number" name="number" class="form-control requiredField number" onKeyUp="verif_int(this)">
+                    <input type="text" id="phone_number" name="phone_number" class="form-control requiredField phone_number" onKeyUp="verif_int(this)">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Email : <span class="text-danger">*</span></label>
@@ -189,81 +184,4 @@
         </form>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-	<script src="/assets/js/custom/flatpickr_fr.js"></script>
-	<script src="/assets/js/custom/select2.js"></script>
-    <script>
-        $(document).ready(function() {
-            $(".date_at").flatpickr({
-                locale: "fr",
-                altInput: true,
-                altFormat: "d-m-Y",
-                dateFormat: "Y-m-d",
-    			defaultDate: "today",
-                maxDate: "today",
-            });
-            
-            const input = document.querySelector("#number");
-
-            const iti = window.intlTelInput(input, {
-                initialCountry: "gn", // Côte d'Ivoire 🇨🇮
-                separateDialCode: true,
-                preferredCountries: ["gn", "ci"],
-                utilsScript: "/assets/js/custom/utils.js"
-            });
-            $('#embassy_id, #pays_id, #nationality_id').select2({
-                placeholder: "Sélectionner un pays",
-                width: '100%',
-
-                templateResult: formatCountry,
-                templateSelection: formatCountrySelection,
-
-                escapeMarkup: function (markup) {
-                    return markup;
-                }
-            });
-            function formatCountry(country) {
-                if (!country.id) return country.text;
-
-                let code = $(country.element).data('code');
-                let flag = $(country.element).data('alpha').toLowerCase();
-
-                return `
-                    <span>
-                        <span class="fi fi-${flag}" style="margin-right:8px;"></span>
-                        ${country.text} (${code})
-                    </span>
-                `;
-            }
-
-            function formatCountrySelection(country) {
-                if (!country.id) return country.text;
-
-                let code = $(country.element).data('code');
-                let flag = $(country.element).data('alpha').toLowerCase();
-
-                return `
-                    <span>
-                        <span class="fi fi-${flag}" style="margin-right:5px;"></span>
-                        ${country.text} (${code})
-                    </span>
-                `;
-            }
-            const selectFields = [
-                { selector: '#profile_id', placeholder: "Sélectionner le profil" },
-                { selector: '#town_id', placeholder: "Sélectionner la préfecture" },
-                { selector: '#agency_id', placeholder: "Sélectionner l'agence" },
-            ];
-
-            selectFields.forEach(field => {
-                $(field.selector).select2({
-                    width: '100%',
-                    placeholder: field.placeholder
-                });
-            });
-        });
-    </script>
 @endsection
