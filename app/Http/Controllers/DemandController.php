@@ -39,7 +39,7 @@ class DemandController extends Controller
 			'uuid' => $data->uuid,
 			'code' => $data->code,
 			'label' => $data->document->label,
-			'number' => $data->number,
+			'phone_number' => $data->phone_number,
 			'email' => $data->email,
 			'company' => $data->company,
 			'status' => match((int)$data->status) {

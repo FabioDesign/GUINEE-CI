@@ -120,7 +120,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone :</label>
-                    <input type="text" value="{{ $query->person_number }}" class="form-control">
+                    <input type="text" id="person_number" value="{{ $query->person_number }}" class="form-control">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Adresse :</label>

@@ -158,7 +158,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
-                    <input type="text" name="person_number" value="{{ old('person_number', $query->person_number) }}" class="form-control requiredField" placeholder="Saisir numéro (Personne à prévenir)">
+                    <input type="text" id="person_number" name="person_number" value="{{ old('person_number', $query->person_number) }}" class="form-control requiredField person_number" onKeyUp="verif_int(this)">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Adresse : <span class="text-danger">*</span></label>
