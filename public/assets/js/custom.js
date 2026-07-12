@@ -32,7 +32,7 @@ const phoneInstances = {};
   }
 });
 // Select2
-$('#embassy_id, #pays_id, #nationality_id').select2({
+$('#embassy_id, #country_id, #nationality_id').select2({
   placeholder: "Sélectionner un pays",
   width: '100%',
 
@@ -154,7 +154,6 @@ $(document).on('click', '#remove_sig', function () {
     $(this).hide().data('status', 0);
     $('#previewSignature').attr('src', '');
 });
-
 // Cachet
 $('#stamp').on('change', function() {
   let file = this.files[0];
@@ -186,7 +185,7 @@ $.ajaxSetup({
   }
 });
 // Récupération des préfectures
-$('#pays_id').on('change', function() {
+$('#country_id').on('change', function() {
   let dataString = { country_id: $(this).val() };
   $.ajax({
     type: 'POST',

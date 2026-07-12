@@ -1,8 +1,6 @@
 @extends('layouts.master')
 
 @section('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
 	<link href="/assets/css/wizard/wizard.css?v={{ time() }}" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -228,7 +226,7 @@
                                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
                                     <select id="country_id" name="country_id" class="form-control">
                                         <option value="" selected>Sélectionner</option>
-                                        @foreach($pays as $data)
+                                        @foreach($country as $data)
                                             <option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == 61 ? 'selected':'' @endphp>{{ $data->country }}</option>
                                         @endforeach
                                     </select>
@@ -328,7 +326,7 @@
                                 </div>
                                 <div class="col-md-2 col-12">
                                     <label class="fw-bolder text-dark fs-5">Nombre : <span class="text-danger">*</span></label>
-                                    <input type="text" id="quantity" name="quantity" value="{{ old('number', $firstDoc->number) }}" class="form-control requiredDmd text-center" placeholder="0" onKeyUp="verif_int(this)" data-valid="0" />
+                                    <input type="text" id="number" name="number" value="{{ old('number', $firstDoc->number) }}" class="form-control requiredDmd text-center" placeholder="0" onKeyUp="verif_int(this)" data-valid="0" />
                                 </div>
                                 <div class="col-md-2 col-12">
                                     <label class="fw-bolder text-dark fs-5">Montant : <span class="text-danger">*</span></label>
@@ -340,7 +338,7 @@
                                 </div>
                                 <div class="col-md-2 col-12">
                                     <label class="fw-bolder text-dark fs-5">Total : <span class="text-danger">*</span></label>
-                                    <input type="text" id="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" readonly />
+                                    <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" readonly />
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -348,17 +346,24 @@
                                     <label class="fw-bolder text-dark fs-4">Pièces jointes :</label>
                                 </div>
                             </div>
-                            <div class="row mb-2 files-list">
+                            <div class="files-list">
                                 @foreach ($docFiles as $data)
-                                    <div class="col-md-6 col-12">
-                                        <input type="hidden" name="file_id[]" value="{{ $data->files->id }}" />
-                                        <label class="fw-bolder text-dark fs-6">
-                                            {{ $data->files->label }} : <span class="text-danger">*</span>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 col-12">
+                                            <input type="hidden" name="file_id[]" value="{{ $data->files->id }}" />
+                                            <label class="fw-bolder text-dark fs-6">
+                                                {{ $data->files->label }} : <span class="text-danger">*</span>
+                                                <a href="/storage/{{ $data->files->path }}" target="_blank">
+                                                (Voir le specimen)
+                                                </a>
+                                            </label>
+                                            <input type="file" name="filename[]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                        </div>
+                                        <div class="col-md-1 col-12 position-relative">
                                             <a href="/storage/{{ $data->files->path }}" target="_blank">
-                                            <i class="ki-duotone ki-paper-clip fs-2 text-primary"></i>
+                                                <i class="ki-duotone ki-paper-clip fs-1 text-primary position-absolute start-50 bottom-0 translate-middle"></i>
                                             </a>
-                                        </label>
-                                        <input type="file" name="filename[]" class="form-control requiredDmd filename" accept=".png,.jpg,.jpeg" data-valid="1" />
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -367,7 +372,7 @@
                         <!--begin::Form Wizard Step 4-->
                         <div class="body-step4 pb-5" data-wizard-type="step-content" data-kt-stepper-element="content">
                             <div class="row mb-5">
-                                <div class="col-md-12 text-primary fw-bold fs-2">Information de l'utilisateur</div>
+                                <div class="col-md-12 text-primary fw-bold fs-2">Informations de l'utilisateur</div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-2 col-12">
@@ -390,7 +395,7 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
                                 </div>
                                 <div class="col-md-6" col-12">
                                     <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
@@ -398,7 +403,14 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">Pays de naissance : <span class="country_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Pays de naissance : 
+                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">                                            
+                                        @foreach($country as $data)
+                                            @php echo $data->id == 61 ? $data->country : '' @endphp
+                                        @endforeach
+                                        </span>
+                                </label>
                                 </div>
                                 <div class="col-md-6" col-12">
                                     <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span></label>
@@ -409,7 +421,14 @@
                                     <label class="fs-5">Profession : <span class="profession fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nationalité : <span class="nationality_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Nationalité : 
+                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">
+                                        @foreach($nationality as $data)
+                                            @php echo $data->id == 61 ? $data->nationality : '' @endphp
+                                        @endforeach
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -433,7 +452,7 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">Signes particuliers : <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span></label>
@@ -462,6 +481,28 @@
                                     <label class="fs-5">Adresse : <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                             </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 text-primary fw-bold fs-2">Informations de la demande</div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 col-12">
+                                    <label class="document_id fw-bold fs-4 text-uppercase text-dark">{{ $firstDoc->label }}</label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-3 col-12">
+                                    <label class="fs-5">Nombre : <span class="number fw-bold fs-5 text-uppercase text-dark">{{ $firstDoc->number }}</span></label>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <label class="fs-5">Montant : <span class="price fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <label class="fs-5">Copie : <span class="copy fw-bold fs-5 text-uppercase text-dark">1</span></label>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
+                                </div>
+                            </div>
                         </div>
                         <!--end::Form Wizard Step 4-->
                         <!--begin::Wizard Actions-->
@@ -470,7 +511,7 @@
                                 <button type="button" class="btn btn-light-danger font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step" data-step="1">Envoyer</button>
+                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Envoyer</button>
                                 <button type="button" class="btn btn-primary font-weight-bold px-6 py-3 fs-4 btn-next btn-step" data-step="1">Suivant</button>
                             </div>
                         </div>
@@ -490,10 +531,6 @@
     <script src="/assets/js/custom/wizard.js?v={{ time() }}"></script>
     <script>
         $(document).ready(function() {
-            // Récupérer l'ID de l'utilisateur sélectionné
-            $(document).on('ifChecked', '.user_id', function(event) {
-                $('#user_id').val($(this).parents('label').find('input').val());
-            });
             // Masquer les boutons précédent et envoyer
             $('.btn-previous, .btn-submit').hide();
             // Rechercher les utilisateurs
@@ -566,6 +603,10 @@
                     );
                 }
             });
+            // Récupérer l'ID de l'utilisateur sélectionné
+            $(document).on('ifChecked', '.user_id', function(event) {
+                $('#user_id').val($(this).parents('label').find('input').val());
+            });
             // Rechercher les documents
             $(document).on('change', '#document_id', function() {
                 let id = $(this).val();
@@ -582,9 +623,11 @@
                     response => {
                         if (response) {
                             $('#copy').val(1);
-                            $('#quantity').val(response.docs.number);
+                            $('#number').val(response.docs.number);
+                            $('.number').text(response.docs.number);
                             $('#price, #total').val(response.docs.price);
-                            $('.files-list').html(response.files.map(file => `<div class="col-md-6 col-12">
+                            $('.price, .total').text(response.docs.price);
+                            $('.files-list').html(response.files.map(file => `<div class="col-md-12 col-12">
                                 <input type="hidden" name="file_id[]" value="${file.id}" />
                                 <label class="fw-bolder text-dark fs-6">
                                     ${file.label} : <span class="text-danger">*</span>
@@ -592,7 +635,7 @@
                                     <i class="ki-duotone ki-paper-clip fs-2 text-primary"></i>
                                     </a>
                                 </label>
-                                <input type="file" name="filename[]" class="form-control requiredDmd filename" accept=".png,.jpg,.jpeg" data-valid="1" />
+                                <input type="file" name="filename[]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
                             </div>`).join(''));
                             dmdForm();
                         }
@@ -727,26 +770,28 @@
                 let price = parseInt($('#price').val()) || 0;
                 let copy = parseInt($('#copy').val()) || 1;
                 let total = price * copy;
-                $('#total').val(total);
+                $('#total').val(total).text(total);
             });
             // Validation des fichiers
             $(document).on('change', '.filename', function() {
                 $('.dmdError').html('');
-                var value = $(this).val();
                 var imgObj = $(this)[0].files[0];
                 var iSize = imgObj.size;
+                var value = $(this).val();
                 var file = value.toLowerCase();
                 var iExt = file.substr((file.lastIndexOf('.')+1));
                 var ValidImageTypes = ['pdf', 'jpg', 'jpeg', 'png'];
-                $(this).data('valid', 1).attr('data-valid', 1);
                 if ($.inArray(iExt, ValidImageTypes) < 0) {
+                    $('#step3').val(0);
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('Les types de fichier autorisés sont : PDF ou Image.');
                 } else if(iSize > 2000000) {
+                    $('#step3').val(0);
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('La taille du fichier doit être inférieure ou égale à 2MB.');
                 } else {
-                    $(this).data('valid', 0).attr('data-valid', 0);
+                    dmdForm();
                 }
-                dmdForm();
             });
             // Zone de texte Document
             $(document).on('keyup', '.requiredDmd', function() {
@@ -766,26 +811,26 @@
                         sum += $(this).data('valid');
                     }
                 });
-                // if (sum > 0) {
-                //     $('#step3').val(0);
-                //     $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                // } else {
-                //     $('#step3').val(1);
-                //     $('.dmdError').hide().html("");
-                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                // }
+                if (sum > 0) {
+                    $('#step3').val(0);
+                    $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                } else {
+                    $('#step3').val(1);
+                    $('.dmdError').hide().html("");
+                    $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                }
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address',
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total',
             ];
             $.each(textFields, function (i, field) {
-                $('[name="' + field + '"]').on('input change', function () {
+                $('[name="' + field + '"]').on('keyup change', function () {
                     $('.' + field).text($(this).val());
                 });
             });
-            // Dates : reformatage Y-m-d → d/m/Y
+            // Dates : reformatage Y-m-d → d-m-Y
             var dateFields = ['birthday_at', 'arrival_at'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
@@ -800,16 +845,12 @@
                 });
             });
             var selectFields = [
-                'civility', 'country_id', 'town_id', 'nationality_id',
+                'civility', 'country_id', 'town_id', 'nationality_id', 'document_id',
             ];
             $.each(selectFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
                     $('.' + field).text($('option:selected', this).text());
                 });
-            });
-            // Bouton envoyer
-            $('.btn-submit').on('click', function() {
-                console.log('btn-submit');
             });
         });
     </script>

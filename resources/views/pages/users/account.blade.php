@@ -95,7 +95,7 @@
 					<label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
 					<select id="embassy_id" name="embassy_id" class="form-control" disabled>
 						<option value="" selected>Sélectionner</option>
-						@foreach($country as $data)
+						@foreach($embassy as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
@@ -117,9 +117,9 @@
 				</div>
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
-					<select id="pays_id" class="form-control">
+					<select id="country_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
-						@foreach($pays as $data)
+						@foreach($country as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>

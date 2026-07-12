@@ -51,10 +51,10 @@ class UserController extends Controller
 		}
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>';
-		$pays = Country::orderBy('country')->get();
+		$country = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
 		$ville = Town::where('id', $query->town_id)->first();
-		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'pays'));
+		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'country'));
 	}
     // Liste des utilisateurs
 	public function create() {
@@ -69,13 +69,13 @@ class UserController extends Controller
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
-		$pays = Country::orderBy('country')->get();
+		$country = Country::orderBy('country')->get();
 		$agency = Agency::where('country_id', 41)->orderBy('label')->get();
 		$nationality = Country::orderBy('nationality')->get();
 		$town = Town::where('country_id', 61)->orderBy('label')->get();
-		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
-		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'pays', 'profile', 'country', 'nationality', 'agency'));
+		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency'));
 	}
     // Account creation
     public function store(Request $request) {
@@ -174,8 +174,8 @@ class UserController extends Controller
             default => 'M',
         };
         // Formatage du nom et prénoms
-        $lastname = mb_strtoupper($request->lastname, 'UTF-8');
-        $firstname = mb_convert_case(Str::lower($request->firstname), MB_CASE_TITLE, "UTF-8");
+        $lastname = Str::upper(Myhelper::valideString($request->lastname, 'UTF-8'));
+        $firstname = Str::title(Myhelper::valideString($request->firstname, 'UTF-8'));
 		// Enregistrer le fichier
 		$signature = $request->file('signature') != '' ? $request->file('signature')->store('signatures', 'public') : '';
 		$stamp = $request->file('stamp') != '' ? $request->file('stamp')->store('stamps', 'public') : '';
@@ -187,24 +187,24 @@ class UserController extends Controller
             'gender' => $gender,
             'phone_number' => $request->phone_number,
             'email' => Str::lower($request->email),
-            'profession' => $request->profession,
+            'profession' => Str::upper(Myhelper::valideString($request->profession)),
             'profile_id' => $request->profile_id,
             'embassy_id' => $request->embassy_id,
             'agency_id' => $request->agency_id,
             'nationality_id' => $request->nationality_id,
             'birthday_at' => $request->birthday_at,
             'town_id' => $request->town_id,
-            'birthplace' => $request->birthplace,
-            'father_fullname' => $request->father_fullname,
-            'mother_fullname' => $request->mother_fullname,
-            'size' => $request->size,
-            'complexion' => $request->complexion,
-            'hairs' => $request->hairs,
-            'particular_sign' => $request->particular_sign,
-            'home_address' => $request->home_address,
-            'person_fullname' => $request->person_fullname,
+            'birthplace' => Str::upper(Myhelper::valideString($request->birthplace)),
+            'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname)),
+            'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname)),
+            'size' => Str::upper(Myhelper::valideString($request->size)),
+            'complexion' => Str::upper(Myhelper::valideString($request->complexion)),
+            'hairs' => Str::upper(Myhelper::valideString($request->hairs)),
+            'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign)),
+            'home_address' => Str::upper(Myhelper::valideString($request->home_address)),
+            'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname)),
             'person_number' => $request->person_number,
-            'person_address' => $request->person_address,
+            'person_address' => Str::upper(Myhelper::valideString($request->person_address)),
             'arrival_at' => $request->arrival_at,
             'signature' => $signature,
             'stamp' => $stamp,
@@ -255,16 +255,16 @@ class UserController extends Controller
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
-		$pays = Country::orderBy('country')->get();
+		$country = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
 		$nationality = Country::orderBy('nationality')->get();
 		$agency = Agency::where('id', $query->agency_id)->first();
 		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
-		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
-		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'pays', 'profile', 'country', 'nationality', 'agency', 'agencies'));
+		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies'));
 	}
     // Modification
     public function update(Request $request, $uuid) {
@@ -364,8 +364,8 @@ class UserController extends Controller
                 default => 'M',
             };
             // Formatage du nom et prénoms
-            $lastname = mb_strtoupper($request->lastname, 'UTF-8');
-            $firstname = mb_convert_case(Str::lower($request->firstname), MB_CASE_TITLE, "UTF-8");
+            $lastname = mb_strtoupper(Myhelper::valideString($request->lastname, 'UTF-8'));
+            $firstname = mb_convert_case(Myhelper::valideString($request->firstname, 'UTF-8'), MB_CASE_TITLE, "UTF-8");
             $set = [
                 'code' => substr($request->code, 1),
                 'civility' => $request->civility,
@@ -374,20 +374,20 @@ class UserController extends Controller
                 'gender' => $gender,
                 'phone_number' => $request->phone_number,
                 'email' => Str::lower($request->email),
-                'profession' => $request->profession,
+                'profession' => Str::upper(Myhelper::valideString($request->profession)),
                 'birthday_at' => $request->birthday_at,
                 'town_id' => $request->town_id,
-                'birthplace' => $request->birthplace,
-                'father_fullname' => $request->father_fullname,
-                'mother_fullname' => $request->mother_fullname,
-                'size' => $request->size,
-                'complexion' => $request->complexion,
-                'hairs' => $request->hairs,
-                'particular_sign' => $request->particular_sign,
-                'home_address' => $request->home_address,
-                'person_fullname' => $request->person_fullname,
+                'birthplace' => Str::upper(Myhelper::valideString($request->birthplace)),
+                'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname)),
+                'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname)),
+                'size' => Str::upper(Myhelper::valideString($request->size)),
+                'complexion' => Str::upper(Myhelper::valideString($request->complexion)),
+                'hairs' => Str::upper(Myhelper::valideString($request->hairs)),
+                'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign)),
+                'home_address' => Str::upper(Myhelper::valideString($request->home_address)),
+                'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname)),
                 'person_number' => $request->person_number,
-                'person_address' => $request->person_address,
+                'person_address' => Str::upper(Myhelper::valideString($request->person_address)),
                 'arrival_at' => $request->arrival_at,
             ];
             if ($request->has('profile_id')) $set['profile_id'] = $request->profile_id;
@@ -521,14 +521,14 @@ class UserController extends Controller
         // Avatar
         if ($query->avatar == '')
         $query->avatar = $query->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-		$pays = Country::orderBy('country')->get();
+		$country = Country::orderBy('country')->get();
 		$code = Country::where('code', $query->code)->first();
 		$nationality = Country::orderBy('nationality')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
-		$country = Country::where('embassy', 1)->orderBy('country')->get();
+		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::all();
-		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'pays', 'profile', 'country', 'nationality'));
+		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality'));
 	}
     // Connexion
 	public function login() {

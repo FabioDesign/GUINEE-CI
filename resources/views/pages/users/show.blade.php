@@ -59,9 +59,8 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays de naissance :</label>
-                    <select id="pays_id" class="form-control">
-						<option value="" selected disabled>Sélectionner</option>
-						@foreach($pays as $data)
+                    <select id="country_id" class="form-control">
+						@foreach($country as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $ville->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
