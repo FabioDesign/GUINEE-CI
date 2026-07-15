@@ -128,9 +128,10 @@
             <div class="row justify-content-center my-10 px-8 px-lg-10">
                 <div class="col-xl-12 col-xxl-7">
                     <!--begin::Form Wizard Form-->
-                    <form class="form" id="kt_contact_add_form" data-wizard-validation="false">
+                    <form class="formField" id="kt_contact_add_form" data-wizard-validation="false">
                         <input type="hidden" id="rootForm" value="demands">
                         <input type="hidden" id="user_id" name="user_id" value="0">
+                        <input type="hidden" id="codeDoc" name="codeDoc" value="{{ old('code', $firstDoc->code) }}">
                         <input type="hidden" id="step2" value="0">
                         <input type="hidden" id="step3" value="0">
                         <!--begin::Form Wizard Step 1-->
@@ -350,14 +351,13 @@
                                 @foreach ($docFiles as $data)
                                     <div class="row mb-2">
                                         <div class="col-md-6 col-12">
-                                            <input type="hidden" name="file_id[]" value="{{ $data->files->id }}" />
                                             <label class="fw-bolder text-dark fs-6">
                                                 {{ $data->files->label }} : <span class="text-danger">*</span>
                                                 <a href="/storage/{{ $data->files->path }}" target="_blank">
                                                 (Voir le specimen)
                                                 </a>
                                             </label>
-                                            <input type="file" name="filename[]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                            <input type="file" name="filename[{{ $data->files->id }}]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
                                         </div>
                                         <div class="col-md-1 col-12 position-relative">
                                             <a href="/storage/{{ $data->files->path }}" target="_blank">
@@ -623,19 +623,26 @@
                     response => {
                         if (response) {
                             $('#copy').val(1);
+                            $('#codeDoc').val(response.docs.code);
                             $('#number').val(response.docs.number);
                             $('.number').text(response.docs.number);
                             $('#price, #total').val(response.docs.price);
                             $('.price, .total').text(response.docs.price);
-                            $('.files-list').html(response.files.map(file => `<div class="col-md-12 col-12">
-                                <input type="hidden" name="file_id[]" value="${file.id}" />
-                                <label class="fw-bolder text-dark fs-6">
-                                    ${file.label} : <span class="text-danger">*</span>
+                            $('.files-list').html(response.files.map(file => `<div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fw-bolder text-dark fs-6">
+                                        ${file.label} : <span class="text-danger">*</span>
+                                        <a href="/storage/${file.path}" target="_blank">
+                                        (Voir le specimen)
+                                        </a>
+                                    </label>
+                                    <input type="file" name="filename[${file.id}]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                </div>
+                                <div class="col-md-1 col-12 position-relative">
                                     <a href="/storage/${file.path}" target="_blank">
-                                    <i class="ki-duotone ki-paper-clip fs-2 text-primary"></i>
+                                        <i class="ki-duotone ki-paper-clip fs-1 text-primary position-absolute start-50 bottom-0 translate-middle"></i>
                                     </a>
-                                </label>
-                                <input type="file" name="filename[]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                </div>
                             </div>`).join(''));
                             dmdForm();
                         }
@@ -770,7 +777,8 @@
                 let price = parseInt($('#price').val()) || 0;
                 let copy = parseInt($('#copy').val()) || 1;
                 let total = price * copy;
-                $('#total').val(total).text(total);
+                $('#total').val(total);
+                $('.total').text(total);
             });
             // Validation des fichiers
             $(document).on('change', '.filename', function() {

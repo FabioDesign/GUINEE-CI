@@ -86,7 +86,8 @@ class UserController extends Controller
 			'firstname' => 'required',
 			'phone_number' => [
 				'required',
-                'regex:/^\d{10}$/',
+				'numeric',
+                'digits_between:8,15',
                 Rule::unique('users')->where(function ($query) {
 					return $query->whereNull('deleted_at');
                 }),
@@ -175,36 +176,37 @@ class UserController extends Controller
         };
         // Formatage du nom et prénoms
         $lastname = Str::upper(Myhelper::valideString($request->lastname, 'UTF-8'));
-        $firstname = Str::title(Myhelper::valideString($request->firstname, 'UTF-8'));
+        $firstname = Str::upper(Myhelper::valideString($request->firstname, 'UTF-8'));
 		// Enregistrer le fichier
 		$signature = $request->file('signature') != '' ? $request->file('signature')->store('signatures', 'public') : '';
 		$stamp = $request->file('stamp') != '' ? $request->file('stamp')->store('stamps', 'public') : '';
         $set = [
-            'code' => substr($request->code, 1),
             'civility' => $request->civility,
             'lastname' => $lastname,
             'firstname' => $firstname,
             'gender' => $gender,
+            'phone_code' => substr($request->phone_code, 1),
             'phone_number' => $request->phone_number,
             'email' => Str::lower($request->email),
-            'profession' => Str::upper(Myhelper::valideString($request->profession)),
+            'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
             'profile_id' => $request->profile_id,
             'embassy_id' => $request->embassy_id,
             'agency_id' => $request->agency_id,
             'nationality_id' => $request->nationality_id,
             'birthday_at' => $request->birthday_at,
             'town_id' => $request->town_id,
-            'birthplace' => Str::upper(Myhelper::valideString($request->birthplace)),
-            'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname)),
-            'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname)),
-            'size' => Str::upper(Myhelper::valideString($request->size)),
-            'complexion' => Str::upper(Myhelper::valideString($request->complexion)),
-            'hairs' => Str::upper(Myhelper::valideString($request->hairs)),
-            'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign)),
-            'home_address' => Str::upper(Myhelper::valideString($request->home_address)),
-            'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname)),
+            'birthplace' => Str::upper(Myhelper::valideString($request->birthplace),'UTF-8'),
+            'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname),'UTF-8'),
+            'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname),'UTF-8'),
+            'size' => Str::upper(Myhelper::valideString($request->size),'UTF-8'),
+            'complexion' => Str::upper(Myhelper::valideString($request->complexion),'UTF-8'),
+            'hairs' => Str::upper(Myhelper::valideString($request->hairs),'UTF-8'),
+            'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign),'UTF-8'),
+            'home_address' => Str::upper(Myhelper::valideString($request->home_address),'UTF-8'),
+            'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname),'UTF-8'),
+            'person_code' => substr($request->person_code, 1),
             'person_number' => $request->person_number,
-            'person_address' => Str::upper(Myhelper::valideString($request->person_address)),
+            'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
             'arrival_at' => $request->arrival_at,
             'signature' => $signature,
             'stamp' => $stamp,
@@ -268,7 +270,6 @@ class UserController extends Controller
 	}
     // Modification
     public function update(Request $request, $uuid) {
-        // dd($request);
         if (!Auth::check()) {
             return 'x';
         }
@@ -289,6 +290,8 @@ class UserController extends Controller
                 'firstname' => 'required',
                 'phone_number' => [
                     'required',
+					'numeric',
+                    'digits_between:8,15',
                     Rule::unique('users')->where(function ($query) use ($uuid) {
                         return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
                     }),
@@ -300,7 +303,10 @@ class UserController extends Controller
                     }),
                 ],
                 'profession' => 'required',
+                'profile_id' => 'required|exists:profiles,id',
                 'nationality_id' => 'required|exists:countries,id',
+                'embassy_id' => 'required|exists:countries,id',
+                'agency_id' => 'required|exists:agencies,id',
                 'town_id' => 'required|exists:towns,id',
                 'birthday_at' => 'required|date|date_format:Y-m-d',
                 'birthplace' => 'required',
@@ -327,8 +333,14 @@ class UserController extends Controller
                 'email.required' => "L'email est obligatoire.",
                 'email.unique' => "L'email existe déjà dans la base de données.",
                 'profession.required' => "La profession est obligatoire.",
+                'profile_id.required' => "Le profil est obligatoire.",
+                'profile_id.exists' => "Le profil n'existe pas dans la base de données.",
                 'nationality_id.required' => "La nationalité est obligatoire.",
                 'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
+                'embassy_id.required' => "L'ambassade est obligatoire.",
+                'embassy_id.exists' => "L'ambassade n'existe pas dans la base de données.",
+                'agency_id.required' => "L'agence est obligatoire.",
+                'agency_id.exists' => "L'agence n'existe pas dans la base de données.",
                 'birthday_at.required' => "La date de naissance est obligatoire.",
                 'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
                 'town_id.required' => "La prefecture est obligatoire.",
@@ -364,35 +376,37 @@ class UserController extends Controller
                 default => 'M',
             };
             // Formatage du nom et prénoms
-            $lastname = mb_strtoupper(Myhelper::valideString($request->lastname, 'UTF-8'));
-            $firstname = mb_convert_case(Myhelper::valideString($request->firstname, 'UTF-8'), MB_CASE_TITLE, "UTF-8");
+            $lastname = Str::upper(Myhelper::valideString($request->lastname, 'UTF-8'));
+            $firstname = Str::upper(Myhelper::valideString($request->firstname, 'UTF-8'));
             $set = [
-                'code' => substr($request->code, 1),
                 'civility' => $request->civility,
                 'lastname' => $lastname,
                 'firstname' => $firstname,
                 'gender' => $gender,
+                'phone_code' => substr($request->phone_code, 1),
                 'phone_number' => $request->phone_number,
                 'email' => Str::lower($request->email),
-                'profession' => Str::upper(Myhelper::valideString($request->profession)),
+                'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
+                'profile_id' => $request->profile_id,
+                'nationality_id' => $request->nationality_id,
+                'embassy_id' => $request->embassy_id,
+                'agency_id' => $request->agency_id,
                 'birthday_at' => $request->birthday_at,
                 'town_id' => $request->town_id,
-                'birthplace' => Str::upper(Myhelper::valideString($request->birthplace)),
-                'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname)),
-                'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname)),
-                'size' => Str::upper(Myhelper::valideString($request->size)),
-                'complexion' => Str::upper(Myhelper::valideString($request->complexion)),
-                'hairs' => Str::upper(Myhelper::valideString($request->hairs)),
-                'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign)),
-                'home_address' => Str::upper(Myhelper::valideString($request->home_address)),
-                'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname)),
+                'birthplace' => Str::upper(Myhelper::valideString($request->birthplace),'UTF-8'),
+                'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname),'UTF-8'),
+                'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname),'UTF-8'),
+                'size' => Str::upper(Myhelper::valideString($request->size),'UTF-8'),
+                'complexion' => Str::upper(Myhelper::valideString($request->complexion),'UTF-8'),
+                'hairs' => Str::upper(Myhelper::valideString($request->hairs),'UTF-8'),
+                'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign),'UTF-8'),
+                'home_address' => Str::upper(Myhelper::valideString($request->home_address),'UTF-8'),
+                'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname),'UTF-8'),
+                'person_code' => substr($request->person_code, 1),
                 'person_number' => $request->person_number,
-                'person_address' => Str::upper(Myhelper::valideString($request->person_address)),
+                'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
                 'arrival_at' => $request->arrival_at,
             ];
-            if ($request->has('profile_id')) $set['profile_id'] = $request->profile_id;
-            if ($request->has('embassy_id')) $set['embassy_id'] = $request->embassy_id;
-            if ($request->has('nationality_id')) $set['nationality_id'] = $request->nationality_id;
             // Enregistrer le fichier
             if ($request->img_sig == 0) {
                 $signature = $request->file('signature') != '' ? $request->file('signature')->store('signatures', 'public') : '';
@@ -630,7 +644,7 @@ class UserController extends Controller
                 Session::put('username', $username);
                 Session::put('agency', $user->agency_id);
                 Session::put('profil', $user->profile->label ?? '');
-                Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '');
+                Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '','UTF-8');
                 Session::put('map', $user->embassy->alpha ?? '');
                 Session::put('menus', $menus);
                 // Avatar

@@ -336,9 +336,18 @@ $(document).on('click', '.submitForm', function(e) {
     } else datasT.append(this.name, $(this).val());
   });
   if (rootForm.slice(0, 5) === 'users') {
-    datasT.append('code', $('.iti__selected-dial-code').html());
+    var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
+    var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
+    datasT.append('phone_code', phone_code);
+    datasT.append('person_code', person_code);
     datasT.append('img_sta', $('#remove_sta').data('status'));
     datasT.append('img_sig', $('#remove_sig').data('status'));
+  }
+  if (rootForm.slice(0, 7) === 'demands') {
+    var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
+    var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
+    datasT.append('phone_code', phone_code);
+    datasT.append('person_code', person_code);
   }
   $('.formField .requiredField').each(function() {
     if (jQuery.trim($(this).val()) === '') {

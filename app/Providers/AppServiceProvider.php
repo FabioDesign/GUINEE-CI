@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Observers\ModelObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use App\Models\{Agency, Document, File, Profile, Town, User};
+use App\Models\{Agency, Demand, Document, File, Profile, Town, User};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(255); //Update defaultStringLength
         $models = [
             Agency::class,
+            Demand::class,
             Document::class,
             File::class,
             Profile::class,

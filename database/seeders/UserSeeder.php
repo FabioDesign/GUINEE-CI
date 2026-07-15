@@ -13,10 +13,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['phone_number' => '0102030405'],
             [
-                'code' => '225',
+                'phone_code' => '225',
                 'civility' => 'M.',
                 'lastname' => 'OGOU',
                 'firstname' => 'Fabrice',
@@ -35,6 +35,7 @@ class UserSeeder extends Seeder
                 'father_fullname' => 'Léon OGOU',
                 'mother_fullname' => 'Apo KOUASSI',
                 'person_fullname' => 'JB OGOU',
+                'person_code' => '225',
                 'person_number' => '0102030406',
                 'person_address' => '10 rue de Cocody, 75001 Abidjan',
                 'arrival_at' => '2000-05-00',

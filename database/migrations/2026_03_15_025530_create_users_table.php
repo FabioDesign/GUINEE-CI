@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->string('code', 5);
             $table->string('civility', 5);
             $table->string('lastname');
             $table->string('firstname');
             $table->string('gender', 1);
+            $table->string('phone_code', 5);
             $table->string('phone_number', 20)->unique();
             $table->string('email')->nullable();
             $table->string('password')->nullable();
@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('father_fullname')->nullable();
             $table->string('mother_fullname')->nullable();
             $table->string('person_fullname')->nullable();
+            $table->string('person_code', 5)->nullable();
             $table->string('person_number')->nullable();
             $table->string('person_address')->nullable();
             $table->date('arrival_at')->nullable();
@@ -52,7 +53,7 @@ return new class extends Migration
             $table->foreignId('blocked_by')->nullable();
             $table->foreignId('activated_by')->nullable();
             $table->integer('town_id');
-            $table->integer('agency_id');
+            $table->integer('agency_id')->default('0');
             $table->integer('profile_id')->default('0');
             $table->integer('embassy_id')->default('0');
             $table->integer('nationality_id');
