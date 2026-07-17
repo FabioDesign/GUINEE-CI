@@ -12,7 +12,7 @@ class MenuActionSeeder extends Seeder
      *
      * @return void
      */
-    public function run(){
+    public function run() {
         // Tableau de bord
         MenuAction::firstOrCreate(
             [

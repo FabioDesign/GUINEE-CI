@@ -7,7 +7,7 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\{Menu, Permission, Profile, User};
+use App\Models\{Menu, Permission, Profile, Role, User};
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 
 class ProfileController extends Controller
@@ -83,7 +83,9 @@ class ProfileController extends Controller
 			->where('status', 1)
 			->orderBy('position')
 			->get();
-		return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions'));
+		// Rôles
+		$roles = Role::all();
+		return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'roles'));
 	}
 	//Add/Mod Profil
 	public function store(request $request) {
@@ -98,11 +100,13 @@ class ProfileController extends Controller
 					return $query->whereNull('deleted_at');
 				}),
 			],
+			'role_id' => 'required',
 			'description' => 'required',
 			'permissions' => 'required|array',
 		], [
 			'label.required' => "Le libellé est obligatoire.",
 			'label.unique' => "Le libellé existe déjà dans la base de données.",
+			'role_id.required' => "Le rôle est obligatoire.",
 			'description.required' => "La description est obligatoire.",
 			'permissions.required' => "Cocher au moins une case.",
 			'permissions.array' => "Format des permissions invalide.",
@@ -117,6 +121,7 @@ class ProfileController extends Controller
 		}
 		$set = [
 			'label' => $request->label,
+			'role_id' => $request->role_id,
 			'description' => $request->description,
 		];
 		DB::beginTransaction(); // Démarrer une transaction
@@ -186,7 +191,9 @@ class ProfileController extends Controller
 				return $permission->menu_id . '|' . $permission->action_id;
 			})
 			->toArray();
-		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions'));
+		// Rôles
+		$roles = Role::all();
+		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions', 'roles'));
 	}
 	// Mettre à jour un profil
 	public function update(Request $request, $uuid) {
@@ -211,11 +218,13 @@ class ProfileController extends Controller
 						return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 					}),
 				],
+				'role_id' => 'required',
 				'description' => 'required',
 				'permissions' => 'required|array',
 			], [
 				'label.required' => "Le libellé est obligatoire.",
 				'label.unique' => "Le libellé existe déjà dans la base de données.",
+				'role_id.required' => "Le rôle est obligatoire.",
 				'description.required' => "La description est obligatoire.",
 				'permissions.required' => "Cocher au moins une case.",
 				'permissions.array' => "Format des permissions invalide.",
@@ -230,6 +239,7 @@ class ProfileController extends Controller
 			}
 			$set = [
 				'label' => $request->label,
+				'role_id' => $request->role_id,
 				'description' => $request->description,
 			];
 			DB::beginTransaction(); // Démarrer une transaction

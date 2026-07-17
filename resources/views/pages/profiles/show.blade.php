@@ -7,11 +7,15 @@
     <div class="card-body py-4">
       <form class="formField">
         <div class="row mb-2">
-          <div class="col-lg-6">
+          <div class="col-md-4 col-12">
             <label class="fw-bolder text-dark fs-5">Libellé :</label>
             <input type="text" class="form-control" value="{{ $query->label }}" readonly />
           </div>
-          <div class="col-lg-6">
+          <div class="col-md-2 col-12">
+            <label class="fw-bolder text-dark fs-5">Rôle :</label>
+            <input type="text" class="form-control" value="{{ $query->role->label }}" readonly />
+          </div>
+          <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Description :</label>
             <input type="text" class="form-control" value="{{ $query->description }}" readonly />
           </div>

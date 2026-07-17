@@ -12,6 +12,7 @@
             <th>#</th>
             <th>Libellé</th>
             <th>Description</th>
+            <th>Rôle</th>
             <th class="text-center w-70">Date</th>
             <th class="text-center">Statut</th>
             <th class="text-center w-170">Action</th>
@@ -49,6 +50,7 @@
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">{{ $data->label }}</td>
             <td class="align-middle">{{ $data->description }}</td>
+            <td class="align-middle">{{ $data->role->label }}</td>
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>
             <td class="text-end align-middle">

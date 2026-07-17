@@ -572,15 +572,52 @@ class UserController extends Controller
         }
         try {
             // Déterminer si le login est un email ou un numéro de téléphone
-            $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
-            // Tentative de connexion avec Laravel Auth
-            $credentials = [
-                $loginField => $request->login,
-                'password' => $request->password,
-                'status' => 1, // Compte actif
-            ];
-            // Vérifier d'abord si l'utilisateur existe et son statut
-            $user = User::where($loginField, $request->login)->first();
+            if (filter_var($request->login, FILTER_VALIDATE_EMAIL)) {
+                // Authentification par email
+                $loginField = 'email';
+                $credentials = [
+                    'email' => $request->login,
+                    'password' => $request->password,
+                    'status' => 1,
+                ];
+            } else {
+                // Authentification par téléphone
+                $phone = $request->login;
+                // Récupérer les codes pays existants
+                $countries = Country::orderByRaw('LENGTH(code) DESC')->get();
+                $country = '';
+                foreach ($countries as $item) :
+                    if (str_starts_with($phone, $item->code)) {
+                        $country = $item;
+                        break;
+                    }
+                endforeach;
+                if (!$country) {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => "Code pays invalide."
+                    ]);
+                }
+                // Séparer le code pays et le numéro
+                $phoneCode = $country->code;
+                $phoneNumber = substr($phone, strlen($phoneCode));
+                $credentials = [
+                    'phone_code' => $phoneCode,
+                    'phone_number' => $phoneNumber,
+                    'password' => $request->password,
+                    'status' => 1,
+                ];
+            }
+            // Vérifier si l'utilisateur existe
+            $query = User::where(function ($q) use ($credentials) {
+                if (isset($credentials['email'])) {
+                    $q->where('email', $credentials['email']);
+                } else {
+                    $q->where('phone_code', $credentials['phone_code'])
+                    ->where('phone_number', $credentials['phone_number']);
+                }
+            });
+            $user = $query->first();
             if (!$user) {
                 return response()->json([
                     'status' => 0,
@@ -615,57 +652,7 @@ class UserController extends Controller
                 ]);
             }
             // Tentative de connexion
-            if (Auth::attempt($credentials)) {
-                // Mise à jour de la dernière connexion
-                $user->update([
-                    'login_at' => now(),
-                ]);
-                // Préparer les données de session
-                $prenom = explode(' ', $user->firstname);
-                $username = "{$prenom[0]} {$user->lastname}";
-                // Récupération des menus
-                $menus = Permission::select('menus.id', 'label', 'target', 'icone')
-                    ->join('menus', 'menus.id', '=', 'permissions.menu_id')
-                    ->where('profile_id', $user->profile_id)
-                    ->where('status', 1)
-                    ->where('action_id', 1)
-                    ->orderBy('position')
-                    ->get();
-                if ($menus->isEmpty()) {
-                    Log::warning("User::auth - Aucun menu trouvé pour ce profil : {$user->profile_id}");
-                    Auth::logout();
-                    return response()->json([
-                        'status' => 0,
-                        'message' => "Aucun menu trouvé pour ce profil.",
-                    ]);
-                }
-                $page = $menus->first()->target ?? '/';
-                // Stocker des informations supplémentaires en session
-                Session::put('username', $username);
-                Session::put('agency', $user->agency_id);
-                Session::put('profil', $user->profile->label ?? '');
-                Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '','UTF-8');
-                Session::put('map', $user->embassy->alpha ?? '');
-                Session::put('menus', $menus);
-                // Avatar
-                if ($user->avatar != '')
-                    $avatar = $user->avatar;
-                else
-                    $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-                Session::put('avatar', $avatar);
-                // Log de connexion
-                Myhelper::logs(
-                    $username,
-                    $user->profile->label ?? '',
-                    $menus->first()->label,
-                    'Connecter',
-                    $avatar
-                );
-                return response()->json([
-                    'status' => 1,
-                    'data' => $page,
-                ]);
-            } else {
+            if (!Auth::attempt($credentials)) {
                 // Mot de passe incorrect
                 Log::warning("User::auth - Tentative de connexion échouée pour : {$request->login}");
                 return response()->json([
@@ -673,6 +660,55 @@ class UserController extends Controller
                     'message' => "Login ou mot de passe incorrect.",
                 ]);
             }
+            // Mise à jour de la dernière connexion
+            $user->update([
+                'login_at' => now(),
+            ]);
+            // Préparer les données de session
+            $prenom = explode(' ', $user->firstname);
+            $username = "{$prenom[0]} {$user->lastname}";
+            // Récupération des menus
+            $menus = Permission::select('menus.id', 'label', 'target', 'icone')
+                ->join('menus', 'menus.id', '=', 'permissions.menu_id')
+                ->where('profile_id', $user->profile_id)
+                ->where('status', 1)
+                ->where('action_id', 1)
+                ->orderBy('position')
+                ->get();
+            if ($menus->isEmpty()) {
+                Log::warning("User::auth - Aucun menu trouvé pour ce profil : {$user->profile_id}");
+                Auth::logout();
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Aucun menu trouvé pour ce profil.",
+                ]);
+            }
+            $page = $menus->first()->target ?? '/';
+            // Stocker des informations supplémentaires en session
+            Session::put('username', $username);
+            Session::put('agency', $user->agency_id);
+            Session::put('profil', $user->profile->label ?? '');
+            Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '','UTF-8');
+            Session::put('map', $user->embassy->alpha ?? '');
+            Session::put('menus', $menus);
+            // Avatar
+            if ($user->avatar != '')
+                $avatar = $user->avatar;
+            else
+                $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
+            Session::put('avatar', $avatar);
+            // Log de connexion
+            Myhelper::logs(
+                $username,
+                $user->profile->label ?? '',
+                $menus->first()->label,
+                'Connecter',
+                $avatar
+            );
+            return response()->json([
+                'status' => 1,
+                'data' => $page,
+            ]);
         } catch (\Exception $e) {
             Log::warning("User::auth - Echec de connexion : {$e->getMessage()}" . json_encode($request->all()));
 			return response()->json([

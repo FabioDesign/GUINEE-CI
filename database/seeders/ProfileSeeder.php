@@ -12,12 +12,13 @@ class ProfileSeeder extends Seeder
      *
      * @return void
      */
-    public function run(){
+    public function run() {
         Profile::firstOrCreate(
             ['label' => "Administrateur"],
             [
                 'description' => "Administrateur du système.",
                 'created_by' => 1,
+                'role_id' => 1,
             ]
         );
     }

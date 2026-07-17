@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
                 MenuActionSeeder::class,
                 // Permission
                 PermissionSeeder::class,
+                // Rôle
+                RoleSeeder::class,
                 // Ville
                 TownSeeder::class,
                 // Utilisateur

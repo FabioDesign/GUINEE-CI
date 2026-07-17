@@ -9,9 +9,18 @@
         @method('PUT')
         <input type="hidden" id="rootForm" value="profiles/{{ $query->uuid }}">
         <div class="row mb-2">
-          <div class="col-md-6 col-12">
+          <div class="col-md-4 col-12">
             <label class="fw-bolder text-dark fs-5">Libellé : <span class="text-danger">*</span></label>
             <input type="text" name="label" class="form-control requiredField" placeholder="Saisir le libellé" value="{{ old('label', $query->label) }}" />
+          </div>
+          <div class="col-md-2 col-12">
+            <label class="fw-bolder text-dark fs-5">Rôle : <span class="text-danger">*</span></label>
+            <select name="role_id" class="form-control requiredField">
+              <option value="" selected>Sélectionner</option>
+              @foreach($roles as $role)
+                <option value="{{ $role->id }}" {{ $query->role_id == $role->id ? 'selected' : '' }}>{{ $role->label }}</option>
+              @endforeach
+            </select>
           </div>
           <div class="col-md-6 col-12">
             <label class="fw-bolder text-dark fs-5">Description : <span class="text-danger">*</span></label>

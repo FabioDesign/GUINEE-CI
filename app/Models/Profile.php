@@ -26,4 +26,8 @@ class Profile extends Model
     public function permissions() {
         return $this->hasMany(Permission::class);
     }
+
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

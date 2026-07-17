@@ -52,7 +52,7 @@
             <td class="align-middle">{{ $i++ }}</td>
             <td class="align-middle">{{ $data->firstname }} {{ $data->lastname }}</td>
             <td class="align-middle">{{ $data->gender }}</td>
-            <td class="align-middle">{{ $data->profile->label }}</td>
+            <td class="align-middle">{{ $data->profile->label ?? 'Aucun profil' }}</td>
             <td class="align-middle">{{ $data->phone_number }}</td>
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>
