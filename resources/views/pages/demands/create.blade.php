@@ -193,11 +193,11 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Nom : <span class="text-danger">*</span></label>
-                                    <input type="text" name="lastname" class="form-control requiredUser" placeholder="Saisir nom" data-valid="1" />
+                                    <input type="text" id="lastname" name="lastname" class="form-control requiredUser" placeholder="Saisir nom" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Prénoms : <span class="text-danger">*</span></label>
-                                    <input type="text" name="firstname" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
+                                    <input type="text" id="firstname" name="firstname" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -207,21 +207,17 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Email :</label>
-                                    <input type="text" name="email" class="form-control email" placeholder="Saisir email" />
+                                    <input type="text" id="email" name="email" class="form-control email" placeholder="Saisir email" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Profession : <span class="text-danger">*</span></label>
-                                    <input type="text" name="profession" class="form-control requiredUser" placeholder="Saisir profession" data-valid="1" />
+                                    <input type="text" id="profession" name="profession" class="form-control requiredUser" placeholder="Saisir profession" data-valid="1" />
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                                    <input type="text" name="birthday_at" class="form-control date_at" readonly>
-                                </div>
-                                <div class="col-md-3" col-12">
-                                    <label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
-                                    <input type="text" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="1" />
+                                    <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly>
                                 </div>
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
@@ -241,6 +237,10 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-3" col-12">
+                                    <label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
+                                    <input type="text" id="birthplace" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="1" />
+                                </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
@@ -254,39 +254,39 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Nom et prénoms du père : <span class="text-danger">*</span></label>
-                                    <input type="text" name="father_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms du père" data-valid="1" />
+                                    <input type="text" id="father_fullname" name="father_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms du père" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Nom et prénoms de la mère : <span class="text-danger">*</span></label>
-                                    <input type="text" name="mother_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms de la mère" data-valid="1" />
+                                    <input type="text" id="mother_fullname" name="mother_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms de la mère" data-valid="1" />
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Taille : <span class="text-danger">*</span></label>
-                                    <input type="text" name="size" class="form-control requiredUser" placeholder="Saisir taille" data-valid="1" />
+                                    <input type="text" id="size" name="size" class="form-control requiredUser" placeholder="Saisir taille" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Teint : <span class="text-danger">*</span></label>
-                                    <input type="text" name="complexion" class="form-control requiredUser" placeholder="Saisir teint" data-valid="1" />
+                                    <input type="text" id="complexion" name="complexion" class="form-control requiredUser" placeholder="Saisir teint" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Cheveux : <span class="text-danger">*</span></label>
-                                    <input type="text" name="hairs" class="form-control requiredUser" placeholder="Saisir cheveux" data-valid="1" />
+                                    <input type="text" id="hairs" name="hairs" class="form-control requiredUser" placeholder="Saisir cheveux" data-valid="1" />
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Signes particuliers : <span class="text-danger">*</span></label>
-                                    <input type="text" name="particular_sign" class="form-control requiredUser" placeholder="Saisir signes particuliers" data-valid="1" />
+                                    <input type="text" id="particular_sign" name="particular_sign" class="form-control requiredUser" placeholder="Saisir signes particuliers" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Domicile : <span class="text-danger">*</span></label>
-                                    <input type="text" name="home_address" class="form-control requiredUser" placeholder="Saisir domicile" data-valid="1" />
+                                    <input type="text" id="home_address" name="home_address" class="form-control requiredUser" placeholder="Saisir domicile" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                                    <input type="text" name="arrival_at" class="form-control date_at" readonly>
+                                    <input type="text" id="arrival_at" name="arrival_at" class="form-control date_at" readonly>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -297,7 +297,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Nom et prénoms : <span class="text-danger">*</span></label>
-                                    <input type="text" name="person_fullname" class="form-control requiredUser" placeholder="Saisir nom complet" data-valid="1" />
+                                    <input type="text" id="person_fullname" name="person_fullname" class="form-control requiredUser" placeholder="Saisir nom complet" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Numéro de téléphone : <span class="text-danger">*</span></label>
@@ -305,7 +305,7 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Adresse : <span class="text-danger">*</span></label>
-                                    <input type="text" name="person_address" class="form-control requiredUser" placeholder="Saisir adresse" data-valid="1" />
+                                    <input type="text" id="person_address" name="person_address" class="form-control requiredUser" placeholder="Saisir adresse" data-valid="1" />
                                 </div>
                             </div>
                         </div>
@@ -606,6 +606,71 @@
             // Récupérer l'ID de l'utilisateur sélectionné
             $(document).on('ifChecked', '.user_id', function(event) {
                 $('#user_id').val($(this).parents('label').find('input').val());
+                let id = $('#user_id').val();
+				if (!id) return;
+                // Récupérer les informations de l'utilisateur
+                const getUsers = async (id) => {
+                    try {
+                        const response = await axios.get( `/getUsers/${id}`);
+                        return response.data?.data || null;
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                getUsers(id).then(
+                    response => {
+                        if (response) {
+                            $('#lastname').val(response.user.lastname);
+                            $('.lastname').text(response.user.lastname);
+                            $('#firstname').val(response.user.firstname);
+                            $('.firstname').text(response.user.firstname);
+                            $('#email').val(response.user.email);
+                            $('.email').text(response.user.email);
+                            phoneInstances["phone_number"].setCountry(response.phone.alpha);
+                            $('#phone_number').val(response.user.phone_number);
+                            $('.phone_number').text(`+${response.user.phone_code} ${response.user.phone_number}`);
+                            $('#profession').val(response.user.profession);
+                            $('.profession').text(response.user.profession);
+                            $('#nationality_id').val(response.user.nationality_id);
+                            $('.nationality_id').text(response.user.nationality_id);
+                            $('#town_id').val(response.user.town_id);
+                            document.querySelector("#birthday_at")._flatpickr.setDate(response.user.birthday_at);
+                            let birthday_date = response.user.birthday_at.slice(0, 10);
+                            let birthday_parts = birthday_date.split('-');
+                            let birthday_at = `${birthday_parts[2]}-${birthday_parts[1]}-${birthday_parts[0]}`;
+                            $('.birthday_at').text(birthday_at);
+                            $('#birthplace').val(response.user.birthplace);
+                            $('.birthplace').text(response.user.birthplace);
+                            $('#father_fullname').val(response.user.father_fullname);
+                            $('.father_fullname').text(response.user.father_fullname);
+                            $('#mother_fullname').val(response.user.mother_fullname);
+                            $('.mother_fullname').text(response.user.mother_fullname);
+                            $('#size').val(response.user.size);
+                            $('.size').text(response.user.size);
+                            $('#complexion').val(response.user.complexion);
+                            $('.complexion').text(response.user.complexion);
+                            $('#hairs').val(response.user.hairs);
+                            $('.hairs').text(response.user.hairs);
+                            $('#particular_sign').val(response.user.particular_sign);
+                            $('.particular_sign').text(response.user.particular_sign);
+                            $('#home_address').val(response.user.home_address);
+                            $('.home_address').text(response.user.home_address);
+                            document.querySelector("#arrival_at")._flatpickr.setDate(response.user.arrival_at);
+                            let arrival_date = response.user.arrival_at.slice(0, 10);
+                            let arrival_parts = arrival_date.split('-');
+                            let arrival_at = `${arrival_parts[2]}-${arrival_parts[1]}-${arrival_parts[0]}`;
+                            $('.arrival_at').text(arrival_at);
+                            $('#person_fullname').val(response.user.person_fullname);
+                            $('.person_fullname').text(response.user.person_fullname);
+                            phoneInstances["person_number"].setCountry(response.person.alpha);
+                            $('#person_number').val(response.user.person_number);
+                            $('.person_number').text(`+${response.user.person_code} ${response.user.person_number}`);
+                            $('#person_address').val(response.user.person_address);
+                            $('.person_address').text(response.user.person_address);
+                            userForm();
+                        }
+                    }
+                );
             });
             // Rechercher les documents
             $(document).on('change', '#document_id', function() {

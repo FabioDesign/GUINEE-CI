@@ -4,8 +4,6 @@
 <div class="card">
     <div class="card-body py-4">
         <form class="formField">
-            <input type="hidden" id="code" value="{{ $query->code }}">
-            <input type="hidden" id="alpha" value="{{ $code->alpha }}">
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5 code">Civilité :</label>
@@ -139,4 +137,15 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            let phone_alpha = "{{ $user['phone']->alpha }}";
+            let person_alpha = "{{ $user['person']->alpha }}";
+            phoneInstances["phone_number"].setCountry(phone_alpha);
+            phoneInstances["person_number"].setCountry(person_alpha);
+        });
+    </script>
 @endsection

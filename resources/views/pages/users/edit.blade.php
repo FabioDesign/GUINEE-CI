@@ -1,17 +1,10 @@
 @extends('layouts.master')
 
-@section('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="card">
     <div class="card-body py-4">
         <form class="formField">
             @method('PUT')
-            <input type="hidden" id="code" value="{{ $query->code }}">
-            <input type="hidden" id="alpha" value="{{ $code->alpha }}">
             <input type="hidden" id="rootForm" value="users/{{ $query->uuid }}">
             <span class="msgError" style="display: none;"></span>
             <div class="row mb-5">
@@ -199,14 +192,10 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            const input = document.querySelector("#number");
-
-            const iti = window.intlTelInput(input, {
-                initialCountry: "gn", // Côte d'Ivoire 🇨🇮
-                separateDialCode: true,
-                preferredCountries: ["gn", "ci"],
-                utilsScript: "/assets/js/custom/utils.js"
-            });
+            let phone_alpha = "{{ $user['phone']->alpha }}";
+            let person_alpha = "{{ $user['person']->alpha }}";
+            phoneInstances["phone_number"].setCountry(phone_alpha);
+            phoneInstances["person_number"].setCountry(person_alpha);
         });
     </script>
 @endsection

@@ -309,7 +309,6 @@ class DocumentController extends Controller
 	}
 	// Récupérer un document
 	public function getDocs($id) {
-		// dd($id);
 		// Requete Read
 		$data['docs'] = Document::select('id', 'label', 'code', 'number', 'price', 'description')
 		->where('id', $id)

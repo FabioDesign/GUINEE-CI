@@ -28,7 +28,7 @@ const phoneInstances = {};
 ["phone_number", "person_number"].forEach(function (id) {
   const el = document.getElementById(id);
   if (el) {
-      phoneInstances[id] = window.intlTelInput(el, phoneConfig);
+    phoneInstances[id] = window.intlTelInput(el, phoneConfig);
   }
 });
 // Select2

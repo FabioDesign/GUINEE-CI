@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
   Route::controller(UserController::class)->group(function () {
     Route::get('account', 'account');
     Route::get('logout', 'logout');
+    Route::get('getUsers/{id}', 'getUsers');
   });
   // Routes pour les mots de passe
   Route::controller(PasswordController::class)->group(function () {

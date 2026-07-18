@@ -24,7 +24,10 @@ class UserController extends Controller
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 8);
 		$addmodal = in_array(2, $actionIds) ? '<a href="/users/create" class="btn btn-sm fw-bold btn-primary">Ajouter un utilisateur</a>':'';
 		// Requete Read
-		$query = User::orderByDesc('created_at')->get();
+		$query = User::join('profiles', 'users.profile_id', '=', 'profiles.id')
+        ->select('users.uuid', 'firstname', 'lastname', 'gender', 'phone_code', 'phone_number', 'users.created_at', 'users.status', 'profiles.label')
+        ->where('role_id', '!=', 4) // 4 = Utilisateur
+        ->orderByDesc('users.created_at')->get();
 		Myhelper::logs(
 			Session::get('username'),
 			Session::get('profil'),
@@ -52,9 +55,10 @@ class UserController extends Controller
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>';
 		$country = Country::orderBy('country')->get();
-		$code = Country::where('code', $query->code)->first();
 		$ville = Town::where('id', $query->town_id)->first();
-		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'country'));
+		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
+		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
+		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'country', 'user'));
 	}
     // Liste des utilisateurs
 	public function create() {
@@ -258,7 +262,6 @@ class UserController extends Controller
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
 		$country = Country::orderBy('country')->get();
-		$code = Country::where('code', $query->code)->first();
 		$nationality = Country::orderBy('nationality')->get();
 		$agency = Agency::where('id', $query->agency_id)->first();
 		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
@@ -266,7 +269,9 @@ class UserController extends Controller
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
-		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies'));
+		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
+		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
+		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies', 'user'));
 	}
     // Modification
     public function update(Request $request, $uuid) {
@@ -543,6 +548,19 @@ class UserController extends Controller
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::all();
 		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality'));
+	}
+	// Récupérer un utilisateur
+	public function getUsers($id) {
+		// Requete Read
+		$data['user'] = User::select('civility', 'lastname', 'firstname', 'email', 'phone_code', 'phone_number', 'profession', 'nationality_id', 'town_id', 'birthday_at', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_code', 'person_number', 'person_address', 'arrival_at')
+		->where('id', $id)
+		->first();
+		$data['phone'] = Country::select('alpha')->where('code', $data['user']->phone_code)->first();
+		$data['person'] = Country::select('alpha')->where('code', $data['user']->person_code)->first();
+		return response()->json([
+			'status' => true,
+			'data' => $data,
+		]);
 	}
     // Connexion
 	public function login() {
