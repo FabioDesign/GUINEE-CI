@@ -357,12 +357,21 @@
                                                 (Voir le specimen)
                                                 </a>
                                             </label>
-                                            <input type="file" name="filename[{{ $data->files->id }}]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                            <input type="file" name="filename[{{ $data->files->id }}]" class="form-control filename" data-id="{{ $data->files->id }}" data-label="{{ $data->files->label }}" accept=".pdf,.png,.jpg,.jpeg" />
                                         </div>
-                                        <div class="col-md-1 col-12 position-relative">
-                                            <a href="/storage/{{ $data->files->path }}" target="_blank">
-                                                <i class="ki-duotone ki-paper-clip fs-1 text-primary position-absolute start-50 bottom-0 translate-middle"></i>
-                                            </a>
+                                        <div class="col-md-3 col-12">
+                                            <label class="file-view fw-bolder text-dark fs-6 mt-10" style="display: none;">
+                                                <a href="" class="file-link" target="_blank">
+                                                (Voir la pièce jointe)
+                                                </a>
+                                                &nbsp;&nbsp;
+                                                <span class="btn btn-icon btn-circle btn-active-color-danger w-25px h-25px bg-body shadow btn-remove" data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Supprimer le fichier" data-bs-original-title="Supprimer le fichier" data-kt-initialized="1">
+                                                    <i class="ki-duotone ki-cross fs-3 text-danger">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                    </i>
+                                                </span>
+                                            </label>
                                         </div>
                                     </div>
                                 @endforeach
@@ -503,6 +512,10 @@
                                     <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
                                 </div>
                             </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
+                            </div>
+                            <div class="files-valid"></div>
                         </div>
                         <!--end::Form Wizard Step 4-->
                         <!--begin::Wizard Actions-->
@@ -533,6 +546,12 @@
         $(document).ready(function() {
             // Masquer les boutons précédent et envoyer
             $('.btn-previous, .btn-submit').hide();
+            $(document).on('click', '.user-item', function (e) {
+                // éviter de déclencher 2 fois si on clique directement sur le radio
+                if (!$(e.target).is('input')) {
+                    $(this).find('input[type="radio"]').iCheck('check');
+                }
+            });
             // Rechercher les utilisateurs
             $(document).on('keyup', '#search', function() {
                 // Initialiser l'ID de l'utilisateur à 0
@@ -572,7 +591,7 @@
                                         <!--begin::Users-->
                                         <div class="mh-375px scroll-y me-n7 pe-7">
                                             <!--begin::User-->
-                                            <a class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
+                                            <a class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1 user-item">
                                                 <!--begin::Avatar-->
                                                 <label class="boxcheck"><input type="radio" name="user" value="${data.id}" class="iCheck user_id"></label>
                                                 <div class="symbol symbol-35px symbol-circle mx-5">
@@ -667,7 +686,16 @@
                             $('.person_number').text(`+${response.user.person_code} ${response.user.person_number}`);
                             $('#person_address').val(response.user.person_address);
                             $('.person_address').text(response.user.person_address);
-                            userForm();
+                            $('#civility').html(response.civility.map(civility => 
+    `<option value="${civility}" ${civility == response.user.civility ? 'selected' : ''}>${civility}</option>`
+).join(''));
+                            $('.civility').text(response.user.civility);
+                            $('#nationality_id').html(response.nationality.map(nationality => `<option value="${nationality.id}" data-alpha="${nationality.alpha}" data-code="+${nationality.code}" ${nationality.id == response.user.nationality_id ? 'selected' : ''}>${nationality.nationality}</option>`).join(''));
+                            $('.nationality_id').text(response.label_nation);
+                            $('#country_id').html(response.country.map(country => `<option value="${country.id}" data-alpha="${country.alpha}" data-code="+${country.code}" ${country.id == response.ville.country_id ? 'selected' : ''}>${country.country}</option>`).join(''));
+                            $('#town_id').html(response.town.map(town => `<option value="${town.id}" ${town.id == response.user.town_id ? 'selected' : ''}>${town.label}</option>`).join(''));
+                            $('.town_id').text(response.ville.label);
+                            $('#step2').val(1);
                         }
                     }
                 );
@@ -701,12 +729,21 @@
                                         (Voir le specimen)
                                         </a>
                                     </label>
-                                    <input type="file" name="filename[${file.id}]" class="form-control filename" accept=".pdf,.png,.jpg,.jpeg" />
+                                    <input type="file" name="filename[${file.id}]" class="form-control filename" data-id="${file.id}" data-label="${file.label}" accept=".pdf,.png,.jpg,.jpeg" />
                                 </div>
-                                <div class="col-md-1 col-12 position-relative">
-                                    <a href="/storage/${file.path}" target="_blank">
-                                        <i class="ki-duotone ki-paper-clip fs-1 text-primary position-absolute start-50 bottom-0 translate-middle"></i>
-                                    </a>
+                                <div class="col-md-3 col-12">
+                                    <label class="file-view fw-bolder text-dark fs-6 mt-10" style="display: none;">
+                                        <a href="" class="file-link" target="_blank">
+                                        (Voir la pièce jointe)
+                                        </a>
+                                        &nbsp;&nbsp;
+                                        <span class="btn btn-icon btn-circle btn-active-color-danger w-25px h-25px bg-body shadow btn-remove" data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Supprimer le fichier" data-bs-original-title="Supprimer le fichier" data-kt-initialized="1">
+                                            <i class="ki-duotone ki-cross fs-3 text-danger">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                    </label>
                                 </div>
                             </div>`).join(''));
                             dmdForm();
@@ -751,24 +788,24 @@
                 $('.btn-step').data('step', step).attr('data-step', step);
                 // Step 2
                 if (step == 2) {
-                    // let step2 = $('#step2').val();
-                    // if (step2 == 0) {
-                    //     $('.btn-next').addClass('not-active');
-                    // } else {
-                    //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                    // }
+                    let step2 = $('#step2').val();
+                    if (step2 == 0) {
+                        $('.btn-next').addClass('not-active');
+                    } else {
+                        $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                    }
                     $('.body-step2').addClass('current');
                     $('.body-step1').removeClass('current');
                     $('.header-step2').attr('data-wizard-state', 'current');
                 }
                 // Step 3
                 if (step == 3) {
-                    // let step3 = $('#step3').val();
-                    // if (step3 == 0) {
-                    //     $('.btn-next').addClass('not-active');
-                    // } else {
-                    //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                    // }
+                    let step3 = $('#step3').val();
+                    if (step3 == 0) {
+                        $('.btn-next').addClass('not-active');
+                    } else {
+                        $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                    }
                     $('.body-step3').addClass('current');
                     $('.body-step2').removeClass('current');
                     $('.header-step3').attr('data-wizard-state', 'current');
@@ -785,8 +822,8 @@
             });
             // Changement du pays
             $(document).on('change', '#country_id', function() {
-                // $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                $('.btn-next').addClass('not-active').removeClass('btn-primary');
             });
             // Changement de la civilité et de la préfecture
             $(document).on('change', '#civility, #town_id', function() {
@@ -827,15 +864,15 @@
                         sum += $(this).data('valid');
                     }
                 });
-                // if (sum > 0) {
-                //     $('#step2').val(0);
-                //     $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                // } else {
-                //     $('#step2').val(1);
-                //     $('.userError').hide().html("");
-                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                // }
+                if (sum > 0) {
+                    $('#step2').val(0);
+                    $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                } else {
+                    $('#step2').val(1);
+                    $('.userError').hide().html("");
+                    $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                }
             }
             // Zone de Montant et de Copie
             $(document).on('keyup', '#price, #copy', function() {
@@ -845,26 +882,76 @@
                 $('#total').val(total);
                 $('.total').text(total);
             });
-            // Validation des fichiers
+            // Validation + affichage fichier
             $(document).on('change', '.filename', function() {
                 $('.dmdError').html('');
-                var imgObj = $(this)[0].files[0];
-                var iSize = imgObj.size;
-                var value = $(this).val();
-                var file = value.toLowerCase();
-                var iExt = file.substr((file.lastIndexOf('.')+1));
-                var ValidImageTypes = ['pdf', 'jpg', 'jpeg', 'png'];
-                if ($.inArray(iExt, ValidImageTypes) < 0) {
+                // Récupérer le fichier
+                var input = this;
+                var fileObj = input.files[0];
+                // Si le fichier n'est pas sélectionné, retourner.
+                if (!fileObj) return;
+                // Récupérer la taille du fichier
+                var iSize = fileObj.size;
+                var fileName = fileObj.name.toLowerCase();
+                var iExt = fileName.split('.').pop();
+                // Les types autorisés : PDF ou Image.
+                var ValidTypes = ['pdf', 'jpg', 'jpeg', 'png'];
+                // Les types autorisés : PDF ou Image.
+                if ($.inArray(iExt, ValidTypes) < 0) {
                     $('#step3').val(0);
                     $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                    $('.dmdError').html('Les types de fichier autorisés sont : PDF ou Image.');
-                } else if(iSize > 2000000) {
-                    $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                    $('.dmdError').html('La taille du fichier doit être inférieure ou égale à 2MB.');
-                } else {
-                    dmdForm();
+                    $('.dmdError').html('Les types autorisés : PDF ou Image.');
+                    return;
                 }
+                // Taille max : 2MB.
+                if (iSize > 2000000) {
+                    $('#step3').val(0);
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.dmdError').html('Taille max : 2MB.');
+                    return;
+                }
+                // Récupérer la ligne correspondante
+                var parentRow = $(this).closest('.row');
+                var fileView = parentRow.find('.file-view');
+                var fileLink = parentRow.find('.file-link');
+                // Récupérer l'ID et le label du fichier
+                var docId = $(this).data('id');
+                var label = $(this).data('label');
+                // URL temporaire
+                var fileURL = URL.createObjectURL(fileObj);
+                // Injecter lien
+                fileLink.attr('href', fileURL);
+                // Afficher le bloc
+                fileView.show();
+                // Supprimer ancienne ligne si existe
+                $('.files-valid').find('[data-id="'+docId+'"]').remove();
+                // Ajouter dans la liste
+                var html = `
+                    <div class="mb-2 d-flex align-items-center" data-id="${docId}">
+                        <i class="ki-duotone ki-check following fs-3 me-3"></i> ${label} : 
+                        <a href="${fileURL}" target="_blank" class="text-primary ms-2">(Voir la pièce jointe)</a>
+                    </div>
+                `;
+                $('.files-valid').append(html);
+                // Activer bouton suivant
+                dmdForm();
+            });
+            // Supprimer le fichier
+            $(document).on('click', '.btn-remove', function() {
+                $('#step3').val(0);
+                $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
+                var parentRow = $(this).closest('.row');
+                var input = parentRow.find('.filename');
+                var docId = input.data('id');
+                // reset input file
+                input.val('');
+                // cacher le lien
+                parentRow.find('.file-view').hide();
+                // vider le lien
+                parentRow.find('.file-link').attr('href', '');
+                // supprimer dans la liste
+                $('.files-valid').find('[data-id="'+docId+'"]').remove();
             });
             // Zone de texte Document
             $(document).on('keyup', '.requiredDmd', function() {
@@ -900,7 +987,13 @@
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
-                    $('.' + field).text($(this).val());
+                    if ((field == 'phone_number') || (field == 'person_number')) {
+                        let number = $(this).val();
+                        let code = phoneInstances[field].getSelectedCountryData().dialCode;
+                        $('.' + field).text(`+${code} ${number}`);
+                    } else {
+                        $('.' + field).text($(this).val());
+                    }
                 });
             });
             // Dates : reformatage Y-m-d → d-m-Y

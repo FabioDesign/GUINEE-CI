@@ -411,11 +411,12 @@ $(document).on('click', '.submitForm', function(e) {
         $('.submitForm').addClass('not-active').html('<i class="fa fa-spinner fa-pulse"></i> Patienter...');
       },
       success:function(response) {
+        console.log('response', response);
         if (response === 'x') {
           window.location.href = '/';
           return;
         }
-        if (response.status != 0) {
+        if (response.status == 1) {
           swal.fire({
             title: "Félicitation !",
             text: response.message,

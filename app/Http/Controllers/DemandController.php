@@ -30,6 +30,9 @@ class DemandController extends Controller
 	}
     // Liste des demandes consulaires
 	public function getDemands() {
+        if (!Auth::check()) {
+            return 'x';
+        }
 		//Requete Read
 		$query = Demand::orderBy('status')
 		->orderByDesc('created_at')
@@ -37,15 +40,18 @@ class DemandController extends Controller
 		// Transformer les données
 		$demands = $query->map(fn($data) => [
 			'uuid' => $data->uuid,
-			'code' => $data->code,
+			'reference' => $data->reference,
+			'user' => $data->user->firstname . ' ' . $data->user->lastname,
 			'label' => $data->document->label,
-			'phone_number' => $data->phone_number,
-			'email' => $data->email,
-			'company' => $data->company,
+			'number' => $data->number,
+			'price' => $data->price,
+			'copy' => $data->copy,
 			'status' => match((int)$data->status) {
-				0 => __('message.inactive'),
-				1 => __('message.active'),
-				2 => __('message.blocked'),
+				0 => "Brouillon",
+				1 => "Transmise",
+				2 => "Validée",
+				3 => "Terminé",
+				4 => "Refusée",
 			},
 			'created_at' => $data->created_at->format('d/m/Y H:i'),
 		]);
@@ -95,9 +101,8 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
-		// dd($request->all());
         if (!Auth::check()) {
-            return redirect('/');
+            return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
@@ -183,7 +188,7 @@ class DemandController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("User::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Demand::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
@@ -223,7 +228,6 @@ class DemandController extends Controller
             'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
             'arrival_at' => $request->arrival_at,
         ];
-		print_r($set);
         DB::beginTransaction(); // Démarrer une transaction
         try {
             // Création de l'utilisateur
@@ -234,7 +238,6 @@ class DemandController extends Controller
             }
             // Création de la demande
 			$reference = Demand::reference($request->codeDoc, $user->birthday_at);
-			print_r($reference);
             $set = [
 				'reference' => $reference,
                 'document_id' => $request->document_id,
@@ -244,7 +247,6 @@ class DemandController extends Controller
                 'user_id' => $user->id,
 				'agency_id' => Auth::user()->agency_id,
             ];
-            print_r($set);
             $demand = Demand::create($set);
             // Création des fichiers
             foreach ($request->filename as $file_id => $filename) {
@@ -269,7 +271,7 @@ class DemandController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack(); // Annuler la transaction en cas d'erreur
-            Log::warning("User::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+            Log::warning("Demand::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
             return response()->json([
                 'status' => 0,
                 'message' => "Erreur lors de l'enregistrement.",

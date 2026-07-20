@@ -48,7 +48,7 @@ class Demand extends Model
   // Reference
   public static function reference(string $codeDoc, string $birthday_at): ?string {
     try {
-        $monthAn = ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'];
+        $monthAn = ['JA', 'FE', 'MR', 'AV', 'MA', 'JN', 'JL', 'AO', 'SE', 'OC', 'NO', 'DE'];
         $date = new DateTime($birthday_at);
         $day = $date->format('d');
         $month = $date->format('m');

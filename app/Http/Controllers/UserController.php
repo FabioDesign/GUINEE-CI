@@ -555,6 +555,12 @@ class UserController extends Controller
 		$data['user'] = User::select('civility', 'lastname', 'firstname', 'email', 'phone_code', 'phone_number', 'profession', 'nationality_id', 'town_id', 'birthday_at', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_code', 'person_number', 'person_address', 'arrival_at')
 		->where('id', $id)
 		->first();
+        $data['civility'] = ['M.', 'Mme', 'Mlle'];
+		$data['country'] = Country::select('id', 'alpha', 'code', 'country')->orderBy('country')->get();
+		$data['nationality'] = Country::select('id', 'alpha', 'code', 'nationality')->orderBy('nationality')->get();
+		$data['label_nation'] = Country::where('id', $data['user']->nationality_id)->first()->nationality;
+		$data['ville'] = Town::select('id', 'label', 'country_id')->where('id', $data['user']->town_id)->first();
+		$data['town'] = Town::select('id', 'label')->where('country_id', $data['ville']->country_id)->orderBy('label')->get();
 		$data['phone'] = Country::select('alpha')->where('code', $data['user']->phone_code)->first();
 		$data['person'] = Country::select('alpha')->where('code', $data['user']->person_code)->first();
 		return response()->json([
