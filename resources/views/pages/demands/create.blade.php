@@ -339,7 +339,7 @@
                                 </div>
                                 <div class="col-md-2 col-12">
                                     <label class="fw-bolder text-dark fs-5">Total : <span class="text-danger">*</span></label>
-                                    <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" readonly />
+                                    <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" onKeyUp="verif_int(this)" />
                                 </div>
                             </div>
                             <div class="row mb-5">

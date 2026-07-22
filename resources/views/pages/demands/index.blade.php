@@ -59,18 +59,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script>
-    function formatDateTime(dateString) {
-      const d = new Date(dateString);
-
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
-
-      const hours = String(d.getHours()).padStart(2, '0');
-      const minutes = String(d.getMinutes()).padStart(2, '0');
-
-      return `${day}-${month}-${year} ${hours}:${minutes}`;
-    }
+    const actionIds = {{ json_encode($actionIds) }};
     const getDemands = async () => {
       try {
         const response = await axios.get( '/getDemands');
@@ -86,67 +75,82 @@
         if (response.length > 0) {
           let i = 1;
           let outTable = `
-            <table id="logsTable" class="table table-striped table-row-bordered gs-7 border rounded align-middle">
+            <table id="dmdTable" class="table table-striped table-row-bordered gs-7 border rounded align-middle">
               <thead>
                 <tr class="fw-bolder text-gray-800 fs-6">
                   <th>#</th>
-                  <th>Code</th>
-                  <th>Libellé</th>
+                  <th>Requérant</th>
+                  <th>Document</th>
+                  <th class="text-center">Jours</th>
+                  <th class="text-center">Copies</th>
                   <th class="text-center">Montant</th>
-                  <th class="text-center">Nombre de jours</th>
-                  <th class="text-center w-70">Date</th>
                   <th class="text-center">Statut</th>
-                  <th class="text-center w-170">Action</th>
+                  <th class="text-center" width="90">Actions</th>
                 </tr>
               </thead>
               <tbody class="text-gray-600 fw-semibold">
           `;
 				  response.map(data => {
-            let dateHour = formatDateTime(data.created_at);
-            let dateRDV = formatDateTime(data.daterdv_at);
-            switch ($data.status) {
+            switch (data.status) {
               case 0:
                 status = 'Brouillon';
-                action = 'Transférer';
-                badge = 'badge-light-info';
+                color = 'badge-light-info';
                 break;
               case 1:
                 status = 'Transféré';
-                action = 'Valider/Rejeter';
                 color = 'badge-light-warning';
                 break;
               case 2:
                 status = 'Validé';
-                action = 'Imprimer';
                 color = 'badge-light-success';
                 break;
               case 3:
                 status = 'Rejeté';
-                action = '';
                 color = 'badge-light-danger';
                 break;
               default:
                 status = 'N/A';
-                action = '';
                 color = 'badge-light-secondary';
             }
             outTable += `<tr>
               <td>${i}</td>
-              <td>${data.code}</td>
+              <td>${data.user}</td>
               <td>${data.label}</td>
-              <td class="text-center">${data.amount}</td>
-              <td class="text-center">${dateHour}</td>
-              <td class="text-center">${dateRDV}</td>
-              <td><span class="badge badge-light-${color} fw-bold px-4 py-3">${data.action}</span></td>
-              <td>${dateHour}</td>
-            </tr>`;
+              <td class="text-center">${data.number}</td>
+              <td class="text-center">${data.copy}</td>
+              <td class="text-center">${data.price}</td>
+              <td class="text-center align-middle"><span data-kt-element="status" class="badge ${color} fw-bold px-4 py-3">${status}</span></td>
+              <td class="text-end align-middle">
+                <a href="/demands/${data.uuid}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail de la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
+                  <i class="ki-duotone ki-switch text-primary fs-2">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                  </i>
+                </a>`;
+                if (actionIds.includes(3) && data.status == 0) {
+                  outTable += `<a href="/demands/${data.uuid}/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
+                    <i class="ki-duotone ki-pencil text-warning fs-2">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </a>`;
+                }
+                if (actionIds.includes(9) && data.status == 2) {
+                  outTable += `<a href="${data.path}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimer la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
+                    <i class="ki-duotone ki-printer text-primary fs-2">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </a>`;
+                }
+                outTable += `</td></tr>`;
             i++;
           });
           outTable += `</tbody></table>`;
           $('#tableData').html(outTable);
               
           // Initialiser DataTable avec pagination et recherche
-          logsTable = $('#logsTable').DataTable({
+          dmdTable = $('#dmdTable').DataTable({
             paging: true,
             searching: true,
             pageLength: 10,
@@ -159,16 +163,16 @@
           
           // Personnaliser la recherche
           $('#tableSearch').on('keyup', function() {
-            logsTable.search(this.value).draw();
+            dmdTable.search(this.value).draw();
           });
           
           // Personnaliser le nombre d'entrées affichées
           $('#tableLength').on('change', function() {
-            logsTable.page.len(this.value).draw();
+            dmdTable.page.len(this.value).draw();
           });
           
           // Mettre à jour le sélecteur de longueur lorsque DataTable change
-          logsTable.on('length.dt', function(e, settings, length) {
+          dmdTable.on('length.dt', function(e, settings, length) {
             $('#tableLength').val(length);
           });
         }

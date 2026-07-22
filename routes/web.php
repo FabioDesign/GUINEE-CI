@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
   // Route pour les demandes:
   Route::controller(DemandController::class)->group(function () {
     Route::post('searchUsers', 'searchUsers');
+    Route::get('getDemands', 'getDemands');
   });
   // Route pour les pistes d'audit:
   Route::controller(LogsController::class)->group(function () {

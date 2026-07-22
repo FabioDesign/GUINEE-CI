@@ -8,8 +8,6 @@
 		<form class="formField">
 			@method('PUT')
 			<input type="hidden" name="account">
-			<input type="hidden" id="code" value="{{ $query->code }}">
-			<input type="hidden" id="alpha" value="{{ $code->alpha }}">
 			<input type="hidden" id="rootForm" value="users/{{ $query->uuid }}">
 			<span class="msgError" style="display: none;"></span>
 			<!--begin::Input group-->
@@ -81,35 +79,44 @@
 					<input type="text" name="profession" value="{{ old('profession', $query->profession) }}" class="form-control requiredField" placeholder="Saisir profession">
 				</div>
 			</div>
-			<div class="row mb-5">
-				<div class="col-md-4 col-12">
-					<label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
-					<select id="profile_id" name="profile_id" class="form-control" disabled>
+            <div class="row mb-5">
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
+                    <select id="profile_id" name="profile_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($profile as $data)
 							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
-				</div>
-				<div class="col-md-4 col-12">
-					<label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
-					<select id="embassy_id" name="embassy_id" class="form-control" disabled>
-						<option value="" selected>Sélectionner</option>
-						@foreach($embassy as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->embassy_id ? 'selected':'' @endphp>{{ $data->country }}</option>
-						@endforeach
-					</select>
-				</div>
-				<div class="col-md-4 col-12">
-					<label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
-					<select id="nationality_id" name="nationality_id" class="form-control" disabled>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
+                    <select id="nationality_id" name="nationality_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($nationality as $data)
 							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->nationality }}</option>
 						@endforeach
 					</select>
-				</div>
-			</div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
+                    <select id="embassy_id" name="embassy_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($embassy as $data)
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $agency->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
+						@endforeach
+					</select>
+                </div>
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
+                    <select id="agency_id" name="agency_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($agencies as $data)
+							<option value="{{ $data->id }}" @php echo $data->id == $query->agency_id ? 'selected':'' @endphp>{{ $data->label }}</option>
+						@endforeach
+					</select>
+                </div>
+            </div>
 			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
@@ -221,4 +228,15 @@
 	</div>
 </div>
 <!--end::details View-->
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            let phone_alpha = "{{ $user['phone']->alpha }}";
+            let person_alpha = "{{ $user['person']->alpha }}";
+            phoneInstances["phone_number"].setCountry(phone_alpha);
+            phoneInstances["person_number"].setCountry(person_alpha);
+        });
+    </script>
 @endsection

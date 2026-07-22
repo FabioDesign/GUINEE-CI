@@ -16,7 +16,7 @@
             <th>Contacts</th>
             <th class="text-center w-70">Date</th>
             <th class="text-center">Statut</th>
-            <th class="text-center w-170">Action</th>
+            <th class="text-center" style="width: 180px;">Action</th>
           </tr>
         </thead>
         <tbody>

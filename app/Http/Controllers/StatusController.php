@@ -6,7 +6,7 @@ use Session;
 use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{Agency, Document, File, Profile, Town, User};
+use App\Models\{Agency, Demand, Document, File, Profile, Town, User};
 
 class StatusController extends Controller
 {
@@ -20,6 +20,10 @@ class StatusController extends Controller
                 'agencies' => [
                     'model' => Agency::class,
                     'label' => 'Agence'
+                ],
+                'demands' => [
+                    'model' => Demand::class,
+                    'label' => 'Demande'
                 ],
                 'documents' => [
                     'model' => Document::class,

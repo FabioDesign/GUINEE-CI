@@ -119,7 +119,11 @@ class UserController extends Controller
             'particular_sign' => 'required',
             'home_address' => 'required',
             'person_fullname' => 'required',
-            'person_number' => 'required',
+            'person_number' => [
+                'required',
+                'numeric',
+                'digits_between:8,15',
+            ],
             'person_address' => 'required',
             'arrival_at' => 'required|date|date_format:Y-m-d',
 			'signature' => 'nullable|file|mimes:png,jpg,jpeg|max:2048',
@@ -130,7 +134,8 @@ class UserController extends Controller
 			'lastname.required' => "Le nom est obligatoire.",
 			'firstname.required' => "Les prénoms sont obligatoires.",
 			'phone_number.required' => "Le numéro de téléphone est obligatoire.",
-            'phone_number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
+            'phone_number.numeric' => "Le numéro de téléphone doit être un nombre.",
+            'phone_number.digits_between' => "Le numéro de téléphone doit être entre 8 et 15 chiffres.",
 			'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
 			'email.required' => "Adresse e-mail est obligatoire.",
             'email.email' => "Adresse e-mail non valide.",
@@ -158,6 +163,9 @@ class UserController extends Controller
 			'home_address.required' => "L'adresse domiciliale est obligatoire.",
 			'arrival_at.required' => "La date d'arrivée est obligatoire.",
 			'arrival_at.date_format' => "Le format de la date d'arrivée est incorrecte.",
+            'person_fullname.required' => "Le nom et prénoms de la personne est obligatoire.",
+            'person_number.required' => "Le numéro de la personne est obligatoire.",
+            'person_address.required' => "L'adresse de la personne est obligatoire.",
 			'signature.file' => "La signature doit être un fichier.",
 			'signature.mimes' => "La signature doit être un fichier de type : png, jpg ou jpeg",
 			'signature.max' => "La signature ne doit pas être supérieur à 2Mo.",
@@ -189,7 +197,7 @@ class UserController extends Controller
             'lastname' => $lastname,
             'firstname' => $firstname,
             'gender' => $gender,
-            'phone_code' => substr($request->phone_code, 1),
+            'phone_code' => $request->phone_code,
             'phone_number' => $request->phone_number,
             'email' => Str::lower($request->email),
             'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
@@ -208,7 +216,7 @@ class UserController extends Controller
             'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign),'UTF-8'),
             'home_address' => Str::upper(Myhelper::valideString($request->home_address),'UTF-8'),
             'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname),'UTF-8'),
-            'person_code' => substr($request->person_code, 1),
+            'person_code' => $request->person_code,
             'person_number' => $request->person_number,
             'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
             'arrival_at' => $request->arrival_at,
@@ -288,6 +296,10 @@ class UserController extends Controller
                     'message' => "Utilisateur non trouvé.",
                 ]);
             }
+            $request->merge([
+                'phone_number' => str_replace(' ', '', $request->phone_number),
+                'person_number' => str_replace(' ', '', $request->person_number),
+            ]);
             // Validator
             $validator = Validator::make($request->all(), [
                 'civility' => 'required|in:M.,Mme,Mlle',
@@ -323,7 +335,11 @@ class UserController extends Controller
                 'particular_sign' => 'required',
                 'home_address' => 'required',
                 'person_fullname' => 'required',
-                'person_number' => 'required',
+                'person_number' => [
+                    'required',
+                    'numeric',
+                    'digits_between:8,15',
+                ],
                 'person_address' => 'required',
                 'arrival_at' => 'required|date|date_format:Y-m-d',
                 'signature' => 'nullable|file|mimes:png,jpg,jpeg|max:2048',
@@ -334,6 +350,8 @@ class UserController extends Controller
                 'lastname.required' => "Le nom est obligatoire.",
                 'firstname.required' => "Les prénoms sont obligatoires.",
                 'phone_number.required' => "Le numéro de téléphone est obligatoire.",
+                'phone_number.numeric' => "Le numéro de téléphone doit être un nombre.",
+                'phone_number.digits_between' => "Le numéro de téléphone doit être entre 8 et 15 chiffres.",
                 'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
                 'email.required' => "L'email est obligatoire.",
                 'email.unique' => "L'email existe déjà dans la base de données.",
@@ -360,6 +378,9 @@ class UserController extends Controller
                 'home_address.required' => "L'adresse domiciliale est obligatoire.",
                 'arrival_at.required' => "La date d'arrivée est obligatoire.",
                 'arrival_at.date_format' => "Le format de la date d'arrivée est incorrecte.",
+                'person_fullname.required' => "Le nom et prénoms de la personne est obligatoire.",
+                'person_number.required' => "Le numéro de la personne est obligatoire.",
+                'person_address.required' => "L'adresse de la personne est obligatoire.",
                 'signature.file' => "La signature doit être un fichier.",
                 'signature.mimes' => "La signature doit être un fichier de type : png, jpg ou jpeg",
                 'signature.max' => "La signature ne doit pas être supérieur à 2Mo.",
@@ -388,7 +409,7 @@ class UserController extends Controller
                 'lastname' => $lastname,
                 'firstname' => $firstname,
                 'gender' => $gender,
-                'phone_code' => substr($request->phone_code, 1),
+                'phone_code' => $request->phone_code,
                 'phone_number' => $request->phone_number,
                 'email' => Str::lower($request->email),
                 'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
@@ -407,7 +428,7 @@ class UserController extends Controller
                 'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign),'UTF-8'),
                 'home_address' => Str::upper(Myhelper::valideString($request->home_address),'UTF-8'),
                 'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname),'UTF-8'),
-                'person_code' => substr($request->person_code, 1),
+                'person_code' => $request->person_code,
                 'person_number' => $request->person_number,
                 'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
                 'arrival_at' => $request->arrival_at,
@@ -541,13 +562,16 @@ class UserController extends Controller
         if ($query->avatar == '')
         $query->avatar = $query->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 		$country = Country::orderBy('country')->get();
-		$code = Country::where('code', $query->code)->first();
 		$nationality = Country::orderBy('nationality')->get();
+		$agency = Agency::where('id', $query->agency_id)->first();
+		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
-		$profile = Profile::all();
-		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'code', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality'));
+		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
+		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
+		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
+		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies', 'user'));
 	}
 	// Récupérer un utilisateur
 	public function getUsers($id) {
@@ -712,6 +736,7 @@ class UserController extends Controller
             Session::put('username', $username);
             Session::put('agency', $user->agency_id);
             Session::put('profil', $user->profile->label ?? '');
+            Session::put('role', $user->profile->role_id ?? '');
             Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '','UTF-8');
             Session::put('map', $user->embassy->alpha ?? '');
             Session::put('menus', $menus);

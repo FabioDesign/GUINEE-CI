@@ -335,7 +335,7 @@ $(document).on('click', '.submitForm', function(e) {
       }
     } else datasT.append(this.name, $(this).val());
   });
-  if (rootForm.slice(0, 5) === 'users') {
+  if ((rootForm.slice(0, 5) === 'users') || (rootForm.slice(0, 7) === 'account')) {
     var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
     var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
     datasT.append('phone_code', phone_code);

@@ -28,38 +28,6 @@ class DemandController extends Controller
 		$query = Demand::orderByDesc('created_at')->get();
 		return view('pages.demands.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
-    // Liste des demandes consulaires
-	public function getDemands() {
-        if (!Auth::check()) {
-            return 'x';
-        }
-		//Requete Read
-		$query = Demand::orderBy('status')
-		->orderByDesc('created_at')
-		->get();
-		// Transformer les données
-		$demands = $query->map(fn($data) => [
-			'uuid' => $data->uuid,
-			'reference' => $data->reference,
-			'user' => $data->user->firstname . ' ' . $data->user->lastname,
-			'label' => $data->document->label,
-			'number' => $data->number,
-			'price' => $data->price,
-			'copy' => $data->copy,
-			'status' => match((int)$data->status) {
-				0 => "Brouillon",
-				1 => "Transmise",
-				2 => "Validée",
-				3 => "Terminé",
-				4 => "Refusée",
-			},
-			'created_at' => $data->created_at->format('d/m/Y H:i'),
-		]);
-		return response()->json([
-			'status' => true,
-			'data' => $demands,
-		]);
-	}
 	// Afficher le détail d'une demande
 	public function show($uuid) {
         if (!Auth::check()) {
@@ -142,7 +110,7 @@ class DemandController extends Controller
             'arrival_at' => 'required|date|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
 			'number' => 'required|integer|min:1',
-			'price' => 'required|integer|min:1',
+			'total' => 'required|integer|min:1',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
 		], [
@@ -177,9 +145,9 @@ class DemandController extends Controller
 			'number.required' => "Le numéro est obligatoire.",
 			'number.integer' => "Le numéro doit être un nombre entier.",
 			'number.min' => "Le numéro doit être supérieur à 0.",
-			'price.required' => "Le prix est obligatoire.",
-			'price.integer' => "Le prix doit être un nombre entier.",
-			'price.min' => "Le prix doit être supérieur à 0.",
+			'total.required' => "Le prix est obligatoire.",
+			'total.integer' => "Le prix doit être un nombre entier.",
+			'total.min' => "Le prix doit être supérieur à 0.",
 			'copy.required' => "Le nombre de copies est obligatoire.",
 			'copy.integer' => "Le nombre de copies doit être un nombre entier.",
 			'copy.min' => "Le nombre de copies doit être supérieur à 0.",
@@ -242,7 +210,7 @@ class DemandController extends Controller
 				'reference' => $reference,
                 'document_id' => $request->document_id,
                 'number' => $request->number,
-                'price' => $request->price,
+                'price' => $request->total,
                 'copy' => $request->copy,
                 'user_id' => $user->id,
 				'agency_id' => Auth::user()->agency_id,
@@ -250,7 +218,7 @@ class DemandController extends Controller
             $demand = Demand::create($set);
             // Création des fichiers
             foreach ($request->filename as $file_id => $filename) {
-				$path = $request->file('filename')[$file_id]->store('demands/' . date('Ymd') . '/' . Auth::user()->uuid, 'public');
+				$path = $request->file('filename')[$file_id]->store('documents/' . date('Ymd') . '/' . Auth::user()->uuid, 'public');
 				Attachment::create([
 					'demand_id' => $demand->id,
 					'file_id' => $file_id,
@@ -443,6 +411,30 @@ class DemandController extends Controller
 		return response()->json([
 			'status' => true,
 			'data' => $users,
+		]);
+	}
+    // Liste des demandes consulaires
+	public function getDemands() {
+        if (!Auth::check()) {
+            return 'x';
+        }
+		//Requete Read
+		$query = DB::select("CALL sp_list_demands(?)", [Auth::id()]);
+		// Transformer les données
+		$demands = collect($query)->map(fn($data) => [
+			'uuid' => $data->uuid,
+			'reference' => $data->reference,
+			'user' => $data->civility . ' ' . $data->firstname . ' ' . $data->lastname,
+			'label' => $data->label,
+			'number' => $data->number,
+			'price' => $data->price,
+			'copy' => $data->copy,
+			'status' => $data->status,
+			'path' => ($data->path == null && $data->status == 2) ? Demand::print_dmd($data->uuid) : asset($data->path),
+		]);
+		return response()->json([
+			'status' => true,
+			'data' => $demands,
 		]);
 	}
 }
