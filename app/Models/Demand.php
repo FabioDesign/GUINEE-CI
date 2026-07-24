@@ -143,7 +143,7 @@ class Demand extends Model
       $pdf->save($path);
       // Mettre à jour le nom de fichier dans la transaction
       // $query->update([
-      //     'filename' => $path,
+      //     'path' => $path,
       // ]);
       return $path;
     } catch(\Exception $e) {

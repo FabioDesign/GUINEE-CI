@@ -137,7 +137,7 @@
                 }
                 if (actionIds.includes(9) && data.status == 2) {
                   outTable += `<a href="${data.path}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimer la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
-                    <i class="ki-duotone ki-printer text-primary fs-2">
+                    <i class="ki-duotone ki-printer text-warning fs-2">
                       <span class="path1"></span>
                       <span class="path2"></span>
                     </i>

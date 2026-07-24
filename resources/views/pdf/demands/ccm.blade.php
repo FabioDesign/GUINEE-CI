@@ -8,7 +8,7 @@
 <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px; font-size:11pt;">
   <tr>
     <td style="text-align:center; padding:10px 0;">
-      L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE<br>
+      L'AMBASSADE DE LA RÉPUBLIQUE DE GUINÉE EN RÉPUBLIQUE DE<br>
       CÔTE D'IVOIRE - {{ strtoupper($dataPDF['agency'] ?? 'ABIDJAN') }},<br><br>
       <strong>CERTIFIE</strong>
     </td>

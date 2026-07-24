@@ -219,7 +219,7 @@
 									<div class="menu-item">
 										<!--begin:Menu link-->
 										<a href="/{{ $menu['target'] }}" class="menu-link menu-active
-										@php echo $currentMenu == $menu['target'] ? 'active':'' @endphp" data-menu="{{ $menu['id'] }}">
+										@php echo $currentMenu == $menu['target'] ? 'actives':'' @endphp" data-menu="{{ $menu['id'] }}">
 											<span class="menu-icon">
 												<i class="ki-duotone {{ $menu['icone'] }} fs-2">
 													<span class="path1"></span>

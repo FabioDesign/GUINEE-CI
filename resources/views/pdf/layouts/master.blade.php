@@ -16,13 +16,25 @@
       body {
         font-family: "Arial Narrow", Arial, sans-serif;
         font-size: 12pt;
+        margin: 0;
+        padding: 0;
       }
 
-      /* ── Filigrane ─────────────────────────────────────────────── */
       .dmd-container {
         position: relative;
         padding: 20px;
       }
+      /* ── Image de fond avec opacité ──────────────────────────────── */
+      .bg-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.2;
+        z-index: 0;
+      }
+      /* ── Filigrane ─────────────────────────────────────────────── */
       .watermark {
         position: absolute;
         top: 50%;
@@ -30,14 +42,13 @@
         transform: translate(-50%, -50%);
         width: 350px;
         height: 330px;
-        opacity: 0.1;
-        z-index: 0;
+        opacity: 0.3;
+        z-index: 1;
       }
       .content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
       }
-
       /* ── En-tête ───────────────────────────────────────────────── */
       .header-table {
         width: 100%;
@@ -137,6 +148,9 @@
   </head>
   <body>
     <div class="dmd-container">
+
+      {{-- ── Image de fond avec opacité ──────────────────────────────── --}}
+      <img src="{{ public_path('assets/img/background.png') }}" class="bg-image" alt="Image de fond" />
 
       {{-- ── Filigrane ─────────────────────────────────────────────── --}}
       <img src="{{ public_path('assets/img/amoirie.png') }}" class="watermark" alt="Filigrane" />

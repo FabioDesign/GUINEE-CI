@@ -25,7 +25,7 @@
 
     {{-- Logo Nimba --}}
     <td class="header-right">
-      <img src="{{ public_path('assets/img/nimba.png') }}" style="height: 120px;" alt="Nimba" />
+      <img src="{{ public_path('assets/img/branding.png') }}" style="height: 50px;" alt="Branding" />
     </td>
   </tr>
 </table>

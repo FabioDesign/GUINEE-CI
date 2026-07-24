@@ -1,7 +1,7 @@
 @extends('pdf.layouts.master')
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 100px;">
+<table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 80px;">
   <tr>
     {{-- ── Champs du demandeur ──────────────────────────────────── --}}
     <td width="75%" style="vertical-align:top;">
