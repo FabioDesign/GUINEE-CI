@@ -73,17 +73,46 @@ class StatusController extends Controller
                 ]);
             }
             // Changement de statut
-            $newStatus = $item->status == 1 ? 0 : 1;
-            $action = $newStatus == 1 ? 'Activé' : 'Désactivé';
-            $item->update([
-                'status' => $newStatus,
-            ]);
+            if ($type === 'demands') {
+                $libelle = optional($item->document)->label;
+                switch ($item->status) {
+                    case 0 :
+                        $action = 'Transmise';
+                        $set = [
+                            'status' => 1,
+                            'transmitted_at' => now(),
+                            'transmitted_by' => Auth::user()->id,
+                        ];
+                        break;
+                    case 1 :
+                        $action = 'Validée';
+                        $set = [
+                            'status' => 2,
+                            'validated_at' => now(),
+                            'validated_by' => Auth::user()->id,
+                            'delivered_at' => Myhelper::addWorkingDays($item->copy),
+                        ];
+                        Demand::print_dmd($uuid);
+                        break;
+                    default :
+                        $newStatus = 0;
+                        $action = 'Désactivé';
+                }
+            } else {
+                $newStatus = $item->status == 1 ? 0 : 1;
+                $action = $newStatus == 1 ? 'Activé' : 'Désactivé';
+                $set = [
+                    'status' => $newStatus,
+                ];
+                $libelle = $item->label ?? ($item->lastname . ' ' . $item->firstname);
+            }
+            $item->update($set);
             // Log
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
-                "{$label}: {$item->label} {$action}",
-				'Modifier',
+                "{$label}: {$libelle}",
+				$action,
                 Session::get('avatar')
             );
 			return response()->json([

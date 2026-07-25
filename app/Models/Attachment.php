@@ -13,4 +13,8 @@ class Attachment extends Model
 
     public $timestamps = false;
 
+    // Relation avec le fichier
+    public function file() {
+        return $this->belongsTo(File::class, 'file_id');
+    }
 }

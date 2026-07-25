@@ -53,7 +53,7 @@ class PasswordController extends Controller
 			$content = "{$gender} {$username},<br/>
 			Votre nouveau mot de passe est : <strong>{$password}</strong><br/><br/>
 			Cordialement<br/>
-			L'équipe Ambassade de Guinée - CI<br>
+			L'équipe Ambassade de GUINEE - CI<br>
 			27 01 02 03 04<br>
 			ambagui-ci@yopomail.com";
 			Myhelper::sendMail($user->email, '', $subject, $content);

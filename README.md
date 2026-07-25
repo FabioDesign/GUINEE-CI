@@ -1,8 +1,8 @@
 # Titre du projet
-APP WEB GUINÉE-COTE D'IVOIRE
+APP WEB GUINEE-COTE D'IVOIRE
 
 ## A Propos
-C'est une App de demande consulaire des ressortisants guinéens en Côte d'Ivoire.
+C'est une App de demande consulaire des ressortisants GUINEEns en Côte d'Ivoire.
 
 ## Dépendences / Prérequis
 LARAVEL = 10
@@ -18,7 +18,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git branch -M main
-git remote add origin https://github.com/FabioDesign/GUINÉE-CI.git
+git remote add origin https://github.com/FabioDesign/GUINEE-CI.git
 git push -u origin main
 ```
 

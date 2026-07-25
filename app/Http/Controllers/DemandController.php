@@ -44,8 +44,16 @@ class DemandController extends Controller
 			return redirect('/demands');
 		}
 		// Modal
-		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>';
-		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query'));
+		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
+		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
+		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
+		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
+		// Modal
+		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
+		$prefecture = Town::find(optional($query->user)->town_id);
+		$country = Country::find($prefecture->country_id);
+		$docFiles = Attachment::where('demand_id', $query->id)->get();
+		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'docFiles'));
 	}
     //Liste des demandes
 	public function create() {
@@ -81,16 +89,10 @@ class DemandController extends Controller
 				'required',
 				'numeric',
                 'digits_between:8,15',
-                Rule::unique('users')->where(function ($query) {
-					return $query->whereNull('deleted_at');
-                }),
 			],
 			'email' => [
 				'nullable',
 				'email',
-                Rule::unique('users')->where(function ($query) {
-					return $query->whereNull('deleted_at');
-                }),
 			],
 			'profession' => 'required',
 			'nationality_id' => 'required|exists:countries,id',
@@ -409,7 +411,7 @@ class DemandController extends Controller
 							: ($data->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg'),
 		]);
 		return response()->json([
-			'status' => true,
+			'status' => 1,
 			'data' => $users,
 		]);
 	}
@@ -433,8 +435,73 @@ class DemandController extends Controller
 			'path' => ($data->path == null && $data->status == 2) ? Demand::print_dmd($data->uuid) : asset($data->path),
 		]);
 		return response()->json([
-			'status' => true,
+			'status' => 1,
 			'data' => $demands,
 		]);
+	}
+	// Rejeter une demande
+	public function reject(Request $request) {
+        if (!Auth::check()) {
+            return 'x';
+        }
+		// Validator
+		$validator = Validator::make($request->all(), [
+			'uuid' => 'required|uuid|exists:demands,uuid',
+			'motif' => 'required|string|min:10',
+		], [
+			'uuid.required' => "L'identifiant est obligatoire.",
+			'uuid.uuid' => "L'identifiant doit être un UUID valide.",
+			'uuid.exists' => "La demande spécifiée n'existe pas.",
+			'motif.required' => "Le motif est obligatoire.",
+			'motif.min' => "Le motif doit contenir au moins 10 caractères.",
+		]);
+		// Error field
+		if ($validator->fails()) {
+			Log::warning("Demand::reject - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
+		}
+		// Vérifier si la caisse existe
+		$query = Demand::where('uuid', $request->uuid)->first();
+		if (!$query) {
+			Log::warning("Demand::reject - Aucune demande trouvée pour l'UUID : {$request->uuid}");
+			return response()->json([
+				'status' => 0,
+				'message' => "Demande non trouvée.",
+			]);
+		}
+		$label = optional($query->document)->label;
+		$set = [
+			'status' => 3,
+			'rejeted_at' => now(),
+			'motif' => $request->motif,
+			'rejeted_by' => Auth::user()->id,
+		];
+		DB::beginTransaction();
+		try {
+			// Mettre à jour la demande
+			$query->update($set);
+			DB::commit();
+			Myhelper::logs(
+				Session::get('username'),
+				Session::get('profil'),
+				"Demande consulaire: {$label}",
+				'Rejetée',
+				Session::get('avatar')
+			);
+			return response()->json([
+				'status' => 1,
+				'message' => "Demande consulaire rejetée avec succès.",
+			]);
+		} catch (\Exception $e) {
+			DB::rollBack(); // Annuler la transaction en cas d'erreur
+			Log::warning("Demand::reject - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors du rejet.",
+			]);
+		}
 	}
 }

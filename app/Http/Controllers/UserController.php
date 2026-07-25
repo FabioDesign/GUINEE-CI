@@ -588,7 +588,7 @@ class UserController extends Controller
 		$data['phone'] = Country::select('alpha')->where('code', $data['user']->phone_code)->first();
 		$data['person'] = Country::select('alpha')->where('code', $data['user']->person_code)->first();
 		return response()->json([
-			'status' => true,
+			'status' => 1,
 			'data' => $data,
 		]);
 	}

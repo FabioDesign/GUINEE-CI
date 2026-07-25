@@ -253,11 +253,11 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fw-bolder text-dark fs-5">Nom et prénoms du père : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Noms du père : <span class="text-danger">*</span></label>
                                     <input type="text" id="father_fullname" name="father_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms du père" data-valid="1" />
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fw-bolder text-dark fs-5">Nom et prénoms de la mère : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Noms de la mère : <span class="text-danger">*</span></label>
                                     <input type="text" id="mother_fullname" name="mother_fullname" class="form-control requiredUser" placeholder="Saisir nom et prénoms de la mère" data-valid="1" />
                                 </div>
                             </div>
@@ -442,10 +442,10 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nom et prénoms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Noms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nom et prénoms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Noms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">

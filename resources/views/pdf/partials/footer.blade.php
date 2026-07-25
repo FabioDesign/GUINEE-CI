@@ -12,7 +12,7 @@
       <div style="margin-bottom: 5px;">
         Fait à {{ $dataPDF['agency'] }}, le {{ $dataPDF['validated_at'] }}
       </div>
-      <div style="font-weight:bold;">Le Consul</div>
+      <div style="font-weight:bold;">LE CONSUL</div>
       {{-- Cachet + Signature côte à côte (sans position absolute) --}}
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -39,7 +39,7 @@
 <table width="100%" cellspacing="0" cellpadding="0" style="margin-top: 30px;">
   <tr>
     <td style="text-align:center; font-size: 8pt; font-style: italic; border-top: 1px solid #000; padding-top: 6px;">
-      Ce document n'est valable que muni du sticker de l'Ambassade de Guinée en Côte d'Ivoire
+      Ce document n'est valable que muni du sticker de l'Ambassade de GUINEE en Côte d'Ivoire
     </td>
   </tr>
 </table>

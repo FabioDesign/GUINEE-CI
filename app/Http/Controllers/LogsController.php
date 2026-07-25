@@ -26,7 +26,7 @@ class LogsController extends Controller
 		//Requete Read-
 		$query = Logs::orderByDesc('created_at')->get();
 		return response()->json([
-			'status' => true,
+			'status' => 1,
 			'data' => $query,
 		]);
 	}

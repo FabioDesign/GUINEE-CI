@@ -97,15 +97,15 @@
                 color = 'badge-light-info';
                 break;
               case 1:
-                status = 'Transféré';
+                status = 'Transmise';
                 color = 'badge-light-warning';
                 break;
               case 2:
-                status = 'Validé';
+                status = 'Validée';
                 color = 'badge-light-success';
                 break;
               case 3:
-                status = 'Rejeté';
+                status = 'Rejetée';
                 color = 'badge-light-danger';
                 break;
               default:
@@ -120,7 +120,7 @@
               <td class="text-center">${data.copy}</td>
               <td class="text-center">${data.price}</td>
               <td class="text-center align-middle"><span data-kt-element="status" class="badge ${color} fw-bold px-4 py-3">${status}</span></td>
-              <td class="text-end align-middle">
+              <td class="text-center align-middle">
                 <a href="/demands/${data.uuid}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail de la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
                   <i class="ki-duotone ki-switch text-primary fs-2">
                     <span class="path1"></span>

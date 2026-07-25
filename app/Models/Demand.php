@@ -142,9 +142,9 @@ class Demand extends Model
       // Save file
       $pdf->save($path);
       // Mettre à jour le nom de fichier dans la transaction
-      // $query->update([
-      //     'path' => $path,
-      // ]);
+      $query->update([
+        'path' => $path,
+      ]);
       return $path;
     } catch(\Exception $e) {
       Log::warning("Demand::print_dmd - Erreur : {$e->getMessage()}");

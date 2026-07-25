@@ -41,6 +41,18 @@
       		$string = preg_replace('#&[^;]+;€#', '', $string);
       		return $string;
     	}
+		// Ajouter des jours ouvrés
+		public static function addWorkingDays($days) {
+			$date = Carbon::now();
+			while ($days > 0) {
+				$date->addDay();
+				// Vérifie si ce n'est pas samedi (6) ou dimanche (0)
+				if (!$date->isWeekend()) {
+					$days--;
+				}
+			}
+			return $date->setTime(8, 0, 0);
+		}
 		//Piste d'audit
 		public static function logs($username, $profil, $label, $action, $avatar) {
 			switch ($action) {

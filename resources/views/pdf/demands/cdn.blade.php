@@ -7,9 +7,9 @@
 
       {{-- ── Texte introductif ─────────────────────────────────── --}}
       <p style="font-size:12pt; margin-bottom: 30px;line-height: 1.5;">
-        L'AMBASSADE DE LA RÉPUBLIQUE DE GUINÉE EN RÉPUBLIQUE DE CÔTE D'IVOIRE<br>
+        L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE<br>
         {{ $dataPDF['agency'] }},<br>
-        SUR LA FOI DES DOCUMENTS PRÉSENTÉS,
+        SUR LA FOI DES DOCUMENTS PRESENTES,
       </p>
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">
         ATTESTE :
@@ -24,12 +24,12 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">EST {{ $dataPDF['sex'] == 'M' ? 'NÉ' : 'NÉE' }} LE</td>
+          <td class="field-label">EST {{ $dataPDF['sex'] == 'M' ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">À</td>
+          <td class="field-label">A</td>
           <td class="field-value">: {{ $dataPDF['birthplace'] }}</td>
         </tr>
 
@@ -52,12 +52,12 @@
 
       {{-- ── Texte de clôture ──────────────────────────────────── --}}
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin-top: 25px; margin-bottom: 15px;">
-        EST DE NATIONALITÉ GUINÉENNE
+        EST DE NATIONALITE GUINEENNE
       </p>
 
       <p style="font-size:12pt; line-height: 1.5;">
-        DELIVRÉE SUR LA DEMANDE DE L'{{ $dataPDF['sex'] == 'M' ? 'INTERÉSSÉ' : 'INTERÉSSÉE' }} POUR JOUIR DE TOUTES LES
-        PREROGATIVES DÉCOULANT DE LA POSSESSION D'ÉTAT SUSVISE.
+        DELIVREE SUR LA DEMANDE DE L'{{ $dataPDF['sex'] == 'M' ? 'INTERESSE' : 'INTERESSEE' }} POUR JOUIR DE TOUTES LES
+        PREROGATIVES DECOULANT DE LA POSSESSION D'ETAT SUBVISE.
       </p>
 
     </td>

@@ -18,7 +18,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'NÉ' : 'NÉE' }} LE</td>
+          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
         </tr>
 
@@ -28,7 +28,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">PRÉFECTURE</td>
+          <td class="field-label">PREFECTURE</td>
           <td class="field-value">: {{ $dataPDF['prefecture'] }}</td>
         </tr>
 

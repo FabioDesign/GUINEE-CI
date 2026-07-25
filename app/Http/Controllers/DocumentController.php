@@ -321,7 +321,7 @@ class DocumentController extends Controller
 			'path' => $data->files->path,
 		]);
 		return response()->json([
-			'status' => true,
+			'status' => 1,
 			'data' => $data,
 		]);
 	}

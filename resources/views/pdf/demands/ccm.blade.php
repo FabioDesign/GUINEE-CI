@@ -8,8 +8,8 @@
 <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px; font-size:11pt;">
   <tr>
     <td style="text-align:center; padding:10px 0;">
-      L'AMBASSADE DE LA RÉPUBLIQUE DE GUINÉE EN RÉPUBLIQUE DE<br>
-      CÔTE D'IVOIRE - {{ strtoupper($dataPDF['agency'] ?? 'ABIDJAN') }},<br><br>
+      L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE<br>
+      COTE D'IVOIRE - {{ strtoupper($dataPDF['agency'] ?? 'ABIDJAN') }},<br><br>
       <strong>CERTIFIE</strong>
     </td>
   </tr>
@@ -52,7 +52,7 @@
 </table>
 
 <p style="margin: 15px 0; font-size:11pt;">
-  Est apte d'après la loi matrimoniale guinéenne à contracter un mariage ou une union valable
+  Est apte d'après la loi matrimoniale GUINEEnne à contracter un mariage ou une union valable
 </p>
 
 {{-- ── Section CONJOINT ───────────────────────────────────────── --}}
@@ -96,6 +96,6 @@
 </p>
 
 <p style="margin-top: 10px; font-size: 9pt; font-style: italic;">
-  Ce document n'est valable que muni du sticker de l'Ambassade de Guinée en Côte d'Ivoire
+  Ce document n'est valable que muni du sticker de l'Ambassade de GUINEE en Côte d'Ivoire
 </p>
 @endsection

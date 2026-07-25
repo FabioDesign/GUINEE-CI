@@ -6,13 +6,14 @@
     <td style="vertical-align:top;">
 
       {{-- ── Texte introductif ─────────────────────────────────── --}}
-      <p style="font-size:12pt; margin-bottom: 20px;text-align: justify;line-height: 1.5;">
-        NOUS CONSUL, FONCTIONNAIRE CONSULAIRE DE LA REPUBLIQUE DE GUINEE<br>
-        EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['agency'] }}<br>
-        CERTIFIONS<br>
-        SUR LA FOI DES PIECES PRESENTEES ET LES RENSEIGNEMENTS RECUEILLIS<br>
-        AUPRES DES TEMOINS MAJEURS REGULIEREMENT DOMICILIES EN COTE ET EN GUINEE,<br>
-        QU'IL EST DE NOTORIETE PUBLIQUE, CONSTANTE ET ETABLIE
+      <p style="font-size:12pt; margin-bottom: 15px; text-align: justify; line-height: 1.5;">
+        L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE,<br>
+        SUR LA FOI DES PIECES PRESENTEES ET LES RENSEIGNEMENTS RECUEILLIS AUPRES DE<br>
+        TEMOINS MAJEURS REGULIEREMENT DOMICILIES EN COTE ET EN GUINEE :
+      </p>
+
+      <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">
+        CERTIFIE PAR LA PRESENTE
       </p>
 
       {{-- ── Champs du demandeur ───────────────────────────────── --}}
@@ -24,17 +25,12 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">SEXE</td>
-          <td class="field-value">: {{ $dataPDF['sex'] == 'M' ? 'MASCULIN' : 'FEMININ' }}</td>
-        </tr>
-
-        <tr class="field-row">
           <td class="field-label">EST {{ $dataPDF['sex'] == 'M' ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">A</td>
+          <td class="field-label">À</td>
           <td class="field-value">: {{ $dataPDF['birthplace'] }}</td>
         </tr>
 
@@ -44,7 +40,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} DE</td>
+          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} (LE) DE</td>
           <td class="field-value">: {{ $dataPDF['father'] }}</td>
         </tr>
 
@@ -54,15 +50,26 @@
         </tr>
 
         <tr class="field-row">
+          <td class="field-label">PROFESSION</td>
+          <td class="field-value">: {{ $dataPDF['profession'] }}</td>
+        </tr>
+
+        <tr class="field-row">
           <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} À</td>
           <td class="field-value">: {{ $dataPDF['home_address'] }}</td>
         </tr>
 
       </table>
 
+      {{-- ── Mention célibat ───────────────────────────────────── --}}
+      <p style="font-size:12pt; font-weight:bold; text-align:center; margin: 20px 0;">
+        EST CELIBATAIRE A CE JOUR.
+      </p>
+
       {{-- ── Texte de clôture ──────────────────────────────────── --}}
-      <p style="font-size:12pt; margin-top: 20px;line-height: 1.5;">
-        EN FOI DE QUOI, LUI A ETE DELIVRE LE PRESENT ACTE POUR SERVIR ET VALOIR CE QUE DE DROIT.
+      <p style="font-size:12pt; margin-top: 20px; text-align:justify; line-height: 1.5;">
+        EN FOI DE QUOI, NOUS LUI DELIVRONS LE PRESENT CERTIFICAT DE CELIBAT POUR SERVIR ET VALOIR
+        CE QUE DE DROIT.
       </p>
 
     </td>

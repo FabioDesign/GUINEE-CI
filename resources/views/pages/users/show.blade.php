@@ -74,11 +74,11 @@
                     <input type="text" value="{{ $query->birthplace }}" class="form-control">
                 </div>
                 <div class="col-md-4 col-12">
-                    <label class="fw-bolder text-dark fs-5">Nom et prénoms du père :</label>
+                    <label class="fw-bolder text-dark fs-5">Noms du père :</label>
                     <input type="text" value="{{ $query->father_fullname }}" class="form-control">
                 </div>
                 <div class="col-md-4 col-12">
-                    <label class="fw-bolder text-dark fs-5">Nom et prénoms de la mère :</label>
+                    <label class="fw-bolder text-dark fs-5">Noms de la mère :</label>
                     <input type="text" value="{{ $query->mother_fullname }}" class="form-control">
                 </div>
             </div>
