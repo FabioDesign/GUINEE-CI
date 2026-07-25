@@ -488,7 +488,7 @@ class DemandController extends Controller
 				Session::get('username'),
 				Session::get('profil'),
 				"Demande consulaire: {$label}",
-				'Rejetée',
+				'Rejeter',
 				Session::get('avatar')
 			);
 			return response()->json([

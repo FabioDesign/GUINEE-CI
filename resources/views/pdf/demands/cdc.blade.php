@@ -1,7 +1,7 @@
 @extends('pdf.layouts.master')
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 60px;">
+<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
   <tr>
     <td style="vertical-align:top;">
 
@@ -30,7 +30,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">À</td>
+          <td class="field-label">A</td>
           <td class="field-value">: {{ $dataPDF['birthplace'] }}</td>
         </tr>
 
@@ -40,7 +40,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} (LE) DE</td>
+          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} DE</td>
           <td class="field-value">: {{ $dataPDF['father'] }}</td>
         </tr>
 
@@ -55,7 +55,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} À</td>
+          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} A</td>
           <td class="field-value">: {{ $dataPDF['home_address'] }}</td>
         </tr>
 

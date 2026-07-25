@@ -54,7 +54,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} À</td>
+          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} A</td>
           <td class="field-value">: {{ $dataPDF['home_address'] }}</td>
         </tr>
 

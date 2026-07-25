@@ -80,7 +80,7 @@
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title" style="font-size: 18px;">AMBASSADE DE GUINEE - {{ Session::get('embassy') }}</span>
+											<span class="menu-title" style="font-size: 18px;">AMBASSADE DE GUINÉE - {{ Session::get('embassy') }}</span>
 										</span>
 										<!--end:Menu link-->
 									</div>
@@ -176,8 +176,8 @@
 										<img alt="Logo" src="/assets/img/amoirie.png" class="h-20px app-sidebar-logo-minimize" />
 									</div>
 									<div class="logo-text d-flex flex-column">
-										<span style="color:#FFF; font-weight:bold;">REPUBLIQUE de GUINEE</span>
-										<span style="color:#FFF;font-size: 10px;">Ministère d'Etat Chargé des Affaires Étrangères et des GUINEEns de l'Etrangers</span>
+										<span style="color:#FFF; font-weight:bold;">République de Guinée</span>
+										<span style="color:#FFF;font-size: 10px;">Ministère d'Etat Chargé des Affaires Étrangères et des Guinéens de l'Etrangers</span>
 									</div>
 								</a>
 								<!--end::Logo image-->
@@ -293,7 +293,7 @@
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
 									<span class="text-muted fw-semibold me-1">2026&nbsp;&nbsp;&copy;</span>
-									<a href="#" class="text-gray-800 text-hover-primary">Ambassade de la REPUBLIQUE de GUINEE</a>
+									<a href="#" class="text-gray-800 text-hover-primary">Ambassade de la République de Guinée</a>
 								</div>
 								<!--end::Copyright-->
 								<!--begin::Menu-->

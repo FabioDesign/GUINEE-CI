@@ -46,7 +46,7 @@ class StatusController extends Controller
                     'label' => 'Utilisateur'
                 ],
             ];
-            // Vérifier si le type existe
+            // Verrifier si le type existe
             if (!isset($models[$type])) {
                 return response()->json([
                     'status' => 0,
@@ -58,10 +58,10 @@ class StatusController extends Controller
             // Récupération de l'enregistrement
             $item = $modelClass::where('uuid', $uuid)->first();
             if (!$item) {
-                Log::warning("StatusController - Aucun {$label} trouvé pour uUID : {$uuid}");
+                Log::warning("StatusController - Aucun {$label} trouver pour uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
-                    'message' => "{$label} non trouvé.",
+                    'message' => "{$label} non trouver.",
                 ]);
             }
             // Cas spécifique : Profil admin
@@ -69,7 +69,7 @@ class StatusController extends Controller
                 Log::warning("StatusController - Tentative désactivation admin uUID : {$uuid}");
                 return response()->json([
                     'status' => 0,
-                    'message' => "Le profil administrateur ne peut pas être désactivé.",
+                    'message' => "Le profil administrateur ne peut pas être désactiver.",
                 ]);
             }
             // Changement de statut
@@ -77,7 +77,7 @@ class StatusController extends Controller
                 $libelle = optional($item->document)->label;
                 switch ($item->status) {
                     case 0 :
-                        $action = 'Transmise';
+                        $action = 'Transmettre';
                         $set = [
                             'status' => 1,
                             'transmitted_at' => now(),
@@ -85,7 +85,7 @@ class StatusController extends Controller
                         ];
                         break;
                     case 1 :
-                        $action = 'Validée';
+                        $action = 'Valider';
                         $set = [
                             'status' => 2,
                             'validated_at' => now(),
@@ -96,11 +96,11 @@ class StatusController extends Controller
                         break;
                     default :
                         $newStatus = 0;
-                        $action = 'Désactivé';
+                        $action = 'Désactiver';
                 }
             } else {
                 $newStatus = $item->status == 1 ? 0 : 1;
-                $action = $newStatus == 1 ? 'Activé' : 'Désactivé';
+                $action = $newStatus == 1 ? 'Activer' : 'Désactiver';
                 $set = [
                     'status' => $newStatus,
                 ];

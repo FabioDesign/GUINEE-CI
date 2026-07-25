@@ -1,7 +1,7 @@
 @extends('pdf.layouts.master')
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 80px;">
+<table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 70px;">
   <tr>
     {{-- ── Champs du demandeur ──────────────────────────────────── --}}
     <td width="75%" style="vertical-align:top;">
@@ -13,7 +13,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">PRÉNOM(S)</td>
+          <td class="field-label">PRENOM(S)</td>
           <td class="field-value">: {{ $dataPDF['firstname'] }}</td>
         </tr>
 
@@ -23,7 +23,7 @@
         </tr>
 
         <tr class="field-row">
-          <td class="field-label">À</td>
+          <td class="field-label">A</td>
           <td class="field-value">: {{ $dataPDF['birthplace'] }}</td>
         </tr>
 
