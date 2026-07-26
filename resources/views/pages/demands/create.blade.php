@@ -217,7 +217,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                                    <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly>
+                                    <input type="text" id="birthday_at" name="birthday_at" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                 </div>
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
@@ -286,7 +286,7 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                                    <input type="text" id="arrival_at" name="arrival_at" class="form-control date_at" readonly>
+                                    <input type="text" id="arrival_at" name="arrival_at" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -696,6 +696,12 @@
                             $('#town_id').html(response.town.map(town => `<option value="${town.id}" ${town.id == response.user.town_id ? 'selected' : ''}>${town.label}</option>`).join(''));
                             $('.town_id').text(response.ville.label);
                             $('#step2').val(1);
+                            $('.body-step2 .requiredUser').each(function() {
+                                let value = $(this).attr('name') == undefined ? 0 : 1;
+                                if (value == 1) {
+                                    $(this).data('valid', 0).attr('data-valid', 0);
+                                }
+                            });
                         }
                     }
                 );

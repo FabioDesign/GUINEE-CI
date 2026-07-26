@@ -81,7 +81,7 @@
             <div class="row mb-5">
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                    <input type="text" name="birthday_at" value="{{ old('birthday_at', $query->birthday_at ? $query->birthday_at->format('d-m-Y') : '') }}" class="form-control requiredField date_at">
+                    <input type="text" name="birthday_at" value="{{ old('birthday_at', $query->birthday_at) }}" class="form-control requiredField date_at">
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
@@ -141,7 +141,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                    <input type="text" name="arrival_at" value="{{ old('arrival_at', $query->arrival_at ? $query->arrival_at->format('d-m-Y') : '') }}" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
+                    <input type="text" name="arrival_at" value="{{ old('arrival_at', $query->arrival_at) }}" class="form-control requiredField date_at" placeholder="Saisir date d'arrivée">
                 </div>
             </div>
             <div class="row mb-5">

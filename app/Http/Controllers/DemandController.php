@@ -266,7 +266,19 @@ class DemandController extends Controller
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
-		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query'));
+		$documents = Document::orderBy('label')->get();
+		$docFiles = DocFile::where('document_id', $query->document_id)->get();
+        $civility = ['M.', 'Mme', 'Mlle'];
+		$country = Country::orderBy('country')->get();
+		$nationality = Country::orderBy('nationality')->get();
+		$agency = Agency::where('id', $query->agency_id)->first();
+		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
+		$ville = Town::where('id', optional($query->user)->town_id)->first();
+		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
+		$user['phone'] = Country::select('alpha')->where('code', $query->user->phone_code)->first();
+		$user['person'] = Country::select('alpha')->where('code', $query->user->person_code)->first();
+		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
+		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'civility', 'town', 'documents', 'user', 'agency', 'agencies', 'ville', 'nationality', 'docFiles', 'dmdFiles'));
 	}
 	// Mettre à jour une demande
 	public function update(Request $request, $uuid) {

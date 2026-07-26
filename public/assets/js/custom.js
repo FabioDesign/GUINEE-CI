@@ -14,7 +14,6 @@ $(".date_at").flatpickr({
   altInput: true,
   altFormat: "d-m-Y",
   dateFormat: "Y-m-d",
-  defaultDate: "today",
   maxDate: "today",
 });
 // Configuration pour les champs de numéro de téléphone
