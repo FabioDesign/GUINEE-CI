@@ -129,11 +129,10 @@
                 <div class="col-xl-12 col-xxl-7">
                     <!--begin::Form Wizard Form-->
                     <form class="formField" id="kt_contact_add_form" data-wizard-validation="false">
-                        <input type="hidden" id="rootForm" value="demands">
-                        <input type="hidden" id="user_id" name="user_id" value="0">
-                        <input type="hidden" id="codeDoc" name="codeDoc" value="{{ old('code', optional($query->document)->code) }}">
-                        <input type="hidden" id="step2" value="0">
-                        <input type="hidden" id="step3" value="0">
+                        @method('PUT')
+                        <input type="hidden" id="rootForm" value="demands/{{ $query->uuid }}">
+                        <input type="hidden" id="step2" value="1">
+                        <input type="hidden" id="step3" value="1">
                         <!--begin::Form Wizard Step 1-->
                         <div class="body-step1 pb-5 m-auto w-75 current" data-wizard-type="step-content" data-kt-stepper-element="content">
                             <div class="row">
@@ -217,7 +216,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
-                                    <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly value="{{ old('birthday_at', optional($query->user)->birthday_at->format('d-m-Y')) }}">
+                                    <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly value="{{ old('birthday_at', optional($query->user)->birthday_at) }}">
                                 </div>
                                 <div class="col-md-3" col-12">
                                     <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
@@ -286,7 +285,7 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Date d'arrivée : <span class="text-danger">*</span></label>
-                                    <input type="text" id="arrival_at" name="arrival_at" class="form-control date_at" readonly value="{{ old('arrival_at', optional($query->user)->arrival_at->format('d-m-Y')) }}">
+                                    <input type="text" id="arrival_at" name="arrival_at" class="form-control date_at" readonly value="{{ old('arrival_at', optional($query->user)->arrival_at) }}">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -348,13 +347,13 @@
                                 </div>
                             </div>
                             <div class="files-list">
-                                @foreach ($docFiles as $doc)
+                                @foreach ($docFiles as $docFille)
                                     @php
                                         $pathFile = '';
                                         $display = 'display: none;';
-                                        foreach ($dmdFiles as $dmd) :
-                                            if ($dmd->file_id == $doc->files->id) {
-                                                $pathFile = '/storage/' . $dmd->path;
+                                        foreach ($dmdFiles as $dmdFile) :
+                                            if ($dmdFile->file_id == $docFille->files->id) {
+                                                $pathFile = '/storage/' . $dmdFile->path;
                                                 $display = 'display: block;';
                                             }
                                         endforeach;
@@ -362,12 +361,12 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6 col-12">
                                             <label class="fw-bolder text-dark fs-6">
-                                                {{ $doc->files->label }} : <span class="text-danger">*</span>
-                                                <a href="/storage/{{ $doc->files->path }}" target="_blank">
+                                                {{ $docFille->files->label }} : <span class="text-danger">*</span>
+                                                <a href="/storage/{{ $docFille->files->path }}" target="_blank">
                                                 (Voir le specimen)
                                                 </a>
                                             </label>
-                                            <input type="file" name="filename[{{ $doc->files->id }}]" class="form-control filename" data-id="{{ $doc->files->id }}" data-label="{{ $doc->files->label }}" accept=".pdf,.png,.jpg,.jpeg" />
+                                            <input type="file" name="filename[{{ $docFille->files->id }}]" class="form-control filename" data-id="{{ $docFille->files->id }}" data-label="{{ $docFille->files->label }}" accept=".pdf,.png,.jpg,.jpeg" />
                                         </div>
                                         <div class="col-md-3 col-12">
                                             <label class="file-view fw-bolder text-dark fs-6 mt-10" style="{{ $display }}">
@@ -395,91 +394,77 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-2 col-12">
-                                    <label class="fs-5">Civilité : <span class="civility fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">Civilité : <span class="civility fw-bold fs-5 text-dark">{{ optional($query->user)->civility }}</span></label>
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->lastname }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->firstname }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Numéro de téléphone : <span class="phone_number fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">Numéro de téléphone : <span class="phone_number fw-bold fs-5 text-dark">+{{ optional($query->user)->phone_code }} {{ optional($query->user)->phone_number }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Email : <span class="email fw-bold fs-5 text-lowercase text-dark"></span></label>
+                                    <label class="fs-5">Email : <span class="email fw-bold fs-5 text-lowercase text-dark">{{ optional($query->user)->email }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
+                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">{{ optional($query->user)->birthday_at->format('d-m-Y') }}</span></label>
                                 </div>
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->birthplace }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">
-                                        Pays de naissance : 
-                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">                                            
-                                        @foreach($country as $data)
-                                            @php echo $data->id == 61 ? $data->country : '' @endphp
-                                        @endforeach
-                                        </span>
-                                </label>
+                                    <label class="fs-5">Pays de naissance : <span class="country_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->country }}</span></label>
                                 </div>
                                 <div class="col-md-6" col-12">
-                                    <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark">{{ $query->user->town->label }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Profession : <span class="profession fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Profession : <span class="profession fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->profession }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">
-                                        Nationalité : 
-                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">
-                                        @foreach($nationality as $data)
-                                            @php echo $data->id == 61 ? $data->nationality : '' @endphp
-                                        @endforeach
-                                        </span>
-                                    </label>
+                                <label class="fs-5">Nationalité : <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->nationality->nationality }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Noms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Noms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->father_fullname }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Noms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Noms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->mother_fullname }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
-                                    <label class="fs-5">Taille : <span class="size fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Taille : <span class="size fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->size }}</span></label>
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fs-5">Teint : <span class="complexion fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Teint : <span class="complexion fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->complexion }}</span></label>
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fs-5">Cheveux : <span class="hairs fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Cheveux : <span class="hairs fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->hairs }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
+                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark">{{ optional($query->user)->arrival_at->format('d-m-Y') }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Signes particuliers : <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Signes particuliers : <span class="particular_sign fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->particular_sign }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
-                                    <label class="fs-5">Domicile : <span class="home_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Domicile : <span class="home_address fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->home_address }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -489,15 +474,15 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nom et prénoms : <span class="person_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Nom et prénoms : <span class="person_fullname fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->person_fullname }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Numéro de téléphone : <span class="person_number fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">Numéro de téléphone : <span class="person_number fw-bold fs-5 text-dark">+{{ optional($query->user)->person_code }} {{ optional($query->user)->person_number }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
-                                    <label class="fs-5">Adresse : <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">Adresse : <span class="person_address fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->person_address }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -510,22 +495,29 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Nombre : <span class="number fw-bold fs-5 text-uppercase text-dark">{{ optional($query->document)->number }}</span></label>
+                                    <label class="fs-5">Nombre de jours : <span class="number fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Montant : <span class="price fw-bold fs-5 text-uppercase text-dark">{{ number_format(optional($query->document)->price, 0, ',', ' ') }}</span></label>
+                                    <label class="fs-5">Montant : <span class="price fw-bold fs-5 text-dark">{{ number_format(optional($query->document)->price, 0, ',', ' ') }}</span></label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Copie : <span class="copy fw-bold fs-5 text-uppercase text-dark">1</span></label>
+                                    <label class="fs-5">Copie : <span class="copy fw-bold fs-5 text-dark">{{ $query->copy }}</span></label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format(optional($query->document)->price, 0, ',', ' ') }}</span></label>
+                                    <label class="fs-5">Total : <span class="total fw-bold fs-5 text-dark">{{ number_format($query->price, 0, ',', ' ') }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>
-                            <div class="files-valid"></div>
+                            <div class="files-valid">
+                                @foreach ($dmdFiles as $dmdFile)
+                                    <div class="mb-2 d-flex align-items-center" data-id="{{ $dmdFile->file_id }}">
+                                        <i class="ki-duotone ki-check following fs-3 me-3"></i> {{ $dmdFile->file->label }} : 
+                                        <a href="{{ asset('storage/' . $dmdFile->path) }}" target="_blank" class="text-primary ms-2">(Voir la pièce jointe)</a>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                         <!--end::Form Wizard Step 4-->
                         <!--begin::Wizard Actions-->
@@ -534,7 +526,7 @@
                                 <button type="button" class="btn btn-light-danger font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Envoyer</button>
+                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Modifier</button>
                                 <button type="button" class="btn btn-primary font-weight-bold px-6 py-3 fs-4 btn-next btn-step" data-step="1">Suivant</button>
                             </div>
                         </div>
@@ -566,20 +558,16 @@
                 // Masquer toutes les étapes
                 $('.body-step1, .body-step2, .body-step3, .body-step4').removeClass('current');
                 $('.header-step1, .header-step2, .header-step3, .header-step4').removeAttr('data-wizard-state');
-
                 // Afficher l'étape cible
                 $('.body-step' + step).addClass('current');
                 $('.header-step' + step).attr('data-wizard-state', 'current');
-
                 // Marquer les étapes précédentes comme "done"
                 for (var i = 1; i < step; i++) {
                     $('.header-step' + i).attr('data-wizard-state', 'done');
                 }
-
                 // Synchroniser le data-step des boutons
                 $('.btn-step').data('step', step).attr('data-step', step);
             }
-
             // ── Aller à l'étape 2 au chargement de la page ──────────────────────────
             goToStep(2);
             $(document).on('click', '.user-item', function (e) {
@@ -604,7 +592,6 @@
                     response => {
                         if (response) {
                             $('#copy').val(1);
-                            $('#codeDoc').val(response.docs.code);
                             $('#number').val(response.docs.number);
                             $('.number').text(response.docs.number);
                             $('#price, #total').val(response.docs.price);
@@ -634,7 +621,8 @@
                                     </label>
                                 </div>
                             </div>`).join(''));
-                            dmdForm();
+                            $('#step3').val(0);
+                            $('.btn-next').addClass('not-active').removeClass('btn-primary');
                         }
                     }
                 );
@@ -807,9 +795,6 @@
             });
             // Supprimer le fichier
             $(document).on('click', '.btn-remove', function() {
-                $('#step3').val(0);
-                $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
                 var parentRow = $(this).closest('.row');
                 var input = parentRow.find('.filename');
                 var docId = input.data('id');
@@ -821,6 +806,13 @@
                 parentRow.find('.file-link').attr('href', '');
                 // supprimer dans la liste
                 $('.files-valid').find('[data-id="'+docId+'"]').remove();
+                // ── Ou compter uniquement ceux qui sont visibles (display: block) ────────────
+                var totalVisible = $('.file-view:visible .btn-remove').length;
+                if (totalVisible == 0) {
+                    $('#step3').val(0);
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
+                }
             });
             // Zone de texte Document
             $(document).on('keyup', '.requiredDmd', function() {

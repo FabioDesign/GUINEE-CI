@@ -524,7 +524,7 @@
                                 <button type="button" class="btn btn-light-danger font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Envoyer</button>
+                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Enregistrer</button>
                                 <button type="button" class="btn btn-primary font-weight-bold px-6 py-3 fs-4 btn-next btn-step" data-step="1">Suivant</button>
                             </div>
                         </div>
@@ -752,7 +752,6 @@
                                     </label>
                                 </div>
                             </div>`).join(''));
-                            dmdForm();
                         }
                     }
                 );
@@ -944,9 +943,6 @@
             });
             // Supprimer le fichier
             $(document).on('click', '.btn-remove', function() {
-                $('#step3').val(0);
-                $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
                 var parentRow = $(this).closest('.row');
                 var input = parentRow.find('.filename');
                 var docId = input.data('id');
@@ -958,6 +954,13 @@
                 parentRow.find('.file-link').attr('href', '');
                 // supprimer dans la liste
                 $('.files-valid').find('[data-id="'+docId+'"]').remove();
+                // ── Ou compter uniquement ceux qui sont visibles (display: block) ────────────
+                var totalVisible = $('.file-view:visible .btn-remove').length;
+                if (totalVisible == 0) {
+                    $('#step3').val(0);
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
+                }
             });
             // Zone de texte Document
             $(document).on('keyup', '.requiredDmd', function() {

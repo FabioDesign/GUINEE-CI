@@ -52,8 +52,8 @@ class DemandController extends Controller
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
 		$prefecture = Town::find(optional($query->user)->town_id);
 		$country = Country::find($prefecture->country_id);
-		$docFiles = Attachment::where('demand_id', $query->id)->get();
-		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'docFiles'));
+		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
+		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles'));
 	}
     //Liste des demandes
 	public function create() {
@@ -231,7 +231,7 @@ class DemandController extends Controller
             Myhelper::logs(
                 Session::get('username'),
                 Session::get('profil'),
-                "Demande consulaire: {$reference}",
+                "Demande consulaire: {$reference} - {$user->lastname} {$user->firstname}",
                 'Ajouter',
                 Session::get('avatar')
             );
@@ -264,44 +264,101 @@ class DemandController extends Controller
 			return redirect('/demands');
 		}
 		// Modal
-		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>
-		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
+		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>';
 		$documents = Document::orderBy('label')->get();
 		$docFiles = DocFile::where('document_id', $query->document_id)->get();
         $civility = ['M.', 'Mme', 'Mlle'];
 		$country = Country::orderBy('country')->get();
 		$nationality = Country::orderBy('nationality')->get();
-		$agency = Agency::where('id', $query->agency_id)->first();
-		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
-		$ville = Town::where('id', optional($query->user)->town_id)->first();
+		$ville = Town::find(optional($query->user)->town_id);
+		$pays = Country::find($ville->country_id);
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
 		$user['phone'] = Country::select('alpha')->where('code', $query->user->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->user->person_code)->first();
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
-		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'civility', 'town', 'documents', 'user', 'agency', 'agencies', 'ville', 'nationality', 'docFiles', 'dmdFiles'));
+		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'pays', 'civility', 'town', 'documents', 'user', 'ville', 'nationality', 'docFiles', 'dmdFiles'));
 	}
 	// Mettre à jour une demande
 	public function update(Request $request, $uuid) {
+		dd($request->all());
         if (!Auth::check()) {
             return 'x';
         }
 		// Validator
 		$validator = Validator::make($request->all(), [
-			'label' => [
+			'civility' => 'required|in:M.,Mme,Mlle',
+			'lastname' => 'required',
+			'firstname' => 'required',
+			'phone_number' => [
 				'required',
-				Rule::unique('demands')->where(function ($query) use ($uuid) {
-					return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
-				}),
+				'numeric',
+                'digits_between:8,15',
 			],
-			'price' => 'required|integer|min:1',
-			'day' => 'required|integer|min:1',
-			'description' => 'required',
+			'email' => [
+				'nullable',
+				'email',
+			],
+			'profession' => 'required',
+			'nationality_id' => 'required|exists:countries,id',
+            'town_id' => 'required|exists:towns,id',
+            'birthday_at' => 'required|date|date_format:Y-m-d',
+            'birthplace' => 'required',
+            'father_fullname' => 'required',
+            'mother_fullname' => 'required',
+            'size' => 'required',
+            'complexion' => 'required',
+            'hairs' => 'required',
+            'particular_sign' => 'required',
+            'home_address' => 'required',
+            'person_fullname' => 'required',
+            'person_number' => 'required',
+            'person_address' => 'required',
+            'arrival_at' => 'required|date|date_format:Y-m-d',
+			'document_id' => 'required|exists:documents,id',
+			'number' => 'required|integer|min:1',
+			'total' => 'required|integer|min:1',
+			'copy' => 'required|integer|min:1',
+			'filename' => 'required|array',
 		], [
-			'label.required' => "Le document est obligatoire.",
-			'label.unique' => "Le document existe déjà dans la base de données.",
-			'price.*' => "Le montant est obligatoire et doit être un entier.",
-			'day.*' => "Le nombre de jours est obligatoire et doit être un entier.",
-			'description.required' => "La description est obligatoire.",
+			'civility.required' => "La civilité est obligatoire.",
+			'civility.in' => "La civilité est incorrecte.",
+			'lastname.required' => "Le nom est obligatoire.",
+			'firstname.required' => "Les prénoms sont obligatoires.",
+			'phone_number.required' => "Le numéro de téléphone est obligatoire.",
+            'phone_number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
+			'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
+            'email.email' => "Adresse e-mail non valide.",
+			'email.unique' => "Adresse e-mail existe déjà dans la base de données.",
+			'profession.required' => "La profession est obligatoire.",
+			'nationality_id.required' => "La nationalité est obligatoire.",
+			'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
+			'birthday_at.required' => "La date de naissance est obligatoire.",
+			'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
+			'town_id.required' => "La prefecture est obligatoire.",
+			'town_id.exists' => "La prefecture n'existe pas dans la base de données.",
+			'birthplace.required' => "Le lieu de naissance est obligatoire.",
+			'father_fullname.required' => "Le nom et prénoms du père est obligatoire.",
+			'mother_fullname.required' => "Le nom et prénoms de la mère est obligatoire.",
+			'size.required' => "La taille est obligatoire.",
+			'complexion.required' => "Le teint est obligatoire.",
+			'hairs.required' => "Les cheveux sont obligatoires.",
+			'particular_sign.required' => "Les Signes particuliers sont obligatoires.",
+			'home_address.required' => "L'adresse domiciliale est obligatoire.",
+			'arrival_at.required' => "La date d'arrivée est obligatoire.",
+			'arrival_at.date_format' => "Le format de la date d'arrivée est incorrecte.",
+			'document_id.required' => "Le document est obligatoire.",
+			'document_id.exists' => "Le document n'existe pas dans la base de données.",
+			'number.required' => "Le numéro est obligatoire.",
+			'number.integer' => "Le numéro doit être un nombre entier.",
+			'number.min' => "Le numéro doit être supérieur à 0.",
+			'total.required' => "Le prix est obligatoire.",
+			'total.integer' => "Le prix doit être un nombre entier.",
+			'total.min' => "Le prix doit être supérieur à 0.",
+			'copy.required' => "Le nombre de copies est obligatoire.",
+			'copy.integer' => "Le nombre de copies doit être un nombre entier.",
+			'copy.min' => "Le nombre de copies doit être supérieur à 0.",
+			'filename.required' => "Les fichiers sont obligatoires.",
+			'filename.array' => "Les fichiers doivent être un tableau.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -311,36 +368,87 @@ class DemandController extends Controller
 				'message' => $validator->errors()->first(),
 			]);
 		}
-		// Vérifier si le document existe
+		// Vérifier si la demande existe
 		$query = Demand::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::update - Aucune document trouvé pour l'uUID : {$uuid}");
+			Log::warning("Demand::update - Aucune demande trouvée pour l'UUID : {$uuid}");
 			return response()->json([
 				'status' => 0,
-				'message' => "Document consulaire non trouvé.",
+				'message' => "Demande non trouvée.",
 			]);
 		}
+        // Gendre
+        $gender = match($request->civility) {
+            'Mme', 'Mlle' => 'F',
+            default => 'M',
+        };
+        // Formatage du nom et prénoms
+		$lastname = Str::upper(Myhelper::valideString($request->lastname, 'UTF-8'));
+		$firstname = Str::upper(Myhelper::valideString($request->firstname, 'UTF-8'));
 		$set = [
-			'day' => $request->day,
-			'price' => $request->price,
-			'description' => $request->description,
-			'label' => Str::upper(Myhelper::valideString($request->label)),
-		];
-		DB::beginTransaction(); // Démarrer une transaction
-		try {
-			// Mettre à jour le document
-			$query->update($set);
+			'civility' => $request->civility,
+			'lastname' => $lastname,
+			'firstname' => $firstname,
+            'gender' => $gender,
+            'phone_code' => $request->phone_code,
+            'phone_number' => $request->phone_number,
+            'email' => Str::lower($request->email) ?? '',
+            'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
+            'nationality_id' => $request->nationality_id,
+            'birthday_at' => $request->birthday_at,
+            'town_id' => $request->town_id,
+            'birthplace' => Str::upper(Myhelper::valideString($request->birthplace),'UTF-8'),
+            'father_fullname' => Str::upper(Myhelper::valideString($request->father_fullname),'UTF-8'),
+            'mother_fullname' => Str::upper(Myhelper::valideString($request->mother_fullname),'UTF-8'),
+            'size' => Str::upper(Myhelper::valideString($request->size),'UTF-8'),
+            'complexion' => Str::upper(Myhelper::valideString($request->complexion),'UTF-8'	),
+            'hairs' => Str::upper(Myhelper::valideString($request->hairs),'UTF-8'),
+            'particular_sign' => Str::upper(Myhelper::valideString($request->particular_sign),'UTF-8'),
+            'home_address' => Str::upper(Myhelper::valideString($request->home_address),'UTF-8'),
+            'person_fullname' => Str::upper(Myhelper::valideString($request->person_fullname),'UTF-8'),
+            'person_code' => $request->person_code,
+            'person_number' => $request->person_number,
+            'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
+            'arrival_at' => $request->arrival_at,
+        ];
+        DB::beginTransaction(); // Démarrer une transaction
+        try {
+            // Création de l'utilisateur
+			$user = $query->user->update($set);
+            // Mettre à jour la demande
+            $set = [
+                'document_id' => $request->document_id,
+                'number' => $request->number,
+                'price' => $request->total,
+                'copy' => $request->copy,
+            ];
+            $query->update($set);
+			// Suppression des fichiers
+			$dmdFiles = Attachment::where('demand_id', $query->id)->get();
+            foreach ($dmdFiles as $dmdFile) {
+                Storage::disk('public')->delete($dmdFile->path);
+                $dmdFile->delete();
+            }
+            // Mettre à jour les fichiers
+            foreach ($request->filename as $file_id => $filename) {
+				$path = $request->file('filename')[$file_id]->store('documents/' . date('Ymd') . '/' . Auth::user()->uuid, 'public');
+				Attachment::create([
+					'demand_id' => $query->id,
+					'file_id' => $file_id,
+					'path' => $path,
+				]);
+			}
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Document consulaire: {$request->label}",
+				"Demande consulaire: {$query->reference}",
 				'Modifier',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Document consulaire modifié avec succès.",
+				'message' => "Demande consulaire modifiée avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
