@@ -11,7 +11,7 @@
           <tr class="fw-bolder fs-6 text-gray-800">
             <th>#</th>
             <th>Pays</th>
-            <th>Agence</th>
+            <th>Consulat</th>
             <th class="text-center w-70">Date</th>
             <th class="text-center">Statut</th>
             <th class="text-center w-170">Action</th>
@@ -32,7 +32,7 @@
             }
             foreach ($query as $data) :
             if (in_array(3, $actionIds)) {
-              $href_edit = "/agencies/{$data->uuid}/edit";
+              $href_edit = "/consulats/{$data->uuid}/edit";
               $color_edit = 'text-warning';
             }
             if ($data->status == 1) {
@@ -55,25 +55,25 @@
             <td class="text-center align-middle">{{ $data->created_at->format('d-m-Y H:i') }}</td>
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>
             <td class="text-end align-middle">
-              <a href="/agencies/{{ $data->uuid }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail de l'agence" class="btn btn-icon btn-bg-light btn-sm me-1">
+              <a href="/consulats/{{ $data->uuid }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail du consulat" class="btn btn-icon btn-bg-light btn-sm me-1">
                 <i class="ki-duotone ki-switch text-primary fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>
               </a>
-              <a href="{{ $href_edit }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier l'agence" class="btn btn-icon btn-bg-light btn-sm me-1">
+              <a href="{{ $href_edit }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier le consulat" class="btn btn-icon btn-bg-light btn-sm me-1">
                 <i class="ki-duotone ki-pencil {{ $color_edit }} fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>
               </a>
-              <a href="#" data-url="/agencies/status/{{ $data->uuid }}" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $action }} l'agence" class="btn btn-icon btn-bg-light btn-sm me-1 {{ $class_status }}">
+              <a href="#" data-url="/consulats/status/{{ $data->uuid }}" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $action }} le consulat" class="btn btn-icon btn-bg-light btn-sm me-1 {{ $class_status }}">
                 <i class="ki-duotone ki-filter {{ $color_status }} fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>
               </a>
-              <a href="#" data-url="/agencies/{{ $data->uuid }}" data-type="DELETE" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimé l'agence" class="btn btn-icon btn-bg-light btn-sm {{ $class_delete }}">
+              <a href="#" data-url="/consulats/{{ $data->uuid }}" data-type="DELETE" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimé le consulat" class="btn btn-icon btn-bg-light btn-sm {{ $class_delete }}">
                 <i class="ki-duotone ki-trash {{ $color_delete }} fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>

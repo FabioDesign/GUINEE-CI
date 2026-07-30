@@ -36,8 +36,8 @@ return new class extends Migration
                     END IF;
 
                     -- UPDATE STATS MENSUELLES
-                    INSERT INTO monthly_stats (years, months, amount, number, paid, free, agency_id, document_id, created_at)
-                    VALUES (v_year, v_month, NEW.price, NEW.copy, v_paids, v_frees, NEW.agency_id, NEW.document_id, NOW())
+                    INSERT INTO monthly_stats (years, months, amount, number, paid, free, consulat_id, document_id, created_at)
+                    VALUES (v_year, v_month, NEW.price, NEW.copy, v_paids, v_frees, NEW.consulat_id, NEW.document_id, NOW())
                     ON DUPLICATE KEY UPDATE
                         amount = amount + NEW.price,
                         number = number + NEW.copy,
@@ -45,8 +45,8 @@ return new class extends Migration
                         free   = free   + v_frees;
 
                     -- UPDATE STATS ANNUELLES
-                    INSERT INTO annual_stats (years, amount, number, paid, free, agency_id, document_id, created_at)
-                    VALUES (v_year, NEW.price, NEW.copy, v_paids, v_frees, NEW.agency_id, NEW.document_id, NOW())
+                    INSERT INTO annual_stats (years, amount, number, paid, free, consulat_id, document_id, created_at)
+                    VALUES (v_year, NEW.price, NEW.copy, v_paids, v_frees, NEW.consulat_id, NEW.document_id, NOW())
                     ON DUPLICATE KEY UPDATE
                         amount = amount + NEW.price,
                         number = number + NEW.copy,

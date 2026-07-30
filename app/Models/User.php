@@ -58,7 +58,7 @@ class User extends Authenticatable
         'town_id',
         'profile_id',
         'embassy_id',
-        'agency_id',
+        'consulat_id',
         'nationality_id',
     ];
 
@@ -102,9 +102,9 @@ class User extends Authenticatable
     public function town() {
         return $this->belongsTo(Town::class, 'town_id');
     }
-    // Relation avec l'Agence
-    public function agency() {
-        return $this->belongsTo(Agency::class, 'agency_id');
+    // Relation avec l'Consulat
+    public function consulat() {
+        return $this->belongsTo(Consulat::class, 'consulat_id');
     }
     // Relation avec l'Ambassade
     public function embassy() {

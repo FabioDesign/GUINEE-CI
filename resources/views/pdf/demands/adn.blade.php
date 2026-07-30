@@ -8,7 +8,7 @@
       {{-- ── Texte introductif ─────────────────────────────────── --}}
       <p style="font-size:12pt; margin-bottom: 20px;text-align: justify;line-height: 1.5;">
         NOUS CONSUL, FONCTIONNAIRE CONSULAIRE DE LA REPUBLIQUE DE GUINEE<br>
-        EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['agency'] }}<br>
+        EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['consulat'] }}<br>
         CERTIFIONS<br>
         SUR LA FOI DES PIECES PRESENTEES ET LES RENSEIGNEMENTS RECUEILLIS<br>
         AUPRES DES TEMOINS MAJEURS REGULIEREMENT DOMICILIES EN COTE ET EN GUINEE,<br>

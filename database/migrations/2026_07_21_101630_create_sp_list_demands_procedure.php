@@ -15,16 +15,16 @@ return new class extends Migration
                 IN p_user_id BIGINT
             )
             BEGIN
-                DECLARE v_role_id     TINYINT;
-                DECLARE v_agency_id   INT;
+                DECLARE v_role_id TINYINT;
+                DECLARE v_consulat_id INT;
 
-                -- Récupérer le role_id et agency_id de l'utilisateur connecté
+                -- Récupérer le role_id et consulat_id de l'utilisateur connecté
                 SELECT
                     p.role_id,
-                    u.agency_id
+                    u.consulat_id
                 INTO
                     v_role_id,
-                    v_agency_id
+                    v_consulat_id
                 FROM users u
                 INNER JOIN profiles p ON p.id = u.profile_id
                 WHERE u.id = p_user_id
@@ -51,7 +51,7 @@ return new class extends Migration
                     WHERE dmd.deleted_at IS NULL
                     ORDER BY dmd.created_at DESC;
 
-                -- role_id = 2 : Coordonnateur → même agence sauf status = 0
+                -- role_id = 2 : Coordonnateur → même consulat sauf status = 0
                 ELSEIF v_role_id = 2 THEN
                     SELECT
                         dmd.uuid,
@@ -69,11 +69,11 @@ return new class extends Migration
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
                     WHERE dmd.deleted_at IS NULL
-                      AND dmd.agency_id = v_agency_id
+                      AND dmd.consulat_id = v_consulat_id
                       AND dmd.status != 0
                     ORDER BY dmd.created_at DESC;
 
-                -- role_id = 3 : Opérateur → même agence + ses propres brouillons
+                -- role_id = 3 : Opérateur → même consulat + ses propres brouillons
                 ELSEIF v_role_id = 3 THEN
                     SELECT
                         dmd.uuid,
@@ -91,7 +91,7 @@ return new class extends Migration
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
                     WHERE dmd.deleted_at IS NULL
-                      AND dmd.agency_id = v_agency_id
+                      AND dmd.consulat_id = v_consulat_id
                       AND (
                           dmd.status != 0
                           OR (dmd.status = 0 AND dmd.created_by = p_user_id)

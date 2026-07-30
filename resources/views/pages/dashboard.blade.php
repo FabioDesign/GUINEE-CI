@@ -5,7 +5,7 @@
     <div class="card-body py-4">
         <div class="row mb-5">
             <div class="col-md-3 col-12">
-                <label class="fw-bolder text-dark fs-5">Document : <span class="text-danger">*</span></label>
+                <label class="fw-bolder text-dark fs-5">Documents : <span class="text-danger">*</span></label>
                 <select id="documents" class="form-select">
                     <option value="" selected>Tous les documents</option>
                     @foreach($documents as $data)
@@ -48,8 +48,8 @@
             <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
-                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
-                        <span>Tous les paiements</span>
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Tous les paiements</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -71,8 +71,8 @@
             <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
-                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
-                        <span>Toutes les demandes</span>
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Toutes les demandes</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -94,8 +94,8 @@
             <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
-                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
-                        <span>Demandes payées</span>
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Demandes payées</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -117,8 +117,8 @@
             <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
-                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
-                        <span>Demandes gratuites</span>
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Demandes gratuites</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>

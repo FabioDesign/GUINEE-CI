@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'created_by' => 1,
                 'activated_by' => 1,
                 'town_id' => 2,
-                'agency_id' => 1,
+                'consulat_id' => 1,
                 'profile_id' => 1,
                 'embassy_id' => 41,
                 'nationality_id' => 41,

@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body py-4">
         <form class="formField">
-            <input type="hidden" id="rootForm" value="agencies">
+            <input type="hidden" id="rootForm" value="consulats">
             <div class="row mb-2">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
@@ -20,8 +20,8 @@
 					</select>
                 </div>
                 <div class="col-md-6 col-12">
-                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
-                    <input type="text" name="label" class="form-control requiredField" placeholder="Saisir l'agence" />
+                    <label class="fw-bolder text-dark fs-5">Consulat : <span class="text-danger">*</span></label>
+                    <input type="text" name="label" class="form-control requiredField" placeholder="Saisir le consulat" />
                 </div>
             </div>
             <span class="msgError" style="display: none;"></span>

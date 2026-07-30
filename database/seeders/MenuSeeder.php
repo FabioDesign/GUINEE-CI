@@ -54,10 +54,10 @@ class MenuSeeder extends Seeder
             ]
         );
         Menu::firstOrCreate(
-            ['label' => "Agences"],
+            ['label' => "Consulats"],
             [
                 'icone' => "ki-call",
-                'target' => "agencies",
+                'target' => "consulats",
                 'position' => 6,
             ]
         );

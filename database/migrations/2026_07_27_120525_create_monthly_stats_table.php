@@ -21,9 +21,9 @@ return new class extends Migration
             $table->decimal('free', 10, 0)->default(0);
             $table->datetime('created_at');
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->foreignId('agency_id');
+            $table->foreignId('consulat_id');
             $table->foreignId('document_id');
-            $table->unique(['agency_id', 'document_id', 'months', 'years']);
+            $table->unique(['consulat_id', 'document_id', 'months', 'years']);
         });
     }
 

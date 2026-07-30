@@ -103,16 +103,16 @@
                     <select id="embassy_id" name="embassy_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
 						@foreach($embassy as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $agency->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $consulat->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
 						@endforeach
 					</select>
                 </div>
                 <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
-                    <select id="agency_id" name="agency_id" class="form-control">
+                    <label class="fw-bolder text-dark fs-5">Consulat : <span class="text-danger">*</span></label>
+                    <select id="consulat_id" name="consulat_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
-						@foreach($agencies as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->agency_id ? 'selected':'' @endphp>{{ $data->label }}</option>
+						@foreach($consulats as $data)
+							<option value="{{ $data->id }}" @php echo $data->id == $query->consulat_id ? 'selected':'' @endphp>{{ $data->label }}</option>
 						@endforeach
 					</select>
                 </div>

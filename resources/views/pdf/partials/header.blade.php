@@ -18,7 +18,7 @@
       ----------------<br>
       <strong>
         AMBASSADE DE LA REPUBLIQUE DE GUINEE<br>
-        EN COTE D'IVOIRE - {{ $dataPDF['agency'] }}
+        EN COTE D'IVOIRE - {{ $dataPDF['consulat'] }}
       </strong><br>
       ----------------
     </td>

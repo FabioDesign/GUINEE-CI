@@ -13,7 +13,7 @@ return new class extends Migration
         // ── 2. Créer la procédure ──────────────────────────────────────────────
         DB::unprepared("
             CREATE PROCEDURE sp_get_stats_data(
-                IN p_agency_id INT,
+                IN p_consulat_id INT,
                 IN p_document_id INT,
                 IN p_years INT,
                 IN p_months INT,
@@ -41,7 +41,7 @@ return new class extends Migration
                         v_paid,
                         v_free
                     FROM demands
-                    WHERE agency_id = p_agency_id
+                    WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id)
                     AND validated_at LIKE CONCAT(p_years, '-', p_months, '-', p_days, '%')
                     AND status = 2;
@@ -62,13 +62,33 @@ return new class extends Migration
                         v_paid,
                         v_free
                     FROM monthly_stats
-                    WHERE agency_id = p_agency_id
+                    WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id)
                     AND years = p_years
                     AND months = p_months;
 
                 /* =========================
                 CAS ANNUEL
+                ========================== */
+                ELSEIF p_years IS NOT NULL THEN
+
+                    SELECT 
+                        COALESCE(SUM(amount), 0),
+                        COALESCE(SUM(number), 0),
+                        COALESCE(SUM(paid), 0),
+                        COALESCE(SUM(free), 0)
+                    INTO
+                        v_amount,
+                        v_number,
+                        v_paid,
+                        v_free
+                    FROM annual_stats
+                    WHERE consulat_id = p_consulat_id
+                    AND (p_document_id IS NULL OR document_id = p_document_id)
+                    AND years = p_years;
+
+                /* =========================
+                CAS TOUTES LES DONNEES
                 ========================== */
                 ELSE
 
@@ -83,9 +103,8 @@ return new class extends Migration
                         v_paid,
                         v_free
                     FROM annual_stats
-                    WHERE agency_id = p_agency_id
-                    AND (p_document_id IS NULL OR document_id = p_document_id)
-                    AND years = p_years;
+                    WHERE consulat_id = p_consulat_id
+                    AND (p_document_id IS NULL OR document_id = p_document_id);
 
                 END IF;
 

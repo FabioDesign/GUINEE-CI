@@ -68,10 +68,10 @@
 					</select>
                 </div>
                 <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Agence : <span class="text-danger">*</span></label>
-                    <select id="agency_id" name="agency_id" class="form-control">
+                    <label class="fw-bolder text-dark fs-5">Consulat : <span class="text-danger">*</span></label>
+                    <select id="consulat_id" name="consulat_id" class="form-control">
 						<option value="" selected>Sélectionner</option>
-						@foreach($agency as $data)
+						@foreach($consulat as $data)
 							<option value="{{ $data->id }}">{{ $data->label }}</option>
 						@endforeach
 					</select>

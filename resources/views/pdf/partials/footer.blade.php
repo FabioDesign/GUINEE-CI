@@ -10,7 +10,7 @@
     {{-- Bloc signature --}}
     <td width="35%" style="text-align:center; vertical-align:middle;">
       <div style="margin-bottom: 5px;">
-        Fait à {{ $dataPDF['agency'] }}, le {{ $dataPDF['validated_at'] }}
+        Fait à {{ $dataPDF['consulat'] }}, le {{ $dataPDF['validated_at'] }}
       </div>
       <div style="font-weight:bold;">LE CONSUL</div>
       {{-- Cachet + Signature côte à côte (sans position absolute) --}}

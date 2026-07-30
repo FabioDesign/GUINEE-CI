@@ -213,13 +213,18 @@
                                     <input type="text" id="profession" name="profession" class="form-control requiredUser" placeholder="Saisir profession" data-valid="0" value="{{ old('profession', optional($query->user)->profession) }}" />
                                 </div>
                             </div>
+                            <div class="row mt-5 mb-2">
+                                <div class="col-md-12 col-12">
+                                    <label class="fw-bolder text-dark fs-4">Informations naissances :</label>
+                                </div>
+                            </div>
                             <div class="row mb-5">
                                 <div class="col-md-3" col-12">
-                                    <label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Date : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly value="{{ old('birthday_at', optional($query->user)->birthday_at) }}">
                                 </div>
                                 <div class="col-md-3" col-12">
-                                    <label class="fw-bolder text-dark fs-5">Pays de naissance : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
                                     <select id="country_id" name="country_id" class="form-control">
                                         <option value="" selected>Sélectionner</option>
                                         @foreach($country as $data)
@@ -228,7 +233,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3" col-12">
-                                    <label class="fw-bolder text-dark fs-5">Préfecture de naissance : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Préfecture : <span class="text-danger">*</span></label>
                                     <select id="town_id" name="town_id" class="form-control requiredUser" data-valid="0">
                                         <option value="" selected>Sélectionner</option>
                                         @foreach($town as $data)
@@ -237,7 +242,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3" col-12">
-                                    <label class="fw-bolder text-dark fs-5">Lieu de naissance : <span class="text-danger">*</span></label>
+                                    <label class="fw-bolder text-dark fs-5">Lieu : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthplace" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="0" value="{{ old('birthplace', optional($query->user)->birthplace) }}" />
                                 </div>
                             </div>
@@ -288,7 +293,7 @@
                                     <input type="text" id="arrival_at" name="arrival_at" class="form-control date_at" readonly value="{{ old('arrival_at', optional($query->user)->arrival_at) }}">
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mt-5 mb-2">
                                 <div class="col-md-12 col-12">
                                     <label class="fw-bolder text-dark fs-4">Personne à prévenir :</label>
                                 </div>

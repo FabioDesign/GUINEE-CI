@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreignId('retrieved_by')->nullable();
             $table->timestamp('delivered_at')->nullable();
             $table->foreignId('user_id');
-            $table->foreignId('agency_id');
+            $table->foreignId('consulat_id');
             $table->foreignId('document_id');
         });
     }

@@ -6,7 +6,7 @@ use Session;
 use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{Agency, Demand, Document, File, Profile, Town, User};
+use App\Models\{Consulat, Demand, Document, File, Profile, Town, User};
 
 class StatusController extends Controller
 {
@@ -17,9 +17,9 @@ class StatusController extends Controller
         try {
             // 🔁 Mapping dynamique
             $models = [
-                'agencies' => [
-                    'model' => Agency::class,
-                    'label' => 'Agence'
+                'consulats' => [
+                    'model' => Consulat::class,
+                    'label' => 'Consulat'
                 ],
                 'demands' => [
                     'model' => Demand::class,

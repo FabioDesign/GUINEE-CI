@@ -7,52 +7,52 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\{Agency, Country, User};
+use App\Models\{Consulat, Country, User};
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 
-class AgencyController extends Controller
+class ConsulatController extends Controller
 {
-    // Liste des Agences
+    // Liste des Consulats
 	public function index() {
         if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
-		$title = 'Gestion des Agences';
+		$title = 'Gestion des Consulats';
 		// Menu
-		$currentMenu = 'agencies';
+		$currentMenu = 'consulats';
 		// Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 6);
-		$addmodal = in_array(2, $actionIds) ? '<a href="/agencies/create" class="btn btn-sm fw-bold btn-primary">Ajouter une agence</a>':'';
+		$addmodal = in_array(2, $actionIds) ? '<a href="/consulats/create" class="btn btn-sm fw-bold btn-primary">Ajouter un consulat</a>':'';
 		// Requete Read
-		$query = Agency::select('uuid', 'label', 'status', 'created_at', 'country_id')
+		$query = Consulat::select('uuid', 'label', 'status', 'created_at', 'country_id')
         ->orderByDesc('created_at')->get();
 		Myhelper::logs(
 			Session::get('username'),
 			Session::get('profil'),
-			"Agence: Liste",
+			"Consulat: Liste",
 			'Consulter',
 			Session::get('avatar')
 		);
-		return view('pages.agencies.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
+		return view('pages.consulats.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
-    // Liste des agences
+    // Liste des consulats
 	public function create() {
         if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
-		$title = "Ajout d'une agence";
+		$title = "Ajout d'un consulat";
 		// Menu
-		$currentMenu = 'agencies';
+		$currentMenu = 'consulats';
 		// Modal
-		$addmodal = '<a href="/agencies" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		$addmodal = '<a href="/consulats" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
 		// Requete Read
 		$query = Country::orderBy('country')->get();
-		return view('pages.agencies.create', compact('title', 'currentMenu', 'addmodal', 'query'));
+		return view('pages.consulats.create', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
-	// Add agence
+	// Add consulat
 	public function store(Request $request) {
         if (!Auth::check()) {
             return 'x';
@@ -61,20 +61,20 @@ class AgencyController extends Controller
 		$validator = Validator::make($request->all(), [
 			'label' => [
 				'required',
-				Rule::unique('agencies')->where(function ($query) {
+				Rule::unique('consulats')->where(function ($query) {
 					return $query->whereNull('deleted_at');
 				}),
 			],
 			'country_id' => 'required|exists:countries,id',
 		], [
-			'label.required' => "L'agence est obligatoire.",
-			'label.unique' => "L'agence existe déjà dans la base de données.",
+			'label.required' => "Le consulat est obligatoire.",
+			'label.unique' => "Le consulat existe déjà dans la base de données.",
 			'country_id.required' => "Le pays est obligatoire.",
 			'country_id.exists' => "Le pays n'existe pas dans la base de données.",
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Agency::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Consulat::store - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
@@ -87,8 +87,8 @@ class AgencyController extends Controller
 				['id' => $request->country_id],
 				['embassy' => 1]
 			);
-			// Enregistrer l'agence
-			Agency::create([
+			// Enregistrer le consulat
+			Consulat::create([
 				'country_id' => $request->country_id,
 				'label' => Str::upper(Myhelper::valideString($request->label)),
 			]);
@@ -96,75 +96,75 @@ class AgencyController extends Controller
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Agence: {$request->label}",
+				"Consulat: {$request->label}",
 				'Ajouter',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Agence enregistrée avec succès.",
+				'message' => "Consulat enregistré avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Agency::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Consulat::store - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de l'enregistrement.",
 			]);
 		}
 	}
-	// Afficher le formulaire d'édition d'une agence
+	// Afficher le formulaire d'édition d'un consulat
 	public function edit($uuid) {
         if (!Auth::check()) {
             return redirect('/');
         }
 		// Title
-		$title = "Modification de l'agence";
+		$title = "Modification du consulat";
 		// Menu
-		$currentMenu = 'agencies';
-		// Vérifier si l'agence existe
-		$query = Agency::where('uuid', $uuid)->first();
+		$currentMenu = 'consulats';
+		// Vérifier si le consulat existe
+		$query = Consulat::where('uuid', $uuid)->first();
 		if (!$query) {
-			Log::warning("Agency::edit - Aucune agence trouvée pour l'UUID : {$uuid}");
-			return redirect('/agencies');
+			Log::warning("Consulat::edit - Aucun consulat trouvé pour l'UUID : {$uuid}");
+			return redirect('/consulats');
 		}
 		// Modal
-		$addmodal = '<a href="/agencies" class="btn btn-sm fw-bold btn-danger">Retour</a>
+		$addmodal = '<a href="/consulats" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
 		// Requete Read
 		$list = Country::orderBy('country')->get();
-		return view('pages.agencies.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'list'));
+		return view('pages.consulats.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'list'));
 	}
-	// Mettre à jour une agence
+	// Mettre à jour un consulat
 	public function update(Request $request, $uuid) {
         if (!Auth::check()) {
             return 'x';
         }
         try {
-			// Vérifier si le agence existe
-			$agency = Agency::where('uuid', $uuid)->first();
-			if (!$agency) {
-				Log::warning("Agency::update - Aucune agence trouvée pour l'UUID : {$uuid}");
+			// Vérifier si le consulat existe
+			$consulat = Consulat::where('uuid', $uuid)->first();
+			if (!$consulat) {
+				Log::warning("Consulat::update - Aucun consulat trouvé pour l'UUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
-					'message' => "Agence non trouvée.",
+					'message' => "Consulat non trouvé.",
 				]);
 			}
 			// Validator
 			$validator = Validator::make($request->all(), [
 				'label' => [
 					'required',
-					Rule::unique('agencies')->where(function ($query) use ($uuid) {
+					Rule::unique('consulats')->where(function ($query) use ($uuid) {
 						return $query->where('uuid', '!=', $uuid)->whereNull('deleted_at');
 					}),
 				],
 			], [
-				'label.required' => "L'agence est obligatoire.",
-				'label.unique' => "L'agence existe déjà dans la base de données.",
+				'label.required' => "Le consulat est obligatoire.",
+				'label.unique' => "Le consulat existe déjà dans la base de données.",
 			]);
 			// Error field
 			if ($validator->fails()) {
-				Log::warning("Agency::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+				Log::warning("Consulat::update - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 				return response()->json([
 					'status' => 0,
 					'message' => $validator->errors()->first(),
@@ -172,80 +172,80 @@ class AgencyController extends Controller
 			}
 			$label = Str::upper(Myhelper::valideString($request->label));
 			DB::beginTransaction(); // Démarrer une transaction
-			// Mettre à jour l'agence
-			$agency->update([
+			// Mettre à jour le consulat
+			$consulat->update([
 				'label' => $label,
 			]);
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Agence: {$label}",
+				"Consulat: {$label}",
 				'Modifier',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Agence modifiée avec succès.",
+				'message' => "Consulat modifié avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Agency::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Consulat::update - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de la modification.",
 			]);
 		}
 	}
-	// Supprimer une agence
+	// Supprimer un consulat
 	public function destroy($uuid) {
         if (!Auth::check()) {
             return 'x';
         }
 		try {
-			// Vérifier si l'agence existe
-			$agency = Agency::where('uuid', $uuid)->first();
-			if (!$agency) {
-				Log::warning("Agency::destroy - Aucune agence trouvée pour l'UUID : {$uuid}");
+			// Vérifier si le consulat existe
+			$consulat = Consulat::where('uuid', $uuid)->first();
+			if (!$consulat) {
+				Log::warning("Consulat::destroy - Aucun consulat trouvé pour l'UUID : {$uuid}");
 				return response()->json([
 					'status' => 0,
-					'message' => "Agence non trouvée.",
+					'message' => "Consulat non trouvé.",
 				]);
 			}
 			// Vérifier si des utilisateurs sont associés
-			$agencyCount = User::where('agency_id', $agency->id)->count();
-			if ($agencyCount > 0) {
-				Log::warning("Agency::destroy - Cette agence est associée à {$agencyCount} utilisateur(s).");
+			$consulatCount = User::where('consulat_id', $consulat->id)->count();
+			if ($consulatCount > 0) {
+				Log::warning("Consulat::destroy - Cet consulat est associé à {$consulatCount} utilisateur(s).");
 				return response()->json([
 					'status' => 0,
-					'message' => "Cette agence est associée à {$agencyCount} utilisateur(s).",
+					'message' => "Cet consulat est associé à {$consulatCount} utilisateur(s).",
 				]);
 			}
 			DB::beginTransaction();
-			// Supprimer l'agence
-			$agency->delete();
+			// Supprimer le consulat
+			$consulat->delete();
 			DB::commit();
 			Myhelper::logs(
 				Session::get('username'),
 				Session::get('profil'),
-				"Agence: " . $agency->label,
+				"Consulat: " . $consulat->label,
 				'Supprimer',
 				Session::get('avatar')
 			);
 			return response()->json([
 				'status' => 1,
-				'message' => "Agence supprimée avec succès.",
+				'message' => "Consulat supprimé avec succès.",
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack();
-			Log::warning("Agency::destroy - Erreur : {$e->getMessage()}");
+			Log::warning("Consulat::destroy - Erreur : {$e->getMessage()}");
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de la suppression.",
 			]);
 		}
 	}
-	// Add agence
+	// Add consulat
 	public function list(Request $request) {
         if (!Auth::check()) {
             return 'x';
@@ -259,27 +259,27 @@ class AgencyController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Agency::list - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Consulat::list - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
 			]);
 		}
 		try {
-			$agency = Agency::select('id', 'label')
+			$consulat = Consulat::select('id', 'label')
 			->where('country_id', $request->country_id)
 			->orderBy('label')
 			->get();
 			return response()->json([
 				'status' => 1,
-				'message' => "Agences chargées avec succès.",
-				'data' => $agency,
+				'message' => "Consulats chargés avec succès.",
+				'data' => $consulat,
 			]);
 		} catch (\Exception $e) {
-			Log::warning("Agency::list : {$e->getMessage()}");
+			Log::warning("Consulat::list : {$e->getMessage()}");
 			return response()->json([
 				'status' => 0,
-				'message' => "Erreur lors de l'affichage des agences.",
+				'message' => "Erreur lors de l'affichage des consulats.",
 			]);
 		}
 	}

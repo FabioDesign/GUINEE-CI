@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Auth,DB, Hash, Log, Validator};
-use App\Models\{Agency, Country, Document, Logs, Consulardoc, Permission, Profile, Town, User};
+use App\Models\{Consulat, Country, Document, Logs, Consulardoc, Permission, Profile, Town, User};
 
 class UserController extends Controller
 {
@@ -74,12 +74,12 @@ class UserController extends Controller
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
 		$country = Country::orderBy('country')->get();
-		$agency = Agency::where('country_id', 41)->orderBy('label')->get();
+		$consulat = Consulat::where('country_id', 41)->orderBy('label')->get();
 		$nationality = Country::orderBy('nationality')->get();
 		$town = Town::where('country_id', 61)->orderBy('label')->get();
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
-		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency'));
+		return view('pages.users.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'consulat'));
 	}
     // Account creation
     public function store(Request $request) {
@@ -107,7 +107,7 @@ class UserController extends Controller
             'profile_id' => 'required|exists:profiles,id',
 			'nationality_id' => 'required|exists:countries,id',
             'embassy_id' => 'required|exists:countries,id',
-            'agency_id' => 'required|exists:agencies,id',
+            'consulat_id' => 'required|exists:consulats,id',
             'town_id' => 'required|exists:towns,id',
             'birthday_at' => 'required|date|date_format:Y-m-d',
             'birthplace' => 'required',
@@ -145,8 +145,8 @@ class UserController extends Controller
             'profile_id.exists' => "Le profil n'existe pas dans la base de données.",
             'embassy_id.required' => "L'ambassade est obligatoire.",
             'embassy_id.exists' => "L'ambassade n'existe pas dans la base de données.",
-            'agency_id.required' => "L'agence est obligatoire.",
-            'agency_id.exists' => "L'agence n'existe pas dans la base de données.",
+            'consulat_id.required' => "Le consulat est obligatoire.",
+            'consulat_id.exists' => "Le consulat n'existe pas dans la base de données.",
 			'nationality_id.required' => "La nationalité est obligatoire.",
 			'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
 			'birthday_at.required' => "La date de naissance est obligatoire.",
@@ -203,7 +203,7 @@ class UserController extends Controller
             'profession' => Str::upper(Myhelper::valideString($request->profession),'UTF-8'),
             'profile_id' => $request->profile_id,
             'embassy_id' => $request->embassy_id,
-            'agency_id' => $request->agency_id,
+            'consulat_id' => $request->consulat_id,
             'nationality_id' => $request->nationality_id,
             'birthday_at' => $request->birthday_at,
             'town_id' => $request->town_id,
@@ -271,15 +271,15 @@ class UserController extends Controller
         $civility = ['M.', 'Mme', 'Mlle'];
 		$country = Country::orderBy('country')->get();
 		$nationality = Country::orderBy('nationality')->get();
-		$agency = Agency::where('id', $query->agency_id)->first();
-		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
+		$consulat = Consulat::where('id', $query->consulat_id)->first();
+		$consulats = Consulat::where('country_id', $consulat->country_id)->orderBy('label')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
 		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
-		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies', 'user'));
+		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'consulat', 'consulats', 'user'));
 	}
     // Modification
     public function update(Request $request, $uuid) {
@@ -323,7 +323,7 @@ class UserController extends Controller
                 'profile_id' => 'required|exists:profiles,id',
                 'nationality_id' => 'required|exists:countries,id',
                 'embassy_id' => 'required|exists:countries,id',
-                'agency_id' => 'required|exists:agencies,id',
+                'consulat_id' => 'required|exists:consulats,id',
                 'town_id' => 'required|exists:towns,id',
                 'birthday_at' => 'required|date|date_format:Y-m-d',
                 'birthplace' => 'required',
@@ -362,8 +362,8 @@ class UserController extends Controller
                 'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
                 'embassy_id.required' => "L'ambassade est obligatoire.",
                 'embassy_id.exists' => "L'ambassade n'existe pas dans la base de données.",
-                'agency_id.required' => "L'agence est obligatoire.",
-                'agency_id.exists' => "L'agence n'existe pas dans la base de données.",
+                'consulat_id.required' => "Le consulat est obligatoire.",
+                'consulat_id.exists' => "Le consulat n'existe pas dans la base de données.",
                 'birthday_at.required' => "La date de naissance est obligatoire.",
                 'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
                 'town_id.required' => "La prefecture est obligatoire.",
@@ -416,7 +416,7 @@ class UserController extends Controller
                 'profile_id' => $request->profile_id,
                 'nationality_id' => $request->nationality_id,
                 'embassy_id' => $request->embassy_id,
-                'agency_id' => $request->agency_id,
+                'consulat_id' => $request->consulat_id,
                 'birthday_at' => $request->birthday_at,
                 'town_id' => $request->town_id,
                 'birthplace' => Str::upper(Myhelper::valideString($request->birthplace),'UTF-8'),
@@ -563,15 +563,15 @@ class UserController extends Controller
         $query->avatar = $query->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 		$country = Country::orderBy('country')->get();
 		$nationality = Country::orderBy('nationality')->get();
-		$agency = Agency::where('id', $query->agency_id)->first();
-		$agencies = Agency::where('country_id', $agency->country_id)->orderBy('label')->get();
+		$consulat = Consulat::where('id', $query->consulat_id)->first();
+		$consulats = Consulat::where('country_id', $consulat->country_id)->orderBy('label')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$town = Town::where('country_id', $ville->country_id)->orderBy('label')->get();
 		$embassy = Country::where('embassy', 1)->orderBy('country')->get();
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
 		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
-		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'agency', 'agencies', 'user'));
+		return view('pages.users.account', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'consulat', 'consulats', 'user'));
 	}
 	// Récupérer un utilisateur
 	public function getUsers($id) {
@@ -734,10 +734,10 @@ class UserController extends Controller
             $page = $menus->first()->target ?? '/';
             // Stocker des informations supplémentaires en session
             Session::put('username', $username);
-            Session::put('agency', $user->agency_id);
+            Session::put('consulat', $user->consulat_id);
             Session::put('profil', $user->profile->label ?? '');
             Session::put('role', $user->profile->role_id ?? '');
-            Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->agency->label ?? '','UTF-8');
+            Session::put('embassy', Str::upper($user->embassy->country ?? '') . ' - ' . $user->consulat->label ?? '','UTF-8');
             Session::put('map', $user->embassy->alpha ?? '');
             Session::put('menus', $menus);
             // Avatar

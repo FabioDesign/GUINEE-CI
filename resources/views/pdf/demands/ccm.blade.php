@@ -9,7 +9,7 @@
   <tr>
     <td style="text-align:center; padding:10px 0;">
       L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE<br>
-      COTE D'IVOIRE - {{ strtoupper($dataPDF['agency'] ?? 'ABIDJAN') }},<br><br>
+      COTE D'IVOIRE - {{ strtoupper($dataPDF['consulat'] ?? 'ABIDJAN') }},<br><br>
       <strong>CERTIFIE</strong>
     </td>
   </tr>

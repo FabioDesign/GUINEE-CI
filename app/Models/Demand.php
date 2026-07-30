@@ -47,9 +47,9 @@ class Demand extends Model
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
-    // Relation avec l'agence
-    public function agency() {
-        return $this->belongsTo(Agency::class, 'agency_id');
+    // Relation avec le consulat
+    public function consulat() {
+        return $this->belongsTo(Consulat::class, 'consulat_id');
     }
   // Reference
   public static function reference(string $codeDoc, string $birthday_at): ?string {
@@ -94,7 +94,7 @@ class Demand extends Model
       $dataPDF = [
         'reference' => $query->reference,
         'document' => optional($query->document)->label,
-        'agency' => optional($query->agency)->label,
+        'consulat' => optional($query->consulat)->label,
         'sex' => optional($query->user)->gender,
         'gender' => optional($query->user)->gender == 'M' ? 'MASCULIN' : 'FÉMININ',
         'civility' => optional($query->user)->civility,
@@ -121,7 +121,7 @@ class Demand extends Model
         $uuid,
         $dataPDF['reference'],
         $dataPDF['document'],
-        $dataPDF['agency'],
+        $dataPDF['consulat'],
         $dataPDF['consul'],
         $dataPDF['validated_at'],
       ]);

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Agency;
+use App\Models\Consulat;
 use Illuminate\Database\Seeder;
 
-class AgencySeeder extends Seeder
+class ConsulatSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,14 +13,14 @@ class AgencySeeder extends Seeder
      * @return void
      */
     public function run() {
-        Agency::firstOrCreate(
+        Consulat::firstOrCreate(
             [
                 'label' => "ABIDJAN",
                 'country_id' => 41,
                 'created_by' => 1,
             ]
         );
-        Agency::firstOrCreate(
+        Consulat::firstOrCreate(
             [
                 'label' => "BOUAKE",
                 'country_id' => 41,

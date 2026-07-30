@@ -334,7 +334,7 @@ class DocumentController extends Controller
 			return 'x';
 		}
 		$query = DB::select('CALL sp_chart_documents_procedure(?, ?)',[
-			Auth::user()->agency_id,
+			Auth::user()->consulat_id,
 			$request->docyears,
 		]);
 		$dataDoc = $dataNum = [];

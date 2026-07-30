@@ -13,32 +13,35 @@ class ActionSeeder extends Seeder
      * @return void
      */
     public function run() {
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Voir"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Ajouter"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Modifier"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Supprimer"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Activer/Désactiver"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Transmettre"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Valider"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Rejeter"]
         );
-        Action::firstOrCreate(
+        Action::updateOrCreate(
             ['label' => "Imprimer"]
+        );
+        Action::updateOrCreate(
+            ['label' => "Récupérer"]
         );
     }
 }

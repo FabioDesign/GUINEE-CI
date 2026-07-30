@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
-use App\Models\{Agency, Attachment, Country, Demand, DocFile, Document, File, Profile, Town, User};
+use App\Models\{Consulat, Attachment, Country, Demand, DocFile, Document, File, Profile, Town, User};
 
 class DemandController extends Controller
 {
@@ -214,7 +214,7 @@ class DemandController extends Controller
                 'price' => $request->total,
                 'copy' => $request->copy,
                 'user_id' => $user->id,
-				'agency_id' => Auth::user()->agency_id,
+				'consulat_id' => Auth::user()->consulat_id,
             ];
             $demand = Demand::create($set);
             // Création des fichiers
@@ -540,7 +540,7 @@ class DemandController extends Controller
             return 'x';
         }
 		//Requete Read
-		$query = DB::select("CALL sp_list_demands(?)", [Auth::id()]);
+		$query = DB::select('CALL sp_list_demands(?)', [Auth::id()]);
 		// Transformer les données
 		$demands = collect($query)->map(fn($data) => [
 			'uuid' => $data->uuid,

@@ -21,14 +21,14 @@ class DashboardController extends Controller
 		$currentMenu = 'dashboard';
 		// Requête Read
 		$years = AnnualStat::select('years')
-		->where('agency_id', Auth::user()->agency_id)
+		->where('consulat_id', Auth::user()->consulat_id)
 		->orderBy('years', 'desc')
 		->distinct()
 		->get();
 		// Documents
 		$documents = Demand::select('document_id')
 		->join('documents', 'documents.id', '=', 'demands.document_id')
-		->where('agency_id', Auth::user()->agency_id)
+		->where('consulat_id', Auth::user()->consulat_id)
 		->where('demands.status', 2)
 		->orderBy('documents.label')
 		->distinct()
@@ -53,7 +53,7 @@ class DashboardController extends Controller
 		//Requete Read
 		$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?, ?)",
 		[
-			Auth::user()->agency_id,
+			Auth::user()->consulat_id,
 			$request->documents,
 			$request->years,
 			$request->months,
@@ -64,7 +64,6 @@ class DashboardController extends Controller
 			'number' => $query[0]->number,
 			'paid' => $query[0]->paid,
 			'free' => $query[0]->free,
-			'type' => $query[0]->type,
 		];
 		return response()->json([
 			'status' => 1,
@@ -77,7 +76,7 @@ class DashboardController extends Controller
             return 'x';
         }
 		$months = MonthlyStat::select('months')
-		->where('agency_id', Auth::user()->agency_id)
+		->where('consulat_id', Auth::user()->consulat_id)
 		->when($request->documents, function ($query, $documents) {
 			return $query->whereIn('document_id', $documents);
 		})
@@ -97,7 +96,7 @@ class DashboardController extends Controller
 		}
 		$month = str_pad($request->months, 2, '0', STR_PAD_LEFT);
 		$days = Demand::select('validated_at')
-		->where('agency_id', Auth::user()->agency_id)
+		->where('consulat_id', Auth::user()->consulat_id)
 		->when($request->documents, function ($query, $documents) {
 			return $query->whereIn('document_id', $documents);
 		})

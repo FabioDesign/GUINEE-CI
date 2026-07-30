@@ -12,7 +12,7 @@ return new class extends Migration
     {
         DB::unprepared("
             CREATE PROCEDURE sp_chart_documents_procedure(
-                IN p_agency_id BIGINT,
+                IN p_consulat_id BIGINT,
                 IN p_years YEAR
             )
             BEGIN
@@ -23,7 +23,7 @@ return new class extends Migration
                 FROM documents d
                 LEFT JOIN annual_stats a
                     ON a.document_id = d.id
-                    AND a.agency_id = p_agency_id
+                    AND a.consulat_id = p_consulat_id
                     AND a.years = p_years
                 WHERE d.status = 1
                 GROUP BY d.id, d.label

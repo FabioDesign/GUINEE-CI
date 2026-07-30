@@ -69,6 +69,12 @@ class MenuActionSeeder extends Seeder
                 'action_id' => 9,
             ]
         );
+        MenuAction::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 10,
+            ]
+        );
         // Documents
         MenuAction::firstOrCreate(
             [
@@ -162,7 +168,7 @@ class MenuActionSeeder extends Seeder
                 'action_id' => 5,
             ]
         );
-        // Agences
+        // Consulats
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 6,

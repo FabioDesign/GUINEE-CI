@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
-  AgencyController,
+  ConsulatController,
   DashboardController,
   DemandController,
   DocumentController,
@@ -69,8 +69,8 @@ Route::middleware(['auth'])->group(function () {
   });
   // Routes pour liste des villes
   Route::post('towns/list', [TownController::class, 'list']);
-  // Routes pour liste des agences
-  Route::post('agencies/list', [AgencyController::class, 'list']);
+  // Routes pour liste des consulats
+  Route::post('consulats/list', [ConsulatController::class, 'list']);
   // Route pour les statuts
   Route::patch('{type}/status/{uuid}', [StatusController::class, 'update']);
   // Route pour les demandes:
@@ -86,7 +86,7 @@ Route::middleware(['auth'])->group(function () {
   });
   // Route des ressources
   Route::resources([
-    'agencies' => AgencyController::class,
+    'consulats' => ConsulatController::class,
     'demands' => DemandController::class,
     'documents' => DocumentController::class,
     'files' => FileController::class,

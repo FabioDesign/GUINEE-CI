@@ -8,7 +8,7 @@
       {{-- ── Texte introductif ─────────────────────────────────── --}}
       <p style="font-size:12pt; margin-bottom: 30px;line-height: 1.5;">
         L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE<br>
-        {{ $dataPDF['agency'] }},<br>
+        {{ $dataPDF['consulat'] }},<br>
         SUR LA FOI DES DOCUMENTS PRESENTES,
       </p>
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">

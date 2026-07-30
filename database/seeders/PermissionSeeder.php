@@ -186,7 +186,7 @@ class PermissionSeeder extends Seeder
                 'profile_id' => 1,
             ]
         );
-        // Agences
+        // Consulats
         Permission::firstOrCreate(
             [
                 'menu_id' => 6,

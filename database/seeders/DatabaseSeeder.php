@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 // Action
                 ActionSeeder::class,
-                // Agence
-                AgencySeeder::class,
+                // Consulat
+                ConsulatSeeder::class,
                 // Pays
                 CountrySeeder::class,
                 // Menu
