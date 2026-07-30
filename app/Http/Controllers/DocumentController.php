@@ -7,8 +7,8 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\{DocFile, Document, File, User};
 use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
+use App\Models\{AnnualStat, DocFile, Document, File, User};
 
 class DocumentController extends Controller
 {
@@ -113,10 +113,10 @@ class DocumentController extends Controller
 		$label = Str::upper(Myhelper::valideString($request->label));
 		$set = [
 			'label' => $label,
-			'code' => $request->code,
-			'number' => $request->number,
 			'price' => $request->price,
+			'number' => $request->number,
 			'icone' => "far fa-address-card",
+			'code' => str::upper($request->code),
 			'description' => $request->description,
 		];
 		DB::beginTransaction();
@@ -219,9 +219,9 @@ class DocumentController extends Controller
 			]);
 		}
 		$set = [
-			'code' => $request->code,
 			'number' => $request->number,
 			'price' => $request->price,
+			'code' => str::upper($request->code),
 			'description' => $request->description,
 			'label' => Str::upper(Myhelper::valideString($request->label)),
 		];
@@ -309,6 +309,9 @@ class DocumentController extends Controller
 	}
 	// Récupérer un document
 	public function getDocs($id) {
+        if (!Auth::check()) {
+            return 'x';
+        }
 		// Requete Read
 		$data['docs'] = Document::select('id', 'label', 'code', 'number', 'price', 'description')
 		->where('id', $id)
@@ -323,6 +326,28 @@ class DocumentController extends Controller
 		return response()->json([
 			'status' => 1,
 			'data' => $data,
+		]);
+	}
+	// Liste des documents
+	public function listDocs(Request $request) {
+		if (!Auth::check()) {
+			return 'x';
+		}
+		$query = DB::select('CALL sp_chart_documents_procedure(?, ?)',[
+			Auth::user()->agency_id,
+			$request->docyears,
+		]);
+		$dataDoc = $dataNum = [];
+		foreach ($query as $data) :
+			$dataDoc[] = $data->label;
+			$dataNum[] = $data->total;
+		endforeach;
+		return response()->json([
+			'status' => 1,
+			'data' => [
+				'dataDoc' => $dataDoc,
+				'dataNum' => $dataNum,
+			],
 		]);
 	}
 }

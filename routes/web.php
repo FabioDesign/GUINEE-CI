@@ -43,11 +43,19 @@ Route::controller(PasswordController::class)->group(function () {
   Route::post('forgotpass', 'store');
 });
 // Route pour les documents
-Route::get('getDocs/{id}', [DocumentController::class, 'getDocs']);
+Route::controller(DocumentController::class)->group(function () {
+  Route::post('listDocs', 'listDocs');
+  Route::get('getDocs/{id}', 'getDocs');
+});
 // Routes protégées par authentification
 Route::middleware(['auth'])->group(function () {
   // Route pour Tableau de bord
-  Route::get('dashboard', [DashboardController::class, 'index']);
+  Route::controller(DashboardController::class)->group(function () {
+    Route::get('dashboard', 'index');
+    Route::post('dashboard', 'stats');
+    Route::post('listDays', 'listDays');
+    Route::post('listMonths', 'listMonths');
+  });
   // Route pour les utilisateurs
   Route::controller(UserController::class)->group(function () {
     Route::get('account', 'account');

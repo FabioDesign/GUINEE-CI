@@ -112,7 +112,7 @@ class DemandController extends Controller
             'arrival_at' => 'required|date|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
 			'number' => 'required|integer|min:1',
-			'total' => 'required|integer|min:1',
+			'total' => 'required|integer',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
 		], [
@@ -149,7 +149,6 @@ class DemandController extends Controller
 			'number.min' => "Le numéro doit être supérieur à 0.",
 			'total.required' => "Le prix est obligatoire.",
 			'total.integer' => "Le prix doit être un nombre entier.",
-			'total.min' => "Le prix doit être supérieur à 0.",
 			'copy.required' => "Le nombre de copies est obligatoire.",
 			'copy.integer' => "Le nombre de copies doit être un nombre entier.",
 			'copy.min' => "Le nombre de copies doit être supérieur à 0.",
