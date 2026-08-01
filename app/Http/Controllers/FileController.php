@@ -27,6 +27,8 @@ class FileController extends Controller
 		//Requete Read
 		$query = File::orderByDesc('created_at')->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Pièces à fournir: Liste",
@@ -91,6 +93,8 @@ class FileController extends Controller
 			File::create($set);
 			DB::commit();
             Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
                 Session::get('username'), 
                 Session::get('profil'), 
                 "Pièce à fournir: {$label}",
@@ -182,6 +186,8 @@ class FileController extends Controller
 			$file->update($set);
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Pièce à fournir: {$label}",
@@ -230,6 +236,8 @@ class FileController extends Controller
 			$file->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'), 
 				Session::get('profil'),
 				"Pièce à fournir: " . $file->label,

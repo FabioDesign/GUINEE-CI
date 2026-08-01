@@ -36,6 +36,8 @@ class DashboardController extends Controller
 		// Modal
 		$addmodal = '';
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Tableau de bord: Liste",
@@ -54,6 +56,7 @@ class DashboardController extends Controller
 		$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?, ?)",
 		[
 			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			$request->documents,
 			$request->years,
 			$request->months,

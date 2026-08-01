@@ -26,9 +26,14 @@ class UserController extends Controller
 		// Requete Read
 		$query = User::join('profiles', 'users.profile_id', '=', 'profiles.id')
         ->select('users.uuid', 'firstname', 'lastname', 'gender', 'phone_code', 'phone_number', 'users.created_at', 'users.status', 'profiles.label')
-        ->where('role_id', '!=', 4) // 4 = Utilisateur
-        ->orderByDesc('users.created_at')->get();
+		->where('consulat_id', Auth::user()->consulat_id)
+		->where('users.id', '!=', Auth::id())
+        ->whereNotIn('role_id', [1, 4])
+        ->orderByDesc('users.created_at')
+        ->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Utilisateur: Liste",
@@ -231,6 +236,8 @@ class UserController extends Controller
             User::create($set);
             DB::commit(); // Valider la transaction
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 Session::get('username'),
                 Session::get('profil'),
                 "Utilisateur: {$lastname} {$firstname}",
@@ -468,6 +475,8 @@ class UserController extends Controller
 			$user->update($set);
             DB::commit(); // Valider la transaction
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 Session::get('username'),
                 Session::get('profil'),
                 "Utilisateur: {$lastname} {$firstname}",
@@ -525,7 +534,9 @@ class UserController extends Controller
 			$user->delete();
 			DB::commit();
 			Myhelper::logs(
-				Session::get('username'),
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
+                Session::get('username'),
 				Session::get('profil'),
 				"Utilisateur: {$user->firstname} {$user->lastname}",
 				'Supprimer',
@@ -748,6 +759,8 @@ class UserController extends Controller
             Session::put('avatar', $avatar);
             // Log de connexion
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 $username,
                 $user->profile->label ?? '',
                 $menus->first()->label,
@@ -770,6 +783,8 @@ class UserController extends Controller
     public function logout(Request $request) {
         if (Auth::check()) {
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 Session::get('username'), 
                 Session::get('profil'), 
                 Session::get('title'), 

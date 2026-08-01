@@ -26,8 +26,11 @@ class ConsulatController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/consulats/create" class="btn btn-sm fw-bold btn-primary">Ajouter un consulat</a>':'';
 		// Requete Read
 		$query = Consulat::select('uuid', 'label', 'status', 'created_at', 'country_id')
-        ->orderByDesc('created_at')->get();
+        ->orderByDesc('created_at')
+		->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Consulat: Liste",
@@ -94,6 +97,8 @@ class ConsulatController extends Controller
 			]);
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Consulat: {$request->label}",
@@ -178,6 +183,8 @@ class ConsulatController extends Controller
 			]);
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Consulat: {$label}",
@@ -226,6 +233,8 @@ class ConsulatController extends Controller
 			$consulat->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Consulat: " . $consulat->label,

@@ -109,6 +109,8 @@ class StatusController extends Controller
             $item->update($set);
             // Log
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 Session::get('username'),
                 Session::get('profil'),
                 "{$label}: {$libelle}",

@@ -68,6 +68,8 @@ class PasswordController extends Controller
             else
                 $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 			Myhelper::logs(
+                $user->consulat_id,
+                $user->profile_id,
                 $username,
                 $user->label,
                 'Mot de passe oublié',
@@ -151,6 +153,8 @@ class PasswordController extends Controller
             ]);
             DB::commit(); // Valider la transaction
             Myhelper::logs(
+                Auth::user()->consulat_id,
+			    Auth::user()->profile_id,
                 Session::get('username'),
                 Session::get('profil'),
                 "Mot de passe: Nouveau",

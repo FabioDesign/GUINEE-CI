@@ -215,6 +215,7 @@ class DemandController extends Controller
                 'copy' => $request->copy,
                 'user_id' => $user->id,
 				'consulat_id' => Auth::user()->consulat_id,
+			Auth::user()->profile_id,
             ];
             $demand = Demand::create($set);
             // Création des fichiers
@@ -228,9 +229,11 @@ class DemandController extends Controller
 			}
             DB::commit(); // Valider la transaction
             Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
                 Session::get('username'),
                 Session::get('profil'),
-                "Demande consulaire: {$reference} - {$user->lastname} {$user->firstname}",
+                "Document consulaire: {$reference}",
                 'Ajouter',
                 Session::get('avatar')
             );
@@ -439,9 +442,11 @@ class DemandController extends Controller
 			}
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
-				"Demande consulaire: {$query->reference}",
+				"Document consulaire: {$query->reference}",
 				'Modifier',
 				Session::get('avatar')
 			);
@@ -487,6 +492,8 @@ class DemandController extends Controller
 			$document->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Document consulaire: {$document->label}",
@@ -604,9 +611,11 @@ class DemandController extends Controller
 			$query->update($set);
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
-				"Demande consulaire: {$label}",
+				"Document consulaire: {$label}",
 				'Rejeter',
 				Session::get('avatar')
 			);

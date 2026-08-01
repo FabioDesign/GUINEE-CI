@@ -54,7 +54,7 @@
 			return $date->setTime(8, 0, 0);
 		}
 		//Piste d'audit
-		public static function logs($username, $profil, $label, $action, $avatar) {
+		public static function logs($consulat_id, $username, $profil, $label, $action, $avatar) {
 			switch ($action) {
 				case 'Consulter' : $color = 'primary';
 					break;
@@ -67,6 +67,7 @@
 				default : $color = 'info';
 			}
 			$set = [
+				'consulat_id' => $consulat_id,
 				'username' => $username,
 				'profil' => $profil,
 				'label' => $label,

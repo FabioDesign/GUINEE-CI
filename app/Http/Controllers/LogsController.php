@@ -24,7 +24,9 @@ class LogsController extends Controller
     //Liste de Pistes d'audit
 	public function getLogs() {
 		//Requete Read-
-		$query = Logs::orderByDesc('created_at')->get();
+		$query = Logs::where('consulat_id', Auth::user()->consulat_id)
+		->orderByDesc('created_at')
+		->get();
 		return response()->json([
 			'status' => 1,
 			'data' => $query,

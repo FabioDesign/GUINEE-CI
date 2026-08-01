@@ -27,6 +27,8 @@ class ProfileController extends Controller
 		//Requete Read
 		$query = Profile::orderByDesc('created_at')->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Profil: Liste",
@@ -142,6 +144,8 @@ class ProfileController extends Controller
 				}
 			}
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Profil: {$request->label}",
@@ -261,6 +265,8 @@ class ProfileController extends Controller
 			}
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Profil: {$request->label}",
@@ -319,6 +325,8 @@ class ProfileController extends Controller
 			$query->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Profil: " . $query->label,

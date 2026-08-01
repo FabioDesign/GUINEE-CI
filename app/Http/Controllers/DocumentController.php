@@ -27,6 +27,8 @@ class DocumentController extends Controller
 		// Requete Read
 		$query = Document::orderByDesc('created_at')->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Document: Liste",
@@ -130,6 +132,8 @@ class DocumentController extends Controller
 			}
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Document: {$label}",
@@ -240,6 +244,8 @@ class DocumentController extends Controller
 			}
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Document: {$request->label}",
@@ -288,6 +294,8 @@ class DocumentController extends Controller
 			$document->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Document: {$document->label}",
@@ -335,6 +343,7 @@ class DocumentController extends Controller
 		}
 		$query = DB::select('CALL sp_chart_documents_procedure(?, ?)',[
 			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			$request->docyears,
 		]);
 		$dataDoc = $dataNum = [];

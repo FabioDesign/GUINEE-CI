@@ -28,6 +28,8 @@ class TownController extends Controller
 		$query = Town::select('uuid', 'label', 'status', 'created_at', 'country_id')
         ->orderByDesc('created_at')->get();
 		Myhelper::logs(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
 			Session::get('username'),
 			Session::get('profil'),
 			"Ville: Liste",
@@ -89,6 +91,8 @@ class TownController extends Controller
 			Town::create($set);
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Ville: {$request->label}",
@@ -177,6 +181,8 @@ class TownController extends Controller
 			$town->update($set);
 			DB::commit(); // Valider la transaction
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Ville: {$request->label}",
@@ -225,6 +231,8 @@ class TownController extends Controller
 			$town->delete();
 			DB::commit();
 			Myhelper::logs(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
 				Session::get('username'),
 				Session::get('profil'),
 				"Ville: " . $town->label,

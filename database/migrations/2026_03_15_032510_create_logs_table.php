@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('color', 10);
             $table->text('avatar');
             $table->timestamps();
+            $table->integer('consulat_id')->default('0');
+            $table->integer('profile_id')->default('0');
         });
     }
 
