@@ -39,10 +39,10 @@
                 <label class="boxcheck">
                     <input type="checkbox" class="iCheck" readonly checked />
                     <span style="margin-left: 10px;">
-                        {{ $docFile->file->label }}
+                        {{ $docFile->files->label }}
                     </span>
                     <span style="margin-left: 10px;">
-                        <a href="{{ asset('storage/' . $docFile->file->path) }}" target="_blank">
+                        <a href="{{ asset('storage/' . $docFile->files->path) }}" target="_blank">
                             (Voir le spécimen)
                         </a>
                     </span>

@@ -81,7 +81,7 @@ class Demand extends Model
   }
 
   // Impression de la demande
-  public static function print_dmd($uuid) {
+  public static function printDmd($uuid) {
     try {
       // Récupérer la demande depuis la BDD
       $query = self::where('uuid', $uuid)->first();
@@ -112,7 +112,7 @@ class Demand extends Model
         'particular_sign' => optional($query->user)->particular_sign,
         'home_address' => optional($query->user)->home_address,
         'validated_at' => optional($query->validated_at)->format('d/m/Y'),
-        'consul' => optional($consul)->civility . ' ' . optional($consul)->firstname . ' ' . optional($consul)->lastname,
+        'signatory' => optional($consul)->civility . ' ' . optional($consul)->firstname . ' ' . optional($consul)->lastname,
         'signature' => optional($consul)->signature,
         'stamp' => optional($consul)->stamp,
       ];
@@ -122,10 +122,11 @@ class Demand extends Model
         $dataPDF['reference'],
         $dataPDF['document'],
         $dataPDF['consulat'],
-        $dataPDF['consul'],
+        $dataPDF['signatory'],
         $dataPDF['validated_at'],
       ]);
-      // // Génération du Qrcode avec les données du reçu
+      // dd($dataPDF, $dataQR);
+      // Génération du Qrcode avec les données du reçu
       // $dataPDF['qrcode'] = QrCode::format('png')->size(250)->generate($dataQR);
       // Nom du fichier blade
       $blade = 'pdf.demands.' . Str::lower($query->document->code);
@@ -147,7 +148,7 @@ class Demand extends Model
       ]);
       return $path;
     } catch(\Exception $e) {
-      Log::warning("Demand::print_dmd - Erreur : {$e->getMessage()}");
+      Log::warning("Demand::printDmd - Erreur : {$e->getMessage()}");
       return null;
     }
   }

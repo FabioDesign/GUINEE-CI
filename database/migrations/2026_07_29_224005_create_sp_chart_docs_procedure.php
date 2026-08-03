@@ -10,8 +10,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // ── 1. Supprimer la procédure s'il existe ──────────────────────────────
+        DB::unprepared("DROP PROCEDURE IF EXISTS sp_chart_docs_data;");
+
+        // ── 2. Créer la procédure ──────────────────────────────────────────────
         DB::unprepared("
-            CREATE PROCEDURE sp_chart_documents_procedure(
+            CREATE PROCEDURE sp_chart_docs_data(
                 IN p_consulat_id BIGINT,
                 IN p_years YEAR
             )
@@ -37,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_chart_documents_procedure');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_chart_documents');
     }
 };

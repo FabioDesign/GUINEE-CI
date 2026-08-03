@@ -233,6 +233,82 @@ $('#embassy_id').on('change', function() {
     }
   });
 });
+$(document).on('click', '.btn-rjt', function() {
+  Swal.fire({
+    title: 'Rejeter la demande',
+    text: 'Veuillez confirmer votre action.',
+    icon: 'warning',
+    input: "textarea",
+    inputPlaceholder: "Veuillez saisir le motif du rejet...",
+      inputAttributes: { required: true },
+    showCancelButton: true,
+    confirmButtonColor: '#3085D6',
+    cancelButtonColor: '#D33',
+    confirmButtonText: 'Confirmer',
+    cancelButtonText: 'Annuler',
+    inputValidator: (value) => {
+      if (!value || !value.trim()) {
+        return "<span style='color: #f27474;font-weight: 600;'>Le motif du rejet est obligatoire !</span>";
+      }
+      if (value.trim().length < 10) {
+        return "<span style='color: #f27474;font-weight: 600;'>Veuillez fournir un motif plus détaillé.</span>";
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const motif = result.value.trim();
+      // Afficher un chargement
+      Swal.fire({
+        title: 'Traitement en cours...',
+        text: 'Rejet de la demande en cours',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      // Appel AJAX
+      axios.post('/reject', {
+        motif: motif,
+        uuid: $('#uuid').val()
+      }).then(response => {
+        if (response.data.status == 1) {
+          Swal.fire({
+            title: "Félicitation !",
+            text: response.data.message,
+            icon: 'success',
+            confirmButtonText: "Fermer",
+            customClass:{
+              confirmButton: "btn btn-square font-weight-bold btn-light-success"
+            }
+          }).then(function() {
+            location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: 'Erreur !',
+            text: response.data.message,
+            icon: 'error',
+            confirmButtonText: 'Fermer',
+            customClass: {
+              confirmButton: "btn btn-square font-weight-bold btn-light-success"
+            },
+          });
+        }
+      })
+      .catch(error => {
+        Swal.fire({
+          title: 'Erreur !',
+          text: 'Une erreur est survenue lors du rejet',
+          icon: 'error',
+          confirmButtonText: "Fermer",
+          customClass:{
+            confirmButton: "btn btn-square font-weight-bold btn-light-success"
+          }
+        });
+      });
+    }
+  });
+});
 // Gestionnaire pour le changement de statut
 $(document).on('click', '.status', function(e) {
   e.preventDefault();
@@ -252,10 +328,10 @@ $(document).on('click', '.status', function(e) {
     if (result.isConfirmed) {
       $.ajax({
         url: urlStatus,
-        type: 'POST',
+        type: 'PATCH',
         data: {
           _token: $('meta[name="csrf-token"]').attr('content'),
-          _method: typeStatus
+          _method: 'PATCH'
         },
         beforeSend: function() {
           Swal.fire({

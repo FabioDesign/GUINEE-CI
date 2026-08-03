@@ -10,8 +10,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // ── 1. Supprimer la procédure s'il existe ──────────────────────────────
+        DB::unprepared("DROP PROCEDURE IF EXISTS sp_get_dmds_data;");
+
+        // ── 2. Créer la procédure ──────────────────────────────────────────────
         DB::unprepared("
-            CREATE PROCEDURE sp_list_demands(
+            CREATE PROCEDURE sp_get_dmds_data(
                 IN p_user_id BIGINT
             )
             BEGIN

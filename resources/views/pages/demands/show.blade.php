@@ -172,8 +172,8 @@
 				inputPlaceholder: "Veuillez saisir le motif du rejet...",
     			inputAttributes: { required: true },
 				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
+				confirmButtonColor: '#3085D6',
+				cancelButtonColor: '#D33',
 				confirmButtonText: 'Confirmer',
 				cancelButtonText: 'Annuler',
 				inputValidator: (value) => {

@@ -92,7 +92,7 @@ class StatusController extends Controller
                             'validated_by' => Auth::user()->id,
                             'delivered_at' => Myhelper::addWorkingDays($item->copy),
                         ];
-                        // Demand::print_dmd($uuid);
+                        Demand::printDmd($uuid);
                         break;
                     default :
                         $newStatus = 0;

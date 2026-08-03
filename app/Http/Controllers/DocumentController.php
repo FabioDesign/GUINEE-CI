@@ -341,9 +341,8 @@ class DocumentController extends Controller
 		if (!Auth::check()) {
 			return 'x';
 		}
-		$query = DB::select('CALL sp_chart_documents_procedure(?, ?)',[
-			Auth::user()->consulat_id,
-			Auth::user()->profile_id,
+		$query = DB::select('CALL sp_chart_docs_data(?, ?)',[
+			Session::get('consulat'),
 			$request->docyears,
 		]);
 		$dataDoc = $dataNum = [];

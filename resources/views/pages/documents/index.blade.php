@@ -68,7 +68,7 @@
                   <span class="path2"></span>
                 </i>
               </a>
-              <a href="#" data-url="/documents/status/{{ $data->uuid }}" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $action }} le document" class="btn btn-icon btn-bg-light btn-sm me-1 {{ $class_status }}">
+              <a href="#" data-url="/documents/status/{{ $data->uuid }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $action }} le document" class="btn btn-icon btn-bg-light btn-sm me-1 {{ $class_status }}">
                 <i class="ki-duotone ki-filter {{ $color_status }} fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>

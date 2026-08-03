@@ -7,7 +7,7 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
+use Illuminate\Support\Facades\{Auth, DB, Log, Storage, Validator};
 use App\Models\{Consulat, Attachment, Country, Demand, DocFile, Document, File, Profile, Town, User};
 
 class DemandController extends Controller
@@ -45,9 +45,9 @@ class DemandController extends Controller
 		}
 		// Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
-		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
-		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
-		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
+		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
+		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
+		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
 		$prefecture = Town::find(optional($query->user)->town_id);
@@ -200,11 +200,13 @@ class DemandController extends Controller
         DB::beginTransaction(); // Démarrer une transaction
         try {
             // Création de l'utilisateur
-            if ($request->user_id) {
-				$user = User::findOrFail($request->user_id)->update($set);
-            } else {
-				$user = User::create($set);
-            }
+            // if ($request->user_id) {
+			// 	$user = User::findOrFail($request->user_id)->update($set);
+            // } else {
+				// $user = User::create($set);
+				$user = User::find(11);
+				// dd($user);
+            // }
             // Création de la demande
 			$reference = Demand::reference($request->codeDoc, $user->birthday_at);
             $set = [
@@ -215,7 +217,6 @@ class DemandController extends Controller
                 'copy' => $request->copy,
                 'user_id' => $user->id,
 				'consulat_id' => Auth::user()->consulat_id,
-			Auth::user()->profile_id,
             ];
             $demand = Demand::create($set);
             // Création des fichiers
@@ -282,7 +283,6 @@ class DemandController extends Controller
 	}
 	// Mettre à jour une demande
 	public function update(Request $request, $uuid) {
-		dd($request->all());
         if (!Auth::check()) {
             return 'x';
         }
@@ -547,7 +547,7 @@ class DemandController extends Controller
             return 'x';
         }
 		//Requete Read
-		$query = DB::select('CALL sp_list_demands(?)', [Auth::id()]);
+		$query = DB::select('CALL sp_get_dmds_data(?)', [Auth::id()]);
 		// Transformer les données
 		$demands = collect($query)->map(fn($data) => [
 			'uuid' => $data->uuid,
@@ -558,7 +558,7 @@ class DemandController extends Controller
 			'price' => $data->price,
 			'copy' => $data->copy,
 			'status' => $data->status,
-			'path' => ($data->path == null && $data->status == 2) ? Demand::print_dmd($data->uuid) : asset($data->path),
+			'path' => ($data->path == null && $data->status == 2) ? Demand::printDmd($data->uuid) : asset($data->path),
 		]);
 		return response()->json([
 			'status' => 1,

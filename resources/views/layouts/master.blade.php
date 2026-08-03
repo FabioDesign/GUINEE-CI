@@ -130,6 +130,13 @@
 											<a href="/password" class="menu-link px-5"><i class="fas fa-lock me-2"></i> Mot de passe</a>
 										</div>
 										<!--end::Menu item-->
+										@if (Session::get('role') == 1)
+										<!--begin::Menu item-->
+										<div class="menu-item px-5">
+											<a href="/password" class="menu-link px-5"><i class="fas fa-lock me-2"></i> Consulat</a>
+										</div>
+										<!--end::Menu item-->
+										@endif
 										<!--begin::Menu separator-->
 										<div class="separator my-2"></div>
 										<!--end::Menu separator-->
@@ -333,6 +340,7 @@
 		<script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
 		<!--end::Page Vendors Javascript-->
 		<!--begin::Custom Javascript(used for this page only)-->
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 		<script src="/assets/js/custom/flatpickr_fr.js"></script>
 		<script src="/assets/js/custom/select2.js"></script>

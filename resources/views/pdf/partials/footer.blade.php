@@ -29,7 +29,7 @@
         </tr>
       </table>
       <div style="font-weight:bold; margin-top: 10px;">
-        {{ $dataPDF['consul'] }}
+        {{ $dataPDF['signatory'] }}
       </div>
     </td>
   </tr>

@@ -55,8 +55,7 @@ class DashboardController extends Controller
 		//Requete Read
 		$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?, ?)",
 		[
-			Auth::user()->consulat_id,
-			Auth::user()->profile_id,
+			Session::get('consulat'),
 			$request->documents,
 			$request->years,
 			$request->months,
