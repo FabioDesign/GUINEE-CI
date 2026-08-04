@@ -108,7 +108,7 @@ class StatusController extends Controller
             }
             $item->update($set);
             // Log
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'),

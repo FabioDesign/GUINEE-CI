@@ -67,7 +67,7 @@ class PasswordController extends Controller
                 $avatar = $user->avatar;
             else
                 $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-			Myhelper::logs(
+			Myhelper::auditTrail(
                 $user->consulat_id,
                 $user->profile_id,
                 $username,
@@ -152,7 +152,7 @@ class PasswordController extends Controller
                 'password_at' => now(),
             ]);
             DB::commit(); // Valider la transaction
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'),

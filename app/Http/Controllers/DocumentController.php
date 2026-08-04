@@ -26,7 +26,7 @@ class DocumentController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/documents/create" class="btn btn-sm fw-bold btn-primary">Ajouter un document</a>':'';
 		// Requete Read
 		$query = Document::orderByDesc('created_at')->get();
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),
@@ -131,7 +131,7 @@ class DocumentController extends Controller
 				]);
 			}
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -243,7 +243,7 @@ class DocumentController extends Controller
 				]);
 			}
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -293,7 +293,7 @@ class DocumentController extends Controller
 			// Supprimer le document
 			$document->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),

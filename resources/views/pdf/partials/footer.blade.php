@@ -3,7 +3,7 @@
   <tr>
     {{-- QR Code --}}
     <td width="20%" style="text-align:center; vertical-align:middle;">
-        <img src="{{ public_path('assets/img/qrcode.jpeg') }}" style="height: 120px;" alt="QR Code" />
+        <img src="{{ public_path('assets/img/qrcode.png') }}" style="height: 120px;" alt="QR Code" />
     </td>
     {{-- Espace central --}}
     <td width="45%"></td>

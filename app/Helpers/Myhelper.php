@@ -4,21 +4,19 @@
 	use \Carbon\Carbon;
 	use Illuminate\Support\Str;
 	use Illuminate\Http\Request;
-	use App\Models\{Logs, Permission, User};
 	use Illuminate\Support\Facades\{DB, Log};
 	use PHPMailer\PHPMailer\{PHPMailer, SMTP};
+	use App\Models\{AuditTrail, Permission, User};
 
 	class Myhelper
 	{
 		//Format Français
-		public static function months($month)
-		{
+		public static function months($month) {
 			$months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 			return $months[$month-1];
 		}
 		// Recherche de droit d'accès
-		public static function actions($profile, $menu)
-		{
+		public static function actions($profile, $menu)	{
 			// Requete Read
 			$permission = Permission::where([
 				'menu_id' => $menu,
@@ -28,7 +26,7 @@
 			return $permission->pluck('action_id')->toArray();
 		}
     	//sans accent
-    	public static function valideString($string, $encoding='utf-8'){
+    	public static function valideString($string, $encoding='utf-8') {
       		// transformer les caractères accentués en entités HTML
       		$string = htmlentities($string, ENT_NOQUOTES, $encoding);
       		// remplacer les entités HTML pour avoir juste le premier caractères non accentués
@@ -54,7 +52,7 @@
 			return $date->setTime(8, 0, 0);
 		}
 		//Piste d'audit
-		public static function logs($consulat_id, $profile_id, $username, $profil, $label, $action, $avatar) {
+		public static function auditTrail($consulat_id, $profile_id, $username, $profil, $label, $action, $avatar) {
 			switch ($action) {
 				case 'Consulter' : $color = 'primary';
 					break;
@@ -78,11 +76,11 @@
 			];
 			DB::beginTransaction();
 			try {
-				Logs::create($set);
+				AuditTrail::create($set);
 				DB::commit();
 			} catch(Exception $e) {
 				DB::rollBack();
-				Log::warning("Logs::Error : {$e->getMessage()} " . json_encode($set));
+				Log::warning("AuditTrail::Error : {$e->getMessage()} " . json_encode($set));
 			}
 		}
     	//Send mail

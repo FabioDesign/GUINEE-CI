@@ -26,7 +26,7 @@ class ProfileController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/profiles/create" class="btn btn-sm fw-bold btn-primary">Ajouter un profil</a>':'';
 		//Requete Read
 		$query = Profile::orderByDesc('created_at')->get();
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),
@@ -143,7 +143,7 @@ class ProfileController extends Controller
 					]);
 				}
 			}
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -264,7 +264,7 @@ class ProfileController extends Controller
 				}
 			}
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -324,7 +324,7 @@ class ProfileController extends Controller
 			// Supprimer le profil
 			$query->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),

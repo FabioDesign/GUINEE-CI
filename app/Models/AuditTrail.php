@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Logs extends Model
+class AuditTrail extends Model
 {
-    public $table = 'logs';
+    public $table = 'audit_trails';
     
     protected $guarded = [];
 }

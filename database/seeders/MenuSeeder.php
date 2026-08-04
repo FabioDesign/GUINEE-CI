@@ -81,7 +81,7 @@ class MenuSeeder extends Seeder
             ['label' => "Piste d'audit"],
             [
                 'icone' => "ki-code",
-                'target' => "logs",
+                'target' => "audit_trails",
                 'position' => 9,
             ]
         );

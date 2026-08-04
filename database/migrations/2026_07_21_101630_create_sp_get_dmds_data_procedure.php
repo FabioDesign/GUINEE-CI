@@ -32,7 +32,7 @@ return new class extends Migration
                 FROM users u
                 INNER JOIN profiles p ON p.id = u.profile_id
                 WHERE u.id = p_user_id
-                  AND u.deleted_at IS NULL
+                AND u.deleted_at IS NULL
                 LIMIT 1;
 
                 -- role_id = 1 : Administrateur → toutes les demandes
@@ -52,7 +52,8 @@ return new class extends Migration
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
-                    WHERE dmd.deleted_at IS NULL
+                    WHERE dmd.consulat_id = v_consulat_id
+                    AND dmd.deleted_at IS NULL
                     ORDER BY dmd.created_at DESC;
 
                 -- role_id = 2 : Coordonnateur → même consulat sauf status = 0

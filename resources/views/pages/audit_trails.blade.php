@@ -71,9 +71,9 @@
 
       return `${day}-${month}-${year} ${hours}:${minutes}`;
     }
-    const getLogs = async () => {
+    const getAuditTrails = async () => {
       try {
-        const response = await axios.get( '/getLogs');
+        const response = await axios.get( '/getAuditTrails');
         return response.data.data || [];
       } catch (e) {
         console.error(e);
@@ -81,7 +81,7 @@
       }
     }
 
-    getLogs().then(
+    getAuditTrails().then(
       response => {
         if (response.length > 0) {
           let i = 1;

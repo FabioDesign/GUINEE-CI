@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Auth,DB, Hash, Log, Validator};
-use App\Models\{Consulat, Country, Document, Logs, Consulardoc, Permission, Profile, Town, User};
+use App\Models\{Consulat, Country, Document, Consulardoc, Permission, Profile, Town, User};
 
 class UserController extends Controller
 {
@@ -26,12 +26,14 @@ class UserController extends Controller
 		// Requete Read
 		$query = User::join('profiles', 'users.profile_id', '=', 'profiles.id')
         ->select('users.uuid', 'firstname', 'lastname', 'gender', 'phone_code', 'phone_number', 'users.created_at', 'users.status', 'profiles.label')
-		->where('consulat_id', Auth::user()->consulat_id)
+        ->when(optional(Auth::user()->profile)->role_id != 1, function ($query) {
+            return $query->where('consulat_id', Auth::user()->consulat_id);
+        })
 		->where('users.id', '!=', Auth::id())
         ->whereNotIn('role_id', [1, 4])
         ->orderByDesc('users.created_at')
         ->get();
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),
@@ -235,7 +237,7 @@ class UserController extends Controller
             // Création de l'utilisateur
             User::create($set);
             DB::commit(); // Valider la transaction
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'),
@@ -474,7 +476,7 @@ class UserController extends Controller
 			// Mettre à jour l'utilisateur
 			$user->update($set);
             DB::commit(); // Valider la transaction
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'),
@@ -533,7 +535,7 @@ class UserController extends Controller
 			// Supprimer l'utilisateur
 			$user->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'),
@@ -710,6 +712,13 @@ class UserController extends Controller
                     'message' => "Votre compte n'est pas rattaché à une Ambassade.",
                 ]);
             }
+            // Vérifier si le compte n'est pas rattaché à un Consulat
+            if ($user->consulat_id == 0) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => "Votre compte n'est pas rattaché à un Consulat.",
+                ]);
+            }
             // Tentative de connexion
             if (!Auth::attempt($credentials)) {
                 // Mot de passe incorrect
@@ -758,7 +767,7 @@ class UserController extends Controller
                 $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
             Session::put('avatar', $avatar);
             // Log de connexion
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 $username,
@@ -782,7 +791,7 @@ class UserController extends Controller
     // Déconnexion avec Laravel Auth
     public function logout(Request $request) {
         if (Auth::check()) {
-            Myhelper::logs(
+            Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
                 Session::get('username'), 

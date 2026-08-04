@@ -35,7 +35,7 @@ class DashboardController extends Controller
 		->get();
 		// Modal
 		$addmodal = '';
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),

@@ -26,7 +26,7 @@ class FileController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/files/create" class="btn btn-sm fw-bold btn-primary">Ajouter une pièce</a>':'';
 		//Requete Read
 		$query = File::orderByDesc('created_at')->get();
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),
@@ -92,7 +92,7 @@ class FileController extends Controller
 		try {
 			File::create($set);
 			DB::commit();
-            Myhelper::logs(
+            Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
                 Session::get('username'), 
@@ -185,7 +185,7 @@ class FileController extends Controller
 			// Mettre à jour la pièce à fournir
 			$file->update($set);
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -235,7 +235,7 @@ class FileController extends Controller
 			// Supprimer la pièce à fournir
 			$file->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'), 

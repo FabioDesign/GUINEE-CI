@@ -26,6 +26,15 @@ class DemandController extends Controller
 		$addmodal = in_array(2, $actionIds) ? '<a href="/demands/create" class="btn btn-sm fw-bold btn-primary">Ajouter une demande</a>':'';
 		// Requete Read
 		$query = Demand::orderByDesc('created_at')->get();
+		Myhelper::auditTrail(
+			Auth::user()->consulat_id,
+			Auth::user()->profile_id,
+			Session::get('username'),
+			Session::get('profil'),
+			"Demande: Liste",
+			'Consulter',
+			Session::get('avatar')
+		);
 		return view('pages.demands.index', compact('title', 'currentMenu', 'addmodal', 'actionIds', 'query'));
 	}
 	// Afficher le détail d'une demande
@@ -229,7 +238,7 @@ class DemandController extends Controller
 				]);
 			}
             DB::commit(); // Valider la transaction
-            Myhelper::logs(
+            Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
                 Session::get('username'),
@@ -441,7 +450,7 @@ class DemandController extends Controller
 				]);
 			}
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -491,7 +500,7 @@ class DemandController extends Controller
 			// Supprimer le document
 			$document->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -610,7 +619,7 @@ class DemandController extends Controller
 			// Mettre à jour la demande
 			$query->update($set);
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),

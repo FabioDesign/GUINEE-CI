@@ -27,7 +27,7 @@ class TownController extends Controller
 		//Requete Read
 		$query = Town::select('uuid', 'label', 'status', 'created_at', 'country_id')
         ->orderByDesc('created_at')->get();
-		Myhelper::logs(
+		Myhelper::auditTrail(
 			Auth::user()->consulat_id,
 			Auth::user()->profile_id,
 			Session::get('username'),
@@ -90,7 +90,7 @@ class TownController extends Controller
 		try {
 			Town::create($set);
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -180,7 +180,7 @@ class TownController extends Controller
 			// Mettre à jour la ville
 			$town->update($set);
 			DB::commit(); // Valider la transaction
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),
@@ -230,7 +230,7 @@ class TownController extends Controller
 			// Supprimer la ville
 			$town->delete();
 			DB::commit();
-			Myhelper::logs(
+			Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
 				Session::get('username'),

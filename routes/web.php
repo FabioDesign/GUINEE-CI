@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
+  AuditTrailController,
   ConsulatController,
   DashboardController,
   DemandController,
   DocumentController,
   FileController,
-  LogsController,
   MenuController,
   PasswordController,
   ProfileController,
@@ -80,9 +80,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('reject', 'reject');
   });
   // Route pour les pistes d'audit:
-  Route::controller(LogsController::class)->group(function () {
-    Route::get('logs', 'index');
-    Route::get('getLogs', 'getLogs');
+  Route::controller(AuditTrailController::class)->group(function () {
+    Route::get('audit_trails', 'index');
+    Route::get('getAuditTrails', 'getAuditTrails');
   });
   // Route des ressources
   Route::resources([
