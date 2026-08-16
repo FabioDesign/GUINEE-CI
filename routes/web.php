@@ -77,7 +77,8 @@ Route::middleware(['auth'])->group(function () {
   Route::controller(DemandController::class)->group(function () {
     Route::post('searchUsers', 'searchUsers');
     Route::get('getDemands', 'getDemands');
-    Route::post('reject', 'reject');
+    Route::patch('recover', 'recover');
+    Route::patch('reject', 'reject');
   });
   // Route pour les pistes d'audit:
   Route::controller(AuditTrailController::class)->group(function () {

@@ -148,6 +148,47 @@
                                 </div>
                             </div>
                             @endif
+                            <div class="row mb-5">
+                                <div class="col-md-12 text-primary fw-bold fs-2">Traitements de la demande</div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-8 col-12">
+                                    <label class="fs-5">Initié par : <span class="fw-bold fs-5 text-dark">{{ $query->createdBy->civility }} {{ $query->createdBy->lastname }} {{ $query->createdBy->firstname }}</span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Date : <span class="fw-bold fs-5 text-dark">{{ $query->created_at->format('d-m-Y H:i') }}</span></label>
+                                </div>
+                            </div>
+                            @if($query->transmitted_at != null)
+                            <div class="row mb-5">
+                                <div class="col-md-8 col-12">
+                                    <label class="fs-5">Transmis par : <span class="fw-bold fs-5 text-dark">{{ $query->transmittedBy->civility }} {{ $query->transmittedBy->lastname }} {{ $query->transmittedBy->firstname }}</span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Date : <span class="fw-bold fs-5 text-dark">{{ $query->transmitted_at->format('d-m-Y H:i') }}</span></label>
+                                </div>
+                            </div>
+                            @endif
+                            @if($query->validated_at != null)
+                            <div class="row mb-5">
+                                <div class="col-md-8 col-12">
+                                    <label class="fs-5">Validé par : <span class="fw-bold fs-5 text-dark">{{ $query->validatedBy->civility }} {{ $query->validatedBy->lastname }} {{ $query->validatedBy->firstname }}</span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Date : <span class="fw-bold fs-5 text-dark">{{ $query->validated_at->format('d-m-Y H:i') }}</span></label>
+                                </div>
+                            </div>
+                            @endif
+                            @if($query->recovered_at != null)
+                            <div class="row mb-5">
+                                <div class="col-md-8 col-12">
+                                    <label class="fs-5">Récupéré avec : <span class="fw-bold fs-5 text-dark">{{ $query->recoveredBy->civility }} {{ $query->recoveredBy->lastname }} {{ $query->recoveredBy->firstname }}</span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Date : <span class="fw-bold fs-5 text-dark">{{ $query->recovered_at->format('d-m-Y H:i') }}</span></label>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                         <!--end::Form Wizard Step 4-->
                     </form>
@@ -197,7 +238,7 @@
 						}
 					});
 					// Appel AJAX
-					axios.post('/reject', {
+					axios.patch('/reject', {
 						motif: motif,
 						uuid: $('#uuid').val()
 					}).then(response => {

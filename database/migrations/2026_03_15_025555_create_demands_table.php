@@ -25,14 +25,14 @@ return new class extends Migration
             $table->timestamp('transmitted_at')->nullable();
             $table->timestamp('validated_at')->nullable();
             $table->timestamp('rejeted_at')->nullable();
-            $table->timestamp('retrieved_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
+            $table->timestamp('recovered_at')->nullable();
             $table->foreignId('created_by')->nullable();
             $table->foreignId('updated_by')->nullable();
             $table->foreignId('transmitted_by')->nullable();
             $table->foreignId('validated_by')->nullable();
             $table->foreignId('rejeted_by')->nullable();
-            $table->foreignId('retrieved_by')->nullable();
-            $table->timestamp('delivered_at')->nullable();
+            $table->foreignId('recovered_by')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('consulat_id');
             $table->foreignId('document_id');

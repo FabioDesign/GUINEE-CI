@@ -1,7 +1,7 @@
 @extends('pdf.layouts.master')
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 100px;">
+<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 70px;">
   <tr>
     <td style="vertical-align:top;">
 
@@ -51,7 +51,7 @@
       </table>
 
       {{-- ── Texte de clôture ──────────────────────────────────── --}}
-      <p style="font-size:12pt; font-weight:bold; text-align:center; margin-top: 25px; margin-bottom: 15px;">
+      <p style="font-size:12pt; font-weight:bold; text-align:center; margin-top: 60px; margin-bottom: 15px;">
         EST DE NATIONALITE GUINEENNE
       </p>
 

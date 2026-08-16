@@ -56,8 +56,6 @@
 @endsection
 
 @section('scripts')
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
   <script>
     const actionIds = {{ json_encode($actionIds) }};
     const getDemands = async () => {
@@ -112,6 +110,13 @@
                 status = 'N/A';
                 color = 'badge-light-secondary';
             }
+            if (data.recovered_at) {
+              tit = 'Récupérée';
+              color = 'badge-light-success';
+            } else {
+              tit = 'Récupérée';
+              color = 'badge-light-success';
+            }
             outTable += `<tr>
               <td>${i}</td>
               <td>${data.user}</td>
@@ -138,6 +143,14 @@
                 if (actionIds.includes(9) && data.status == 2) {
                   outTable += `<a href="${data.path}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimer la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
                     <i class="ki-duotone ki-printer text-warning fs-2">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </a>`;
+                }
+                if (actionIds.includes(10) && data.status == 2 && !data.recovered_at) {
+                  outTable += `<a href="#" data-uuid="${data.uuid}" data-delivered_at="${data.delivered_at}" data-bs-toggle="tooltip" data-bs-placement="top" title="Récupérer la demande" class="btn btn-icon btn-bg-light btn-sm btn-recup me-1">
+                    <i class="ki-duotone ki-message-text-2 text-info fs-2">
                       <span class="path1"></span>
                       <span class="path2"></span>
                     </i>
@@ -178,5 +191,94 @@
         }
       }
     );
+    $(document).on('click', '.btn-recup', function() {
+      const uuid = $(this).data('uuid');
+      const date = $(this).data('delivered_at');
+			Swal.fire({
+        title: 'Récupérer la demande',
+        text: 'Veuillez saisir la date de récupération.',
+        icon: 'warning',
+        input: "text",
+        inputPlaceholder: "JJ-MM-AAAA HH:MM",
+        inputAttributes: { required: true },
+        showCancelButton: true,
+        confirmButtonColor: '#3085D6',
+        cancelButtonColor: '#D33',
+        confirmButtonText: 'Valider',
+        cancelButtonText: 'Annuler',
+        didOpen: () => {
+          const input = Swal.getInput();
+          input.setAttribute('readonly', true);
+          flatpickr(input, {
+            locale: "fr",
+            enableTime: true,
+            time_24hr: true,
+            dateFormat: "d-m-Y H:i",
+            defaultDate: "today",
+            maxDate: "today",
+            minDate: date,
+            allowInput: false,
+          });
+        },
+        inputValidator: (value) => {
+          if (!value || !value.trim()) {
+            return "<span style='color: #f27474;font-weight: 600;'>La date de récupération est obligatoire !</span>";
+          }
+        }
+      }).then((result) => {
+				if (result.isConfirmed) {
+					const date = result.value.trim();
+					// Afficher un chargement
+					Swal.fire({
+						title: 'Traitement en cours...',
+						text: 'Récupération de la demande en cours',
+						allowOutsideClick: false,
+						didOpen: () => {
+							Swal.showLoading();
+						}
+					});
+					// Appel AJAX
+					axios.patch('/recover', {
+						date: date,
+						uuid: uuid
+					}).then(response => {
+						if (response.data.status == 1) {
+							Swal.fire({
+								title: "Félicitation !",
+								text: response.data.message,
+								icon: 'success',
+								confirmButtonText: "Fermer",
+								customClass:{
+									confirmButton: "btn btn-square font-weight-bold btn-light-success"
+								}
+							}).then(function() {
+								location.reload();
+							});
+						} else {
+							Swal.fire({
+								title: 'Erreur !',
+								text: response.data.message,
+								icon: 'error',
+								confirmButtonText: 'Fermer',
+								customClass: {
+									confirmButton: "btn btn-square font-weight-bold btn-light-success"
+								},
+							});
+						}
+					})
+					.catch(error => {
+						Swal.fire({
+							title: 'Erreur !',
+							text: 'Une erreur est survenue lors du rejet',
+							icon: 'error',
+							confirmButtonText: "Fermer",
+							customClass:{
+								confirmButton: "btn btn-square font-weight-bold btn-light-success"
+							}
+						});
+					});
+				}
+			});
+		});
   </script>
 @endsection

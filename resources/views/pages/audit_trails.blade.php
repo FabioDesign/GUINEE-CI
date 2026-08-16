@@ -56,8 +56,6 @@
 @endsection
 
 @section('scripts')
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
   <script>
     function formatDateTime(dateString) {
       const d = new Date(dateString);

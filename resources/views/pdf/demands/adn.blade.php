@@ -1,7 +1,7 @@
 @extends('pdf.layouts.master')
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 60px;">
+<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
   <tr>
     <td style="vertical-align:top;">
 

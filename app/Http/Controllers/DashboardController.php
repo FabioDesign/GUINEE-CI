@@ -63,9 +63,9 @@ class DashboardController extends Controller
 		]);
 		$data = [
 			'amount' => $query[0]->amount,
-			'number' => $query[0]->number,
 			'paid' => $query[0]->paid,
 			'free' => $query[0]->free,
+			'recover' => $query[0]->recover,
 		];
 		return response()->json([
 			'status' => 1,

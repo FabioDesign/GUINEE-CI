@@ -23,7 +23,7 @@ return new class extends Migration
                 SELECT
                     d.id,
                     d.label,
-                    COALESCE(SUM(a.number), 0) AS total
+                    COALESCE(SUM(a.paid), 0) + COALESCE(SUM(a.free), 0) AS total
                 FROM documents d
                 LEFT JOIN annual_stats a
                     ON a.document_id = d.id

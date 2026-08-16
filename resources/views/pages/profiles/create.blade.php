@@ -32,9 +32,9 @@
           </label>
         </div>
         @foreach($menusWithActions as $menu)
-          <div class="row form-group fv-row mb-2">
-            <label class="col-md-2 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->label }}</label>
-            <div class="col-md-10 col-12 checkbox-inline">
+          <div class="row form-group fv-row mb-5">
+            <label class="col-md-12 col-12 col-form-label text-lg-right fw-bolder text-dark fs-5">{{ $menu->label }}</label>
+            <div class="col-md-12 col-12 checkbox-inline">
                 @foreach($menu->actions as $action)
                   @php $class = $action->id == 1 ? 'show' : 'check'; @endphp
                   <label class="boxcheck"><input type="checkbox" name="permissions[]" value="{{ $menu->id . '|' . $action->id }}" class="iCheck checked {{ $class }}"> <span style="margin: 0 15px 0 3px;">{{ $action->label }}</span></label>

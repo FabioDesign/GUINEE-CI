@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Session;
 use Myhelper;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -56,7 +57,7 @@ class DemandController extends Controller
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
 		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
 		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
-		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
+		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
 		$prefecture = Town::find(optional($query->user)->town_id);
@@ -209,13 +210,11 @@ class DemandController extends Controller
         DB::beginTransaction(); // Démarrer une transaction
         try {
             // Création de l'utilisateur
-            // if ($request->user_id) {
-			// 	$user = User::findOrFail($request->user_id)->update($set);
-            // } else {
-				// $user = User::create($set);
-				$user = User::find(11);
-				// dd($user);
-            // }
+            if ($request->user_id) {
+				$user = User::find($request->user_id)->update($set);
+            } else {
+				$user = User::create($set);
+            }
             // Création de la demande
 			$reference = Demand::reference($request->codeDoc, $user->birthday_at);
             $set = [
@@ -567,6 +566,8 @@ class DemandController extends Controller
 			'price' => $data->price,
 			'copy' => $data->copy,
 			'status' => $data->status,
+			'delivered_at' => $data->delivered_at ? Carbon::parse($data->delivered_at)->format('d-m-Y H:i') : null,
+			'recovered_at' => $data->recovered_at,
 			'path' => ($data->path == null && $data->status == 2) ? Demand::printDmd($data->uuid) : asset($data->path),
 		]);
 		return response()->json([
@@ -638,6 +639,71 @@ class DemandController extends Controller
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors du rejet.",
+			]);
+		}
+	}
+	// Récupérer une demande
+	public function recover(Request $request) {
+        if (!Auth::check()) {
+            return 'x';
+        }
+		// Validator
+		$validator = Validator::make($request->all(), [
+			'uuid' => 'required|uuid|exists:demands,uuid',
+			'date' => 'required|date_format:d-m-Y H:i',
+		], [
+			'uuid.required' => "L'identifiant est obligatoire.",
+			'uuid.uuid' => "L'identifiant doit être un UUID valide.",
+			'uuid.exists' => "La demande spécifiée n'existe pas.",
+			'date.required' => "La date de récupération est obligatoire.",
+			'date.date_format' => "Le format de la date de récupération est incorrecte.",
+		]);
+		// Error field
+		if ($validator->fails()) {
+			Log::warning("Demand::recover - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
+		}
+		// Vérifier si la caisse existe
+		$query = Demand::where('uuid', $request->uuid)->first();
+		if (!$query) {
+			Log::warning("Demand::recover - Aucune demande trouvée pour l'UUID : {$request->uuid}");
+			return response()->json([
+				'status' => 0,
+				'message' => "Demande non trouvée.",
+			]);
+		}
+		$label = optional($query->document)->label;
+		$set = [
+			'recovered_at' => Carbon::parse($request->date)->format('Y-m-d H:i:s'),
+			'recovered_by' => Auth::id(),
+		];
+		DB::beginTransaction();
+		try {
+			// Mettre à jour la demande
+			$query->update($set);
+			DB::commit();
+			Myhelper::auditTrail(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
+				Session::get('username'),
+				Session::get('profil'),
+				"Document consulaire: {$label}",
+				'Récupérer',
+				Session::get('avatar')
+			);
+			return response()->json([
+				'status' => 1,
+				'message' => "Demande consulaire récupérée avec succès.",
+			]);
+		} catch (\Exception $e) {
+			DB::rollBack(); // Annuler la transaction en cas d'erreur
+			Log::warning("Demand::recover - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la récupération.",
 			]);
 		}
 	}

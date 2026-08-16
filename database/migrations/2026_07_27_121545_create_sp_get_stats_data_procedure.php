@@ -21,101 +21,91 @@ return new class extends Migration
             )
             BEGIN
                 DECLARE v_amount DECIMAL(15, 0) DEFAULT 0;
-                DECLARE v_number DECIMAL(10, 0) DEFAULT 0;
                 DECLARE v_paid   DECIMAL(10, 0) DEFAULT 0;
                 DECLARE v_free   DECIMAL(10, 0) DEFAULT 0;
+                DECLARE v_recover DECIMAL(10, 0) DEFAULT 0;
 
-                /* =========================
-                CAS JOURNALIER
-                ========================== */
+                
                 IF p_days IS NOT NULL THEN
 
                     SELECT 
                         COALESCE(SUM(price), 0),
-                        COALESCE(SUM(copy), 0),
                         COALESCE(SUM(CASE WHEN price <> 0 THEN copy ELSE 0 END), 0),
-                        COALESCE(SUM(CASE WHEN price = 0 THEN copy ELSE 0 END), 0)
+                        COALESCE(SUM(CASE WHEN price = 0 THEN copy ELSE 0 END), 0),
+                        COALESCE(SUM(CASE WHEN recovered_at IS NOT NULL THEN 1 ELSE 0 END), 0)
                     INTO
                         v_amount,
-                        v_number,
                         v_paid,
-                        v_free
+                        v_free,
+                        v_recover
                     FROM demands
                     WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id)
                     AND validated_at LIKE CONCAT(p_years, '-', p_months, '-', p_days, '%')
                     AND status = 2;
 
-                /* =========================
-                CAS MENSUEL
-                ========================== */
+                
                 ELSEIF p_months IS NOT NULL THEN
 
                     SELECT 
                         COALESCE(SUM(amount), 0),
-                        COALESCE(SUM(number), 0),
                         COALESCE(SUM(paid), 0),
-                        COALESCE(SUM(free), 0)
+                        COALESCE(SUM(free), 0),
+                        COALESCE(SUM(recover), 0)
                     INTO
                         v_amount,
-                        v_number,
                         v_paid,
-                        v_free
+                        v_free,
+                        v_recover
                     FROM monthly_stats
                     WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id)
                     AND years = p_years
                     AND months = p_months;
 
-                /* =========================
-                CAS ANNUEL
-                ========================== */
+                
                 ELSEIF p_years IS NOT NULL THEN
 
                     SELECT 
                         COALESCE(SUM(amount), 0),
-                        COALESCE(SUM(number), 0),
                         COALESCE(SUM(paid), 0),
-                        COALESCE(SUM(free), 0)
+                        COALESCE(SUM(free), 0),
+                        COALESCE(SUM(recover), 0)
                     INTO
                         v_amount,
-                        v_number,
                         v_paid,
-                        v_free
+                        v_free,
+                        v_recover
                     FROM annual_stats
                     WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id)
                     AND years = p_years;
 
-                /* =========================
-                CAS TOUTES LES DONNEES
-                ========================== */
+                
                 ELSE
 
                     SELECT 
                         COALESCE(SUM(amount), 0),
-                        COALESCE(SUM(number), 0),
                         COALESCE(SUM(paid), 0),
-                        COALESCE(SUM(free), 0)
+                        COALESCE(SUM(free), 0),
+                        COALESCE(SUM(recover), 0)
                     INTO
                         v_amount,
-                        v_number,
                         v_paid,
-                        v_free
+                        v_free,
+                        v_recover
                     FROM annual_stats
                     WHERE consulat_id = p_consulat_id
                     AND (p_document_id IS NULL OR document_id = p_document_id);
 
                 END IF;
 
-                /* =========================
-                RESULTAT FINAL
-                ========================== */
+                
                 SELECT 
-                    v_amount AS amount,
-                    v_number AS number,
-                    v_paid   AS paid,
-                    v_free   AS free;
+                    v_amount 	AS amount,
+                    v_paid   	AS paid,
+                    v_free   	AS free,
+                    v_recover 	AS recover;
             END
         ");
     }

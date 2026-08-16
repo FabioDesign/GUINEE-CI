@@ -49,30 +49,7 @@
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
                     <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
-                        <span class="m-auto">Tous les paiements</span>
-                    </div>
-                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
-                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                    </div>
-                </div>
-                <!--end::Progress-->
-            </div>
-            <!--end::Card body-->
-        </div>
-        <!--end::Card widget 20-->
-    </div>
-    <div class="col-md-3 col-12">
-    <!--begin::Card widget 20-->
-        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
-            <!--begin::Header-->
-            <div id="number" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
-            <!--end::Header-->
-            <!--begin::Card body-->
-            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
-                <!--begin::Progress-->
-                <div class="d-flex align-items-center flex-column mt-3 w-100">
-                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
-                        <span class="m-auto">Toutes les demandes</span>
+                        <span class="m-auto">Montant total</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -95,7 +72,7 @@
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
                     <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
-                        <span class="m-auto">Demandes payées</span>
+                        <span class="m-auto">Documents payés</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -118,7 +95,124 @@
                 <!--begin::Progress-->
                 <div class="d-flex align-items-center flex-column mt-3 w-100">
                     <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
-                        <span class="m-auto">Demandes gratuites</span>
+                        <span class="m-auto">Documents gratuits</span>
+                    </div>
+                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
+                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <!--end::Progress-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card widget 20-->
+    </div>
+    <div class="col-md-3 col-12">
+    <!--begin::Card widget 20-->
+        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
+            <!--begin::Header-->
+            <div id="recover" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <!--end::Header-->
+            <!--begin::Card body-->
+            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
+                <!--begin::Progress-->
+                <div class="d-flex align-items-center flex-column mt-3 w-100">
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Documents récupérés</span>
+                    </div>
+                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
+                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <!--end::Progress-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card widget 20-->
+    </div>
+</div>
+<div class="row mb-5 mt-10">
+    <div class="col-md-3 col-12">
+    <!--begin::Card widget 20-->
+        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #7239EA;background-image:url('assets/img/bg-purple.svg')">
+            <!--begin::Header-->
+            <div id="validated" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <!--end::Header-->
+            <!--begin::Card body-->
+            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
+                <!--begin::Progress-->
+                <div class="d-flex align-items-center flex-column mt-3 w-100">
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Documents validés</span>
+                    </div>
+                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
+                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <!--end::Progress-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card widget 20-->
+    </div>
+    <div class="col-md-3 col-12">
+    <!--begin::Card widget 20-->
+        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #F1416C;background-image:url('/assets/img/bg-red.png')">
+            <!--begin::Header-->
+            <div id="rejected" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <!--end::Header-->
+            <!--begin::Card body-->
+            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
+                <!--begin::Progress-->
+                <div class="d-flex align-items-center flex-column mt-3 w-100">
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Documents rejetés</span>
+                    </div>
+                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
+                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <!--end::Progress-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card widget 20-->
+    </div>
+    <div class="col-md-3 col-12">
+    <!--begin::Card widget 20-->
+        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background: linear-gradient(112.14deg, #FF8A00 0%, #E96922 100%)">
+            <!--begin::Header-->
+            <div id="transmitted" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <!--end::Header-->
+            <!--begin::Card body-->
+            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
+                <!--begin::Progress-->
+                <div class="d-flex align-items-center flex-column mt-3 w-100">
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Documents transmis</span>
+                    </div>
+                    <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
+                        <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <!--end::Progress-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card widget 20-->
+    </div>
+    <div class="col-md-3 col-12">
+    <!--begin::Card widget 20-->
+        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
+            <!--begin::Header-->
+            <div id="created" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <!--end::Header-->
+            <!--begin::Card body-->
+            <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
+                <!--begin::Progress-->
+                <div class="d-flex align-items-center flex-column mt-3 w-100">
+                    <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mb-2">
+                        <span class="m-auto">Documents initiés</span>
                     </div>
                     <div class="h-10px mx-3 w-100 bg-white bg-opacity-50 rounded">
                         <div class="bg-white rounded h-10px" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -246,9 +340,9 @@
                 });
                 if (response.data.status == 1) {
                     $('#amount').html(response.data.data.amount);
-                    $('#number').html(response.data.data.number);
                     $('#paid').html(response.data.data.paid);
                     $('#free').html(response.data.data.free);
+                    $('#recover').html(response.data.data.recover);
                 }
             } catch (e) {
                 console.error(e);

@@ -13,54 +13,70 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Demand extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $guarded = [];
+  protected $guarded = [];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'delivered_at' => 'date',
-        'rejeted_at' => 'datetime',
-        'retrieved_at' => 'datetime',
-        'validated_at' => 'datetime',
-        'transmitted_at' => 'datetime',
-    ];
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array<string, string>
+   */
+  protected $casts = [
+    'delivered_at' => 'date',
+    'rejeted_at' => 'datetime',
+    'recovered_at' => 'datetime',
+    'validated_at' => 'datetime',
+    'transmitted_at' => 'datetime',
+  ];
 
-    protected static function boot() {
-        parent::boot();
+  protected static function boot() {
+    parent::boot();
 
-        static::creating(function ($model) {
-            if (empty($model->uuid)) {
-                $model->uuid = Str::uuid()->toString();
-            }
-        });
-    }
-    // Relation avec le Document
-    public function document() {
-        return $this->belongsTo(Document::class, 'document_id');
-    }
-    // Relation avec l'utilisateur
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-    // Relation avec le consulat
-    public function consulat() {
-        return $this->belongsTo(Consulat::class, 'consulat_id');
-    }
+    static::creating(function ($model) {
+      if (empty($model->uuid)) {
+        $model->uuid = Str::uuid()->toString();
+      }
+    });
+  }
+  // Relation avec le Document
+  public function document() {
+    return $this->belongsTo(Document::class, 'document_id');
+  }
+  // Relation avec l'utilisateur
+  public function user() {
+    return $this->belongsTo(User::class, 'user_id');
+  }
+  // Relation avec le consulat
+  public function consulat() {
+    return $this->belongsTo(Consulat::class, 'consulat_id');
+  }
+  // Relation avec le créateur
+  public function createdBy() {
+    return $this->belongsTo(User::class, 'created_by');
+  }
+  // Relation avec le transmetteur
+  public function transmittedBy() {
+    return $this->belongsTo(User::class, 'transmitted_by');
+  }
+  // Relation avec le validateur
+  public function validatedBy() {
+    return $this->belongsTo(User::class, 'validated_by');
+  }
+  // Relation avec le récupérateur
+  public function recoveredBy() {
+    return $this->belongsTo(User::class, 'recovered_by');
+  }
   // Reference
   public static function reference(string $codeDoc, string $birthday_at): ?string {
     try {
-        $monthAn = ['JA', 'FE', 'MR', 'AV', 'MA', 'JN', 'JL', 'AO', 'SE', 'OC', 'NO', 'DE'];
-        $date = new DateTime($birthday_at);
-        $day = $date->format('d');
-        $month = $date->format('m');
-        $year = $date->format('y');
-        // Mois en Fr
-        $monthFr = $monthAn[$month - 1];
+      $monthAn = ['JA', 'FE', 'MR', 'AV', 'MA', 'JN', 'JL', 'AO', 'SE', 'OC', 'NO', 'DE'];
+      $date = new DateTime($birthday_at);
+      $day = $date->format('d');
+      $month = $date->format('m');
+      $year = $date->format('y');
+      // Mois en Fr
+      $monthFr = $monthAn[$month - 1];
       // Nombre de demandes dans la même année
       $lastDemand = self::whereYear('created_at', date('Y'))->count() + 1;
       // Génération de la nouvelle référence
@@ -73,11 +89,11 @@ class Demand extends Model
 
   //Génération de Filename unique
   public static function filenameUnique($codeDoc) {
-      do {
-          $alfa = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
-          $string = $codeDoc.substr(str_shuffle($alfa), 0, 13) . '.pdf';
-      } while(self::where('path', $string)->exists());
-      return $string;
+    do {
+      $alfa = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
+      $string = $codeDoc.substr(str_shuffle($alfa), 0, 13) . '.pdf';
+    } while(self::where('path', $string)->exists());
+    return $string;
   }
 
   // Impression de la demande

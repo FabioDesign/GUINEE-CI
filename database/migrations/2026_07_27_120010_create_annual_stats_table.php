@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('annual_stats', function (Blueprint $table) {
             $table->increments('id');
             $table->year('years', 4);
-            $table->decimal('amount', 15, 0);
-            $table->decimal('number', 10, 0);
-            $table->decimal('paid', 10, 0);
-            $table->decimal('free', 10, 0);
+            $table->decimal('amount', 15, 0)->default(0);
+            $table->integer('paid')->default(0);
+            $table->integer('free')->default(0);
+            $table->integer('recover')->default(0);
             $table->datetime('created_at');
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->foreignId('consulat_id');
