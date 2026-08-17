@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('actions', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('label', 50);
+            $table->tinyInteger('position');
         });
     }
 

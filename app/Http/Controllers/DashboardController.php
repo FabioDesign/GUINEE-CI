@@ -52,6 +52,7 @@ class DashboardController extends Controller
         if (!Auth::check()) {
             return 'x';
         }
+		
 		//Requete Read
 		$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?, ?)",
 		[
@@ -65,7 +66,11 @@ class DashboardController extends Controller
 			'amount' => $query[0]->amount,
 			'paid' => $query[0]->paid,
 			'free' => $query[0]->free,
-			'recover' => $query[0]->recover,
+			'created' => $query[0]->created,
+			'transmitted' => $query[0]->transmitted,
+			'validated' => $query[0]->validated,
+			'rejected' => $query[0]->rejected,
+			'recovered' => $query[0]->recovered,
 		];
 		return response()->json([
 			'status' => 1,
@@ -97,7 +102,8 @@ class DashboardController extends Controller
 			return 'x';
 		}
 		$month = str_pad($request->months, 2, '0', STR_PAD_LEFT);
-		$days = Demand::select('validated_at')
+
+		$days = Demand::selectRaw('DATE(validated_at) as day_date')
 		->where('consulat_id', Auth::user()->consulat_id)
 		->when($request->documents, function ($query, $documents) {
 			return $query->whereIn('document_id', $documents);
@@ -106,11 +112,18 @@ class DashboardController extends Controller
 		->where('status', 2)
 		->orderBy('validated_at')
 		->distinct()
-		->get();
-		dd($days);
+		->get()
+		->map(function ($item) {
+			$date = \Carbon\Carbon::parse($item->day_date)->locale('fr');
+			return [
+				'day_date'  => $date->format('j'),                               // 15
+				'label' => ucfirst($date->isoFormat('dddd D')),              // Samedi 15
+			];
+		});
+
 		return response()->json([
 			'status' => 1,
-			'data' => $days,
+			'data'   => $days,
 		]);
 	}
 	// Liste des documents

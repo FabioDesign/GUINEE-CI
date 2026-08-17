@@ -471,56 +471,6 @@ class DemandController extends Controller
 			]);
 		}
 	}
-	// Supprimer une demande
-	public function destroy($uuid) {
-        if (!Auth::check()) {
-            return 'x';
-        }
-		try {
-			// Vérifier si le document existe
-			$document = Demand::where('uuid', $uuid)->first();
-			if (!$document) {
-				Log::warning("Demand::destroy - Aucune document trouvé pour l'uUID : {$uuid}");
-				return response()->json([
-					'status' => 0,
-					'message' => "Document consulaire non trouvé.",
-				]);
-			}
-			// Vérifier si des utilisateurs sont associés
-			$documentCount = User::where('document_id', $document->id)->count();
-			if ($documentCount > 0) {
-				Log::warning("Demand::destroy - Cet document est associé à {$documentCount} utilisateur(s).");
-				return response()->json([
-					'status' => 0,
-					'message' => "Cet document est associé à {$documentCount} utilisateur(s).",
-				]);
-			}
-			DB::beginTransaction();
-			// Supprimer le document
-			$document->delete();
-			DB::commit();
-			Myhelper::auditTrail(
-				Auth::user()->consulat_id,
-				Auth::user()->profile_id,
-				Session::get('username'),
-				Session::get('profil'),
-				"Document consulaire: {$document->label}",
-				'Supprimer',
-				Session::get('avatar')
-			);
-			return response()->json([
-				'status' => 1,
-				'message' => "Document consulaire supprimé avec succès.",
-			]);
-		} catch (\Exception $e) {
-			DB::rollBack();
-			Log::warning("Demand::destroy - Erreur : {$e->getMessage()} " . json_encode($request->all()));
-			return response()->json([
-				'status' => 0,
-				'message' => "Erreur lors de la suppression.",
-			]);
-		}
-	}
     //Rechercher les utilisateurs
 	public function searchUsers(Request $request) {
 		//Requete Read-
@@ -611,9 +561,9 @@ class DemandController extends Controller
 		$label = optional($query->document)->label;
 		$set = [
 			'status' => 3,
-			'rejeted_at' => now(),
+			'rejected_at' => now(),
 			'motif' => $request->motif,
-			'rejeted_by' => Auth::user()->id,
+			'rejected_by' => Auth::user()->id,
 		];
 		DB::beginTransaction();
 		try {

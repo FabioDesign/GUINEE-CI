@@ -316,10 +316,7 @@ class DocumentController extends Controller
 		}
 	}
 	// Récupérer un document
-	public function getDocs($id) {
-        if (!Auth::check()) {
-            return 'x';
-        }
+	public function getDocuments($id) {
 		// Requete Read
 		$data['docs'] = Document::select('id', 'label', 'code', 'number', 'price', 'description')
 		->where('id', $id)

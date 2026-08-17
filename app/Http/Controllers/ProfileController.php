@@ -81,10 +81,14 @@ class ProfileController extends Controller
 		$addmodal = '<a href="/profiles" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Ajouter</a>';
 		// Dans votre contrôleur
-		$menusWithActions = Menu::with('actions')
-			->where('status', 1)
-			->orderBy('position')
-			->get();
+		$menusWithActions = Menu::with([
+			'actions' => function ($query) {
+				$query->orderBy('position');
+			}
+		])
+		->where('status', 1)
+		->orderBy('position')
+		->get();
 		// Rôles
 		$roles = Role::all();
 		return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'roles'));
@@ -184,10 +188,14 @@ class ProfileController extends Controller
 		$addmodal = '<a href="/profiles" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
 		// Récupérer les menus avec leurs actions
-		$menusWithActions = Menu::with('actions')
-			->where('status', 1)
-			->orderBy('position')
-			->get();
+		$menusWithActions = Menu::with([
+			'actions' => function ($query) {
+				$query->orderBy('position');
+			}
+		])
+		->where('status', 1)
+		->orderBy('position')
+		->get();
 		// Récupérer les permissions actuelles du profil
 		$currentPermissions = Permission::where('profile_id', $query->id)
 			->get()

@@ -46,7 +46,7 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(
             [
                 'menu_id' => 2,
-                'action_id' => 4,
+                'action_id' => 12,
                 'profile_id' => 1,
             ]
         );
@@ -74,7 +74,21 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(
             [
                 'menu_id' => 2,
+                'action_id' => 10,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
                 'action_id' => 9,
+                'profile_id' => 1,
+            ]
+        );
+        Permission::firstOrCreate(
+            [
+                'menu_id' => 2,
+                'action_id' => 11,
                 'profile_id' => 1,
             ]
         );

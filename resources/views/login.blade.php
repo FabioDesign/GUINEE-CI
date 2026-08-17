@@ -48,7 +48,7 @@
 						</div>
 						<div class="footer-button">
 							@foreach($query as $data)
-							<a onclick="getDocs('{{ $data->id }}')">
+							<a onclick="getDocuments('{{ $data->id }}')">
 								<button class="btn">
 									<i class="{{ $data->icone }}"></i><span>{{ $data->label }}</span>
 								</button>
@@ -217,10 +217,10 @@
 		<script src="/assets/js/custom.js?v20126.03.29.02.45"></script>
 		<!--end::Custom Javascript-->
 		<script>
-			const getDocs = async (id) => {
+			const getDocuments = async (id) => {
 				if (!id) return;
 				try {
-					const response = await axios.get(`/getDocs/${id}`);
+					const response = await axios.get(`/getDocuments/${id}`);
 					const data = response.data?.data || null;
 					if (data) {
 						$('#modal-title').text(data.docs.label);

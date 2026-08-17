@@ -24,7 +24,7 @@ class Demand extends Model
    */
   protected $casts = [
     'delivered_at' => 'date',
-    'rejeted_at' => 'datetime',
+    'rejected_at' => 'datetime',
     'recovered_at' => 'datetime',
     'validated_at' => 'datetime',
     'transmitted_at' => 'datetime',

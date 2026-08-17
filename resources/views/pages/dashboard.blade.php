@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body py-4">
         <div class="row mb-5">
-            <div class="col-md-3 col-12">
+            <div class="col-md-5 col-12">
                 <label class="fw-bolder text-dark fs-5">Documents : <span class="text-danger">*</span></label>
                 <select id="documents" class="form-select">
                     <option value="" selected>Tous les documents</option>
@@ -13,31 +13,31 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 col-12">
+            <div class="col-md-2 col-12">
                 <label class="fw-bolder text-dark fs-5">Années : <span class="text-danger">*</span></label>
                 <select id="years" class="form-select">
-                    <option value="" selected>Toutes les années</option>
+                    <option value="" selected>Tous</option>
                     @foreach($years as $data)
                         <option value="{{ $data->years }}">{{ $data->years }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 col-12">
+            <div class="col-md-2 col-12">
                 <label class="fw-bolder text-dark fs-5">Mois : <span class="text-danger">*</span></label>
                 <select id="months" class="form-select">
-                    <option value="" selected>Tous les mois</option>
+                    <option value="" selected>Tous</option>
                 </select>
             </div>
             <div class="col-md-3 col-12">
                 <label class="fw-bolder text-dark fs-5">Jours : <span class="text-danger">*</span></label>
                 <select id="days" class="form-select">
-                    <option value="" selected>Tous les jours</option>
+                    <option value="" selected>Tous</option>
                 </select>
             </div>
         </div>
     </div>
 </div>
-<div class="row mb-5 mt-10">
+<div class="row mt-10">
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
         <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #7239EA;background-image:url('assets/img/bg-purple.svg')">
@@ -111,7 +111,7 @@
     <!--begin::Card widget 20-->
         <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
             <!--begin::Header-->
-            <div id="recover" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
+            <div id="recovered" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
             <!--end::Header-->
             <!--begin::Card body-->
             <div class="card-body d-flex align-items-end pt-0" style="border-top: 1px solid rgba(255, 255, 255, 0.3);background: rgba(0, 0, 0, 0.15);">
@@ -131,7 +131,7 @@
         <!--end::Card widget 20-->
     </div>
 </div>
-<div class="row mb-5 mt-10">
+<div class="row mb-5">
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
         <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #7239EA;background-image:url('assets/img/bg-purple.svg')">
@@ -277,12 +277,12 @@
             await updateChart(docyears);
         });
         $(document).on('change', '#documents, #years, #months, #days', function() {
-            if ($('#years').val() == '') {
-                $('#months').html('<option value="" selected>Tous les mois</option>');
-                $('#days').html('<option value="" selected>Tous les jours</option>');
+            if (this.id == 'years') {
+                $('#months').html('<option value="" selected>Tous</option>');
+                $('#days').html('<option value="" selected>Tous</option>');
             }
-            if ($('#months').val() == '') {
-                $('#days').html('<option value="" selected>Tous les jours</option>');
+            if (this.id == 'months') {
+                $('#days').html('<option value="" selected>Tous</option>');
             }
             const documents = $('#documents').val();
             const years = $('#years').val();
@@ -299,7 +299,7 @@
                         const monthFr = [
                             "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
                         ];
-                        $('#months').html('<option value="" selected>Tous les mois</option>');
+                        $('#months').html('<option value="" selected>Tous</option>');
                         for (let i = 0; i < months.length; i++) {
                             $('#months').append('<option value="' + months[i].months + '">' + monthFr[months[i].months - 1] + '</option>');
                         }
@@ -318,9 +318,9 @@
                             months: months
                         });
                         const days = response.data.data;
-                        $('#days').html('<option value="" selected>Tous les jours</option>');
+                        $('#days').html('<option value="" selected>Tous</option>');
                         for (let i = 0; i < days.length; i++) {
-                            $('#days').append('<option value="' + days[i].days + '">' + days[i].days + '</option>');
+                            $('#days').append('<option value="' + days[i].day_date + '">' + days[i].label + '</option>');
                         }
                     } catch (e) {
                         console.error(e);
@@ -342,7 +342,11 @@
                     $('#amount').html(response.data.data.amount);
                     $('#paid').html(response.data.data.paid);
                     $('#free').html(response.data.data.free);
-                    $('#recover').html(response.data.data.recover);
+                    $('#created').html(response.data.data.created);
+                    $('#transmitted').html(response.data.data.transmitted);
+                    $('#validated').html(response.data.data.validated);
+                    $('#rejected').html(response.data.data.rejected);
+                    $('#recovered').html(response.data.data.recovered);
                 }
             } catch (e) {
                 console.error(e);
@@ -357,7 +361,6 @@
                 const response = await axios.post('/listDocs', {
                     docyears: docyears
                 });
-                console.log(response.data);
                 if (response.data.status == 1) {
                     return {
                         dataDoc: response.data.data.dataDoc,

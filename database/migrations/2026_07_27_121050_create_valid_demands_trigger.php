@@ -62,7 +62,111 @@ return new class extends Migration
                 END IF;
 
                 /* ================================
-                2. RECUPERATION
+                2. CREATION
+                ================================ */
+                IF NEW.created_at IS NOT NULL AND OLD.created_at IS NULL THEN
+
+                    SET v_year  = YEAR(NEW.created_at);
+                    SET v_month = MONTH(NEW.created_at);
+
+                    -- MONTHLY STATS
+                    INSERT INTO monthly_stats 
+                        (years, months, created, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, v_month, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        created = created + 1;
+
+                    -- ANNUAL STATS
+                    INSERT INTO annual_stats 
+                        (years, created, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        created = created + 1;
+
+                END IF;
+
+                /* ================================
+                3. TRANSMITION
+                ================================ */
+                IF NEW.transmitted_at IS NOT NULL AND OLD.transmitted_at IS NULL THEN
+
+                    SET v_year  = YEAR(NEW.transmitted_at);
+                    SET v_month = MONTH(NEW.transmitted_at);
+
+                    -- MONTHLY STATS
+                    INSERT INTO monthly_stats 
+                        (years, months, transmitted, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, v_month, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        transmitted = transmitted + 1;
+
+                    -- ANNUAL STATS
+                    INSERT INTO annual_stats 
+                        (years, transmitted, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        transmitted = transmitted + 1;
+
+                END IF;
+
+                /* ================================
+                4. VALIDATION
+                ================================ */
+                IF NEW.validated_at IS NOT NULL AND OLD.validated_at IS NULL THEN
+
+                    SET v_year  = YEAR(NEW.validated_at);
+                    SET v_month = MONTH(NEW.validated_at);
+
+                    -- MONTHLY STATS
+                    INSERT INTO monthly_stats 
+                        (years, months, validated, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, v_month, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        validated = validated + 1;
+
+                    -- ANNUAL STATS
+                    INSERT INTO annual_stats 
+                        (years, validated, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        validated = validated + 1;
+
+                END IF;
+
+                /* ================================
+                5. REJECTION
+                ================================ */
+                IF NEW.rejected_at IS NOT NULL AND OLD.rejected_at IS NULL THEN
+
+                    SET v_year  = YEAR(NEW.rejected_at);
+                    SET v_month = MONTH(NEW.rejected_at);
+
+                    -- MONTHLY STATS
+                    INSERT INTO monthly_stats 
+                        (years, months, rejected, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, v_month, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        rejected = rejected + 1;
+
+                    -- ANNUAL STATS
+                    INSERT INTO annual_stats 
+                        (years, rejected, consulat_id, document_id, created_at)
+                    VALUES 
+                        (v_year, 1, NEW.consulat_id, NEW.document_id, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        rejected = rejected + 1;
+
+                END IF;
+
+                /* ================================
+                6. RECUPERATION
                 ================================ */
                 IF NEW.recovered_at IS NOT NULL AND OLD.recovered_at IS NULL THEN
 
@@ -71,19 +175,19 @@ return new class extends Migration
 
                     -- MONTHLY STATS
                     INSERT INTO monthly_stats 
-                        (years, months, recover, consulat_id, document_id, created_at)
+                        (years, months, recovered, consulat_id, document_id, created_at)
                     VALUES 
                         (v_year, v_month, 1, NEW.consulat_id, NEW.document_id, NOW())
                     ON DUPLICATE KEY UPDATE
-                        recover = recover + 1;
+                        recovered = recovered + 1;
 
                     -- ANNUAL STATS
                     INSERT INTO annual_stats 
-                        (years, recover, consulat_id, document_id, created_at)
+                        (years, recovered, consulat_id, document_id, created_at)
                     VALUES 
                         (v_year, 1, NEW.consulat_id, NEW.document_id, NOW())
                     ON DUPLICATE KEY UPDATE
-                        recover = recover + 1;
+                        recovered = recovered + 1;
 
                 END IF;
 
