@@ -124,6 +124,14 @@
                     <input type="text" value="{{ $query->person_address }}" class="form-control">
                 </div>
             </div>
+            <div class="row mb-5">
+                <div class="col-md-12 col-12 checkbox-inline">
+                    <label class="boxcheck">
+                        <input type="checkbox" name="printed" value="1" class="iCheck" {{ $printed }}>
+                        <span class="fw-bolder text-dark fs-5 ms-2">Imprimer la Carte d'Identité Consulaire</span>
+                    </label>
+                </div>
+            </div>
             <div class="row mb-2">
                 <div class="col-md-6 col-12 text-center position-relative">
                     @php $signature = $query->signature ? asset('storage/' . $query->signature) : ''; @endphp

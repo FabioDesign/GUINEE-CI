@@ -55,8 +55,8 @@ class DemandController extends Controller
 		}
 		// Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
-		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
-		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . ' data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
+		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
+		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
 		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
@@ -508,14 +508,16 @@ class DemandController extends Controller
 		$query = DB::select('CALL sp_get_dmds_data(?)', [Auth::id()]);
 		// Transformer les données
 		$demands = collect($query)->map(fn($data) => [
+			'id' => $data->id,
 			'uuid' => $data->uuid,
-			'reference' => $data->reference,
-			'user' => $data->civility . ' ' . $data->firstname . ' ' . $data->lastname,
+			'user' => $data->username,
 			'label' => $data->label,
 			'number' => $data->number,
 			'price' => $data->price,
 			'copy' => $data->copy,
 			'status' => $data->status,
+			'printed' => Auth::user()->printed,
+			'role_id' => optional(Auth::user()->profile)->role_id,
 			'delivered_at' => $data->delivered_at ? Carbon::parse($data->delivered_at)->format('d-m-Y H:i') : null,
 			'recovered_at' => $data->recovered_at,
 			'path' => ($data->path == null && $data->status == 2) ? Demand::printDmd($data->uuid) : asset($data->path),

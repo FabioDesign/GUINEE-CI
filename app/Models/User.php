@@ -47,6 +47,7 @@ class User extends Authenticatable
         'signature',
         'avatar',
         'login_at',
+        'printed',
         'status',
         'activated_at',
         'blocked_at',

@@ -55,7 +55,7 @@ class ActionSeeder extends Seeder
         );
         // Action 9
         Action::updateOrCreate(
-            ['label' => "Imprimer A4"],
+            ['label' => "Imprimer"],
             ['position' => 11]
         );
         // Action 10
@@ -64,11 +64,6 @@ class ActionSeeder extends Seeder
             ['position' => 10]
         );
         // Action 11
-        Action::updateOrCreate(
-            ['label' => "Imprimer A5"],
-            ['position' => 12]
-        );
-        // Action 12
         Action::updateOrCreate(
             ['label' => "Dupliquer"],
             ['position' => 4]

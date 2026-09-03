@@ -60,7 +60,7 @@
     const actionIds = {{ json_encode($actionIds) }};
     const getDemands = async () => {
       try {
-        const response = await axios.get( '/getDemands');
+        const response = await axios.get('/getDemands');
         return response.data.data || [];
       } catch (e) {
         console.error(e);
@@ -110,12 +110,15 @@
                 status = 'N/A';
                 color = 'badge-light-secondary';
             }
-            if (data.recovered_at) {
-              tit = 'Récupérée';
-              color = 'badge-light-success';
-            } else {
-              tit = 'Récupérée';
-              color = 'badge-light-success';
+            let printed = 0;
+            if (actionIds.includes(9) && data.status == 2) {
+              printed = 1;
+              if (data.printed == 1 && data.id != 1) {
+                printed = 0;
+              }
+              if (data.root_id == 1) {
+                printed = 1;
+              }
             }
             outTable += `<tr>
               <td>${i}</td>
@@ -127,9 +130,11 @@
               <td class="text-center align-middle"><span data-kt-element="status" class="badge ${color} fw-bold px-4 py-3">${status}</span></td>
               <td class="text-center align-middle">
                 <a href="/demands/${data.uuid}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail de la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
-                  <i class="ki-duotone ki-switch text-primary fs-2">
+                  <i class="ki-duotone ki-text-align-center text-primary fs-2">
                     <span class="path1"></span>
                     <span class="path2"></span>
+                    <span class="path3"></span>
+                    <span class="path4"></span>
                   </i>
                 </a>`;
                 if (actionIds.includes(3) && data.status == 0) {
@@ -140,7 +145,7 @@
                     </i>
                   </a>`;
                 }
-                if (actionIds.includes(9) && data.status == 2) {
+                if (printed == 1) {
                   outTable += `<a href="${data.path}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimer la demande" class="btn btn-icon btn-bg-light btn-sm me-1">
                     <i class="ki-duotone ki-printer text-warning fs-2">
                       <span class="path1"></span>

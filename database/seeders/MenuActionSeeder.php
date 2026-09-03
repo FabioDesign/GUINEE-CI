@@ -42,7 +42,7 @@ class MenuActionSeeder extends Seeder
         MenuAction::firstOrCreate(
             [
                 'menu_id' => 2,
-                'action_id' => 12,
+                'action_id' => 11,
             ]
         );
         MenuAction::firstOrCreate(
@@ -73,12 +73,6 @@ class MenuActionSeeder extends Seeder
             [
                 'menu_id' => 2,
                 'action_id' => 9,
-            ]
-        );
-        MenuAction::firstOrCreate(
-            [
-                'menu_id' => 2,
-                'action_id' => 11,
             ]
         );
         // Documents

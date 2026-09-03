@@ -22,7 +22,7 @@ return new class extends Migration
                 DECLARE v_role_id TINYINT;
                 DECLARE v_consulat_id INT;
 
-                -- Récupérer le role_id et consulat_id de l'utilisateur connecté
+                
                 SELECT
                     p.role_id,
                     u.consulat_id
@@ -32,14 +32,14 @@ return new class extends Migration
                 FROM users u
                 INNER JOIN profiles p ON p.id = u.profile_id
                 WHERE u.id = p_user_id
-                AND u.deleted_at IS NULL
+                  AND u.deleted_at IS NULL
                 LIMIT 1;
 
-                -- role_id = 1 : Administrateur → toutes les demandes
+                
                 IF v_role_id = 1 THEN
                     SELECT
+                        doc.id,
                         dmd.uuid,
-                        dmd.reference,
                         dmd.number,
                         dmd.price,
                         dmd.copy,
@@ -47,9 +47,7 @@ return new class extends Migration
                         dmd.delivered_at,
                         dmd.recovered_at,
                         dmd.path,
-                        usr.firstname,
-                        usr.lastname,
-                        usr.civility,
+                        CONCAT_WS(' ', usr.civility, usr.firstname, usr.lastname) AS username,
                         doc.label AS label
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
@@ -58,11 +56,11 @@ return new class extends Migration
                     AND dmd.deleted_at IS NULL
                     ORDER BY dmd.created_at DESC;
 
-                -- role_id = 2 : Coordonnateur → même consulat sauf status = 0
+                
                 ELSEIF v_role_id = 2 THEN
                     SELECT
+                        doc.id,
                         dmd.uuid,
-                        dmd.reference,
                         dmd.number,
                         dmd.price,
                         dmd.copy,
@@ -70,9 +68,7 @@ return new class extends Migration
                         dmd.delivered_at,
                         dmd.recovered_at,
                         dmd.path,
-                        usr.firstname,
-                        usr.lastname,
-                        usr.civility,
+                        CONCAT_WS(' ', usr.civility, usr.firstname, usr.lastname) AS username,
                         doc.label AS label
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
@@ -82,11 +78,11 @@ return new class extends Migration
                       AND dmd.status != 0
                     ORDER BY dmd.created_at DESC;
 
-                -- role_id = 3 : Opérateur → même consulat + ses propres brouillons
+                
                 ELSEIF v_role_id = 3 THEN
                     SELECT
+                        doc.id,
                         dmd.uuid,
-                        dmd.reference,
                         dmd.number,
                         dmd.price,
                         dmd.copy,
@@ -94,19 +90,13 @@ return new class extends Migration
                         dmd.delivered_at,
                         dmd.recovered_at,
                         dmd.path,
-                        usr.firstname,
-                        usr.lastname,
-                        usr.civility,
+                        CONCAT_WS(' ', usr.civility, usr.firstname, usr.lastname) AS username,
                         doc.label AS label
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
                     WHERE dmd.deleted_at IS NULL
                       AND dmd.consulat_id = v_consulat_id
-                      AND (
-                          dmd.status != 0
-                          OR (dmd.status = 0 AND dmd.created_by = p_user_id)
-                      )
                     ORDER BY dmd.created_at DESC;
 
                 END IF;

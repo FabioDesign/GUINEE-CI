@@ -61,11 +61,12 @@ class UserController extends Controller
 		}
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>';
+        $printed = $query->printed == 1 ? 'checked' : '';
 		$country = Country::orderBy('country')->get();
 		$ville = Town::where('id', $query->town_id)->first();
 		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
-		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'country', 'user'));
+		return view('pages.users.show', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'country', 'user', 'printed'));
 	}
     // Liste des utilisateurs
 	public function create() {
@@ -232,6 +233,9 @@ class UserController extends Controller
             'password_at' => now(),
             'password' => Hash::make('Azerty@123'),
         ];
+        if (isset($request->printed)) {
+            $set['printed'] = 1;
+        }
         DB::beginTransaction(); // Démarrer une transaction
         try {
             // Création de l'utilisateur
@@ -277,6 +281,7 @@ class UserController extends Controller
 		// Modal
 		$addmodal = '<a href="/users" class="btn btn-sm fw-bold btn-danger">Retour</a>
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
+        $printed = $query->printed == 1 ? 'checked' : '';
         $civility = ['M.', 'Mme', 'Mlle'];
 		$country = Country::orderBy('country')->get();
 		$nationality = Country::orderBy('nationality')->get();
@@ -288,7 +293,7 @@ class UserController extends Controller
 		$profile = Profile::where('id', '!=', 1)->orderBy('label')->get();
 		$user['phone'] = Country::select('alpha')->where('code', $query->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->person_code)->first();
-		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'consulat', 'consulats', 'user'));
+		return view('pages.users.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'ville', 'civility', 'town', 'country', 'embassy', 'profile', 'nationality', 'consulat', 'consulats', 'user', 'printed'));
 	}
     // Modification
     public function update(Request $request, $uuid) {
@@ -442,6 +447,11 @@ class UserController extends Controller
                 'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
                 'arrival_at' => $request->arrival_at,
             ];
+            if (isset($request->printed)) {
+                $set['printed'] = 1;
+            } else {
+                $set['printed'] = 0;
+            }
             // Enregistrer le fichier
             if ($request->img_sig == 0) {
                 $signature = $request->file('signature') != '' ? $request->file('signature')->store('signatures', 'public') : '';

@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body py-4">
         <div class="row mb-5">
-            <div class="col-md-5 col-12">
+            <div class="col-md-4 col-12">
                 <label class="fw-bolder text-dark fs-5">Documents : <span class="text-danger">*</span></label>
                 <select id="documents" class="form-select">
                     <option value="" selected>Tous les documents</option>
@@ -13,26 +13,17 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-2 col-12">
-                <label class="fw-bolder text-dark fs-5">Années : <span class="text-danger">*</span></label>
-                <select id="years" class="form-select">
-                    <option value="" selected>Tous</option>
-                    @foreach($years as $data)
-                        <option value="{{ $data->years }}">{{ $data->years }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2 col-12">
-                <label class="fw-bolder text-dark fs-5">Mois : <span class="text-danger">*</span></label>
-                <select id="months" class="form-select">
-                    <option value="" selected>Tous</option>
-                </select>
+            <div class="col-md-3 col-12">
+                <label class="fw-bolder text-dark fs-5">Date de début :</label>
+                <input type="text" id="start_date_stats" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
             </div>
             <div class="col-md-3 col-12">
-                <label class="fw-bolder text-dark fs-5">Jours : <span class="text-danger">*</span></label>
-                <select id="days" class="form-select">
-                    <option value="" selected>Tous</option>
-                </select>
+                <label class="fw-bolder text-dark fs-5">Date de fin :</label>
+                <input type="text" id="end_date_stats" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+            </div>
+            <div class="col-md-2 col-12">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-success font-weight-bold fs-4 px-6 py-3 submitStats">Rechercher</button>
             </div>
         </div>
     </div>
@@ -239,14 +230,20 @@
                     <!--end::Title-->
                     <!--begin::Toolbar-->
                     <div class="card-toolbar">
-                        <!--begin::Daterangepicker(defined in src/js/layout/app.js)-->
-                        <select id="docyears" class="form-select">
-                            <option value="" disabled>Toutes les années</option>
-                            @foreach($years as $data)
-                                <option value="{{ $data->years }}">{{ $data->years }}</option>
-                            @endforeach
-                        </select>
-                        <!--end::Daterangepicker-->
+                        <div class="row">
+                            <div class="col-md-3 offset-md-4 col-12">
+                                <label class="fw-bolder text-dark fs-5">Date de début :</label>
+                                <input type="text" id="start_date_chart" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <label class="fw-bolder text-dark fs-5">Date de fin :</label>
+                                <input type="text" id="end_date_chart" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                            </div>
+                            <div class="col-md-2 col-12">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-success font-weight-bold fs-4 px-6 py-3 submitChart">Rechercher</button>
+                            </div>
+                        </div>
                     </div>
                     <!--end::Toolbar-->
                 </div>
@@ -265,78 +262,40 @@
 @endsection
 
 @section('scripts')
-  	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(document).ready(function() {
             // Récupérer les stats
-            statsData('', '', '', '');
+            statsData('', $('#start_date_stats').val(), $('#end_date_stats').val());
         });
         document.addEventListener("DOMContentLoaded", async () => {
             initChart();
-            let docyears = document.getElementById('docyears').value;
-            await updateChart(docyears);
+            let start_date_chart = document.getElementById('start_date_chart').value;
+            let end_date_chart = document.getElementById('end_date_chart').value;
+            await updateChart(start_date_chart, end_date_chart);
         });
-        $(document).on('change', '#documents, #years, #months, #days', function() {
-            if (this.id == 'years') {
-                $('#months').html('<option value="" selected>Tous</option>');
-                $('#days').html('<option value="" selected>Tous</option>');
-            }
-            if (this.id == 'months') {
-                $('#days').html('<option value="" selected>Tous</option>');
-            }
+        $(document).on('click', '.submitStats', async function() {
+            $(this).addClass('not-active');
             const documents = $('#documents').val();
-            const years = $('#years').val();
-            const months = $('#months').val();
-            const days = $('#days').val();
-            if (years && !months) {
-                const listMonths = async (documents, years) => {
-                    try {
-                        const response = await axios.post('/listMonths', {
-                            documents: documents,
-                            years: years
-                        });
-                        const months = response.data.data;
-                        const monthFr = [
-                            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-                        ];
-                        $('#months').html('<option value="" selected>Tous</option>');
-                        for (let i = 0; i < months.length; i++) {
-                            $('#months').append('<option value="' + months[i].months + '">' + monthFr[months[i].months - 1] + '</option>');
-                        }
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
-                listMonths(documents, years);
+            const start_date_stats = $('#start_date_stats').val();
+            const end_date_stats = $('#end_date_stats').val();
+            if (start_date_stats && end_date_stats) {
+                await statsData(documents, start_date_stats, end_date_stats);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Veuillez sélectionner une date de début et une date de fin',
+                });
+                $('.submitStats').removeClass('not-active');
             }
-            if (years && months && !days) {
-                const listDays = async (documents, years, months) => {
-                    try {
-                        const response = await axios.post('/listDays', {
-                            documents: documents,
-                            years: years,
-                            months: months
-                        });
-                        const days = response.data.data;
-                        $('#days').html('<option value="" selected>Tous</option>');
-                        for (let i = 0; i < days.length; i++) {
-                            $('#days').append('<option value="' + days[i].day_date + '">' + days[i].label + '</option>');
-                        }
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
-                listDays(documents, years, months);
-            }
-            statsData(documents, years, months, days);
         });
-        const statsData = async (documents, years, months, days) => {
+
+        const statsData = async (documents, start_date_stats, end_date_stats) => {
             try {
                 const response = await axios.post('/dashboard', {
                     documents: documents,
-                    years: years,
-                    months: months,
-                    days: days
+                    start_date: start_date_stats,
+                    end_date: end_date_stats
                 });
                 if (response.data.status == 1) {
                     $('#amount').html(response.data.data.amount);
@@ -347,19 +306,38 @@
                     $('#validated').html(response.data.data.validated);
                     $('#rejected').html(response.data.data.rejected);
                     $('#recovered').html(response.data.data.recovered);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.data.message,
+                    });
                 }
+                $('.submitStats').removeClass('not-active');
             } catch (e) {
                 console.error(e);
             }
         }
-        $(document).on('change', '#docyears', async function() {
-            let docyears = $(this).val();
-            await updateChart(docyears);
+        $(document).on('click', '.submitChart', async function() {
+            $(this).addClass('not-active');
+            const start_date_chart = $('#start_date_chart').val();
+            const end_date_chart = $('#end_date_chart').val();
+            if (start_date_chart && end_date_chart) {
+                await updateChart(start_date_chart, end_date_chart);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Veuillez sélectionner une date de début et une date de fin',
+                });
+            }
+            $('.submitChart').removeClass('not-active');
         });
-        const listDocs = async (docyears) => {
+        const listDocs = async (start_date_chart, end_date_chart) => {
             try {
                 const response = await axios.post('/listDocs', {
-                    docyears: docyears
+                    start_date: start_date_chart,
+                    end_date: end_date_chart
                 });
                 if (response.data.status == 1) {
                     return {
@@ -380,8 +358,8 @@
                 };
             }
         }
-        const updateChart = async (year) => {
-            const result = await listDocs(year);
+        const updateChart = async (start_date_chart, end_date_chart) => {
+            const result = await listDocs(start_date_chart, end_date_chart);
             // 🔥 update sans recréer le chart
             chart.updateOptions({
                 xaxis: {
@@ -394,11 +372,9 @@
         };
         let chart;
         const initChart = () => {
-
             var element = document.getElementById("kt_charts_widget");
             var height = 500;
             var labelColor = KTUtil.getCssVariableValue('--bs-danger');
-
             var options = {
                 series: [{
                     name: 'Nombre de documents',
@@ -440,7 +416,6 @@
                     categories: [] // ✅ OK
                 }
             };
-
             chart = new ApexCharts(element, options);
             chart.render();
         };

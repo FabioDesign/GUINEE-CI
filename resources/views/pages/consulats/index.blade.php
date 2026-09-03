@@ -56,7 +56,7 @@
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>
             <td class="text-end align-middle">
               <a href="/consulats/{{ $data->uuid }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail du consulat" class="btn btn-icon btn-bg-light btn-sm me-1">
-                <i class="ki-duotone ki-switch text-primary fs-2">
+                <i class="ki-duotone ki-text-align-center text-primary fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>

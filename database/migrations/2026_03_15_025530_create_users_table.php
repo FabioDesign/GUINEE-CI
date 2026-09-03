@@ -42,6 +42,7 @@ return new class extends Migration
             $table->text('stamp')->nullable();
             $table->text('signature')->nullable();
             $table->timestamp('login_at')->nullable();
+            $table->tinyInteger('printed')->default('0');
             $table->tinyInteger('status')->default('0');
             $table->timestamps();
             $table->softDeletes();

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Session;
 use Myhelper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Auth, DB};
 use App\Models\{AnnualStat, Demand, MonthlyStat};
+use Illuminate\Support\Facades\{Auth, DB, Log, Validator, QueryException};
 
 class DashboardController extends Controller
 {
@@ -52,30 +52,58 @@ class DashboardController extends Controller
         if (!Auth::check()) {
             return 'x';
         }
-		
-		//Requete Read
-		$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?, ?)",
-		[
-			Session::get('consulat'),
-			$request->documents,
-			$request->years,
-			$request->months,
-			$request->days
-		]);
-		$data = [
-			'amount' => $query[0]->amount,
-			'paid' => $query[0]->paid,
-			'free' => $query[0]->free,
-			'created' => $query[0]->created,
-			'transmitted' => $query[0]->transmitted,
-			'validated' => $query[0]->validated,
-			'rejected' => $query[0]->rejected,
-			'recovered' => $query[0]->recovered,
-		];
-		return response()->json([
-			'status' => 1,
-			'data' => $data,
-		]);
+        //Validator
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date|date_format:Y-m-d',
+            'end_date' => 'required|date|date_format:Y-m-d|after_or_equal:start_date',
+        ], [
+            'start_date.required' => "La date de début est obligatoire.",
+            'start_date.date' => "La date de début doit être une date valide.",
+            'start_date.date_format' => "La date de début doit être au format YYYY-MM-DD.",
+            'end_date.required' => "La date de fin est obligatoire.",
+            'end_date.date' => "La date de fin doit être une date valide.",
+            'end_date.date_format' => "La date de fin doit être au format YYYY-MM-DD.",
+            'end_date.after_or_equal' => "La date de fin doit être après la date de début ou égale à la date de début.",
+        ]);
+        //Error field
+        if ($validator->fails()) {
+            Log::warning("Dashboard::stats - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+		try {
+			//Requete Read
+			$query = DB::select("CALL sp_get_stats_data(?, ?, ?, ?)",
+			[
+				Auth::user()->consulat_id,
+				$request->documents,
+				$request->start_date,
+				$request->end_date,
+			]);
+			$data = [
+				'amount' => $query[0]->amount,
+				'paid' => $query[0]->paid,
+				'free' => $query[0]->free,
+				'created' => $query[0]->created,
+				'transmitted' => $query[0]->transmitted,
+				'validated' => $query[0]->validated,
+				'rejected' => $query[0]->rejected,
+				'recovered' => $query[0]->recovered,
+			];
+			return response()->json([
+				'status' => 1,
+				'data' => $data,
+			]);
+		} catch (QueryException $e) {
+			$message = $e->errorInfo[2] ?? 'Une erreur SQL est survenue.';
+			Log::warning("Dashboard::stats - QueryException : {$e->errorInfo[2]} - " . json_encode($request->all()));
+			return response()->json([
+				'status'  => 0,
+				'message' => $message,
+			], 422);
+		}
 	}
 	// Get months
 	public function listMonths(request $request) {

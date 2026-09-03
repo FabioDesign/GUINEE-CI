@@ -198,11 +198,11 @@ class ProfileController extends Controller
 		->get();
 		// Récupérer les permissions actuelles du profil
 		$currentPermissions = Permission::where('profile_id', $query->id)
-			->get()
-			->map(function($permission) {
-				return $permission->menu_id . '|' . $permission->action_id;
-			})
-			->toArray();
+		->get()
+		->map(function($permission) {
+			return $permission->menu_id . '|' . $permission->action_id;
+		})
+		->toArray();
 		// Rôles
 		$roles = Role::all();
 		return view('pages.profiles.edit', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'query', 'currentPermissions', 'roles'));

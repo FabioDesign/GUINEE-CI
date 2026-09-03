@@ -7,8 +7,8 @@ use Myhelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\{Auth, DB, Log, Validator};
 use App\Models\{AnnualStat, DocFile, Document, File, User};
+use Illuminate\Support\Facades\{Auth, DB, Log, QueryException, Validator};
 
 class DocumentController extends Controller
 {
@@ -335,24 +335,57 @@ class DocumentController extends Controller
 	}
 	// Liste des documents
 	public function listDocs(Request $request) {
+		// dd($request->all());
 		if (!Auth::check()) {
 			return 'x';
 		}
-		$query = DB::select('CALL sp_chart_docs_data(?, ?)',[
-			Session::get('consulat'),
-			$request->docyears,
-		]);
-		$dataDoc = $dataNum = [];
-		foreach ($query as $data) :
-			$dataDoc[] = $data->label;
-			$dataNum[] = $data->total;
-		endforeach;
-		return response()->json([
-			'status' => 1,
-			'data' => [
-				'dataDoc' => $dataDoc,
-				'dataNum' => $dataNum,
-			],
-		]);
+        // Validator
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date|date_format:Y-m-d',
+            'end_date' => 'required|date|date_format:Y-m-d|after_or_equal:start_date',
+        ], [
+            'start_date.required' => "La date de début est obligatoire.",
+            'start_date.date' => "La date de début doit être une date valide.",
+            'start_date.date_format' => "La date de début doit être au format YYYY-MM-DD.",
+            'end_date.required' => "La date de fin est obligatoire.",
+            'end_date.date' => "La date de fin doit être une date valide.",
+            'end_date.date_format' => "La date de fin doit être au format YYYY-MM-DD.",
+            'end_date.after_or_equal' => "La date de fin doit être après la date de début ou égale à la date de début.",
+        ]);
+        // Error field
+        if ($validator->fails()) {
+            Log::warning("Document::listDocs - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+		// Requete Read
+		try {
+			$query = DB::select('CALL sp_chart_docs_data(?, ?, ?)',[
+				Auth::user()->consulat_id,
+				$request->start_date,
+				$request->end_date,
+			]);
+			$dataDoc = $dataNum = [];
+			foreach ($query as $data) :
+				$dataDoc[] = $data->label;
+				$dataNum[] = $data->total;
+			endforeach;
+			return response()->json([
+				'status' => 1,
+				'data' => [
+					'dataDoc' => $dataDoc,
+					'dataNum' => $dataNum,
+				],
+			]);
+		} catch (QueryException $e) {
+			$message = $e->errorInfo[2] ?? 'Une erreur SQL est survenue.';
+			Log::warning("Document::listDocs - QueryException : {$e->errorInfo[2]} - " . json_encode($request->all()));
+			return response()->json([
+				'status'  => 0,
+				'message' => $message,
+			], 422);
+		}
 	}
 }

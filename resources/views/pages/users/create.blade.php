@@ -158,6 +158,14 @@
                 </div>
             </div>
             <div class="row mb-2">
+                <div class="col-md-12 col-12 checkbox-inline">
+                    <label class="boxcheck">
+                        <input type="checkbox" name="printed" value="1" class="iCheck">
+                        <span class="fw-bolder text-dark fs-5 ms-2">Imprimer la Carte d'Identité Consulaire</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row mb-2">
                 <div class="col-md-6 col-12">
                     <label class="fw-bolder text-dark fs-5">Signature :</label>
                     <input type="file" id="signature" name="signature" class="form-control" accept=".png,.jpg,.jpeg" />

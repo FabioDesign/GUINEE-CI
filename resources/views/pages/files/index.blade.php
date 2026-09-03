@@ -57,9 +57,11 @@
             <td class="text-center align-middle"><span data-kt-element="status" class="badge {{ $badge }} fw-bold px-4 py-3">{{ $status }}</span></td>
             <td class="text-end align-middle">
               <a href="/files/{{ $data->uuid }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir détail du fichier" class="btn btn-icon btn-bg-light btn-sm me-1">
-                <i class="ki-duotone ki-switch text-primary fs-2">
+                <i class="ki-duotone ki-text-align-center text-primary fs-2">
                   <span class="path1"></span>
                   <span class="path2"></span>
+                  <span class="path3"></span>
+                  <span class="path4"></span>
                 </i>
               </a>
               <a href="{{ $href_edit }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier le fichier" class="btn btn-icon btn-bg-light btn-sm me-1">
