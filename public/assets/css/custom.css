@@ -219,3 +219,6 @@
 .actives {
   background-color: #2F3E30 !important;
 }
+#swal-date-input {
+  text-align: center !important;
+}

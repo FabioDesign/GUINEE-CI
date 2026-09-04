@@ -348,7 +348,7 @@
 		<script src="/assets/js/custom.js?v={{ time() }}"></script>
 		<script>
 			"use strict";
-			//DataTable
+			// DataTable
 			$("#kt_datatable").DataTable({
 				responsive: true,
 				language: {

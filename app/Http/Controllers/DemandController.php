@@ -56,14 +56,15 @@ class DemandController extends Controller
 		// Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
 		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
-		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success status">Valider</a>' : '';
+		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success btn-vld">Valider</a>' : '';
 		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-primary">Retour</a>' . $transmis . $valid . $rejet;
 		$prefecture = Town::find(optional($query->user)->town_id);
 		$country = Country::find($prefecture->country_id);
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
-		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles'));
+		$delivered_at = Carbon::parse(Myhelper::addWorkingDays($query->copy))->format('d-m-Y');
+		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at'));
 	}
     //Liste des demandes
 	public function create() {
@@ -527,8 +528,76 @@ class DemandController extends Controller
 			'data' => $demands,
 		]);
 	}
+	// Valider une demande
+	public function dmdValid(Request $request) {
+        if (!Auth::check()) {
+            return 'x';
+        }
+		// Validator
+		$validator = Validator::make($request->all(), [
+			'uuid' => 'required|uuid|exists:demands,uuid',
+			'date' => 'required|date_format:d-m-Y',
+		], [
+			'uuid.required' => "L'identifiant est obligatoire.",
+			'uuid.uuid' => "L'identifiant doit être un UUID valide.",
+			'uuid.exists' => "La demande spécifiée n'existe pas.",
+			'date.required' => "Le date est obligatoire.",
+			'date.date_format' => "Le format de la date est incorrecte.",
+		]);
+		// Error field
+		if ($validator->fails()) {
+			Log::warning("Demand::dmdValid - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => $validator->errors()->first(),
+			]);
+		}
+		// Vérifier si la caisse existe
+		$query = Demand::where('uuid', $request->uuid)->first();
+		if (!$query) {
+			Log::warning("Demand::dmdValid - Aucune demande trouvée pour l'UUID : {$request->uuid}");
+			return response()->json([
+				'status' => 0,
+				'message' => "Demande non trouvée.",
+			]);
+		}
+		$label = optional($query->document)->label;
+		$set = [
+			'status' => 2,
+			'validated_at' => now(),
+			'validated_by' => Auth::id(),
+			'delivered_at' => Carbon::parse($request->date)->format('Y-m-d H:i:s'),
+		];
+		DB::beginTransaction();
+		try {
+			// Mettre à jour la demande
+			$query->update($set);
+			Demand::printDmd($request->uuid);
+			DB::commit();
+			Myhelper::auditTrail(
+				Auth::user()->consulat_id,
+				Auth::user()->profile_id,
+				Session::get('username'),
+				Session::get('profil'),
+				"Document consulaire: {$label}",
+				'Valider',
+				Session::get('avatar')
+			);
+			return response()->json([
+				'status' => 1,
+				'message' => "Demande consulaire validée avec succès.",
+			]);
+		} catch (\Exception $e) {
+			DB::rollBack(); // Annuler la transaction en cas d'erreur
+			Log::warning("Demand::dmdValid - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			return response()->json([
+				'status' => 0,
+				'message' => "Erreur lors de la validation.",
+			]);
+		}
+	}
 	// Rejeter une demande
-	public function reject(Request $request) {
+	public function dmdReject(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }
@@ -545,7 +614,7 @@ class DemandController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Demand::reject - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Demand::dmdReject - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
@@ -554,7 +623,7 @@ class DemandController extends Controller
 		// Vérifier si la caisse existe
 		$query = Demand::where('uuid', $request->uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::reject - Aucune demande trouvée pour l'UUID : {$request->uuid}");
+			Log::warning("Demand::dmdReject - Aucune demande trouvée pour l'UUID : {$request->uuid}");
 			return response()->json([
 				'status' => 0,
 				'message' => "Demande non trouvée.",
@@ -587,7 +656,7 @@ class DemandController extends Controller
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Demand::reject - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Demand::dmdReject - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors du rejet.",
@@ -595,7 +664,7 @@ class DemandController extends Controller
 		}
 	}
 	// Récupérer une demande
-	public function recover(Request $request) {
+	public function dmdRecover(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }
@@ -612,7 +681,7 @@ class DemandController extends Controller
 		]);
 		// Error field
 		if ($validator->fails()) {
-			Log::warning("Demand::recover - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
+			Log::warning("Demand::dmdRecover - Validator : {$validator->errors()->first()} - " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => $validator->errors()->first(),
@@ -621,7 +690,7 @@ class DemandController extends Controller
 		// Vérifier si la caisse existe
 		$query = Demand::where('uuid', $request->uuid)->first();
 		if (!$query) {
-			Log::warning("Demand::recover - Aucune demande trouvée pour l'UUID : {$request->uuid}");
+			Log::warning("Demand::dmdRecover - Aucune demande trouvée pour l'UUID : {$request->uuid}");
 			return response()->json([
 				'status' => 0,
 				'message' => "Demande non trouvée.",
@@ -652,7 +721,7 @@ class DemandController extends Controller
 			]);
 		} catch (\Exception $e) {
 			DB::rollBack(); // Annuler la transaction en cas d'erreur
-			Log::warning("Demand::recover - Erreur : {$e->getMessage()} " . json_encode($request->all()));
+			Log::warning("Demand::dmdRecover - Erreur : {$e->getMessage()} " . json_encode($request->all()));
 			return response()->json([
 				'status' => 0,
 				'message' => "Erreur lors de la récupération.",

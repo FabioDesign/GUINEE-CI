@@ -201,11 +201,15 @@
       const date = $(this).data('delivered_at');
 			Swal.fire({
         title: 'Récupérer la demande',
-        text: 'Veuillez saisir la date de récupération.',
+        text: 'Veuillez choisir la date de récupération.',
         icon: 'warning',
         input: "text",
         inputPlaceholder: "JJ-MM-AAAA HH:MM",
-        inputAttributes: { required: true },
+        inputAttributes: {
+          required: true,
+          readonly: true,
+          id: 'swal-date-input',
+        },
         showCancelButton: true,
         confirmButtonColor: '#3085D6',
         cancelButtonColor: '#D33',
@@ -213,15 +217,13 @@
         cancelButtonText: 'Annuler',
         didOpen: () => {
           const input = Swal.getInput();
-          input.setAttribute('readonly', true);
           flatpickr(input, {
             locale: "fr",
             enableTime: true,
             time_24hr: true,
             dateFormat: "d-m-Y H:i",
             defaultDate: "today",
-            maxDate: "today",
-            minDate: date,
+            maxDate: date,
             allowInput: false,
           });
         },
@@ -243,7 +245,7 @@
 						}
 					});
 					// Appel AJAX
-					axios.patch('/recover', {
+					axios.patch('/dmdRecover', {
 						date: date,
 						uuid: uuid
 					}).then(response => {

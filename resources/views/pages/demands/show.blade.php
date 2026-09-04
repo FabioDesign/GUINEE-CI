@@ -10,6 +10,7 @@
                     <!--begin::Form Wizard Form-->
                     <form class="formField" id="kt_contact_add_form" data-wizard-validation="false">
                         <input type="hidden" id="uuid" value="{{ $query->uuid }}">
+                        <input type="hidden" id="delivered_at" value="{{ $delivered_at }}">
                         <div class="body-step4 pb-5" data-wizard-type="step-content" data-kt-stepper-element="content">
                             <div class="row mb-5">
                                 <div class="col-md-12 text-primary fw-bold fs-2">Informations de l'utilisateur</div>
@@ -202,8 +203,99 @@
 @endsection
 
 @section('scripts')
-  	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        // Validation de la demande
+        $(document).on('click', '.btn-vld', function() {
+            const uuid = $('#uuid').val();
+            const date = $('#delivered_at').val();
+            Swal.fire({
+                title: 'Valider la demande',
+                text: 'Veuillez choisir la date de récupération.',
+                icon: 'warning',
+                input: "text",
+                inputPlaceholder: "JJ-MM-AAAA",
+                inputAttributes: {
+                    required: true,
+                    readonly: true,
+                    id: 'swal-date-input',
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#3085D6',
+                cancelButtonColor: '#D33',
+                confirmButtonText: 'Valider',
+                cancelButtonText: 'Annuler',
+                didOpen: () => {
+                    const input = Swal.getInput();
+                    flatpickr(input, {
+                        locale: "fr",
+                        dateFormat: "d-m-Y",
+                        defaultDate: date,
+                        minDate: "today",
+                        allowInput: false,
+                        disableMobile: true,
+                    });
+                },
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return "<span style='color: #f27474;font-weight: 600;'>La date de récupération est obligatoire !</span>";
+                    }
+                }
+            }).then((result) => {
+				if (result.isConfirmed) {
+					const date = result.value.trim();
+					// Afficher un chargement
+					Swal.fire({
+						title: 'Traitement en cours...',
+						text: 'Validation de la demande en cours',
+						allowOutsideClick: false,
+						didOpen: () => {
+							Swal.showLoading();
+						}
+					});
+					// Appel AJAX
+					axios.patch('/dmdvalid', {
+						date: date,
+						uuid: uuid
+					}).then(response => {
+						if (response.data.status == 1) {
+							Swal.fire({
+								title: "Félicitation !",
+								text: response.data.message,
+								icon: 'success',
+								confirmButtonText: "Fermer",
+								customClass:{
+									confirmButton: "btn btn-square font-weight-bold btn-light-success"
+								}
+							}).then(function() {
+								location.reload();
+							});
+						} else {
+							Swal.fire({
+								title: 'Erreur !',
+								text: response.data.message,
+								icon: 'error',
+								confirmButtonText: 'Fermer',
+								customClass: {
+									confirmButton: "btn btn-square font-weight-bold btn-light-success"
+								},
+							});
+						}
+					})
+					.catch(error => {
+						Swal.fire({
+							title: 'Erreur !',
+							text: 'Une erreur est survenue lors de la validation',
+							icon: 'error',
+							confirmButtonText: "Fermer",
+							customClass:{
+								confirmButton: "btn btn-square font-weight-bold btn-light-success"
+							}
+						});
+					});
+				}
+			});
+		});
+        // Rejet de la demande
 		$(document).on('click', '.btn-rjt', function() {
 			Swal.fire({
 				title: 'Rejeter la demande',
@@ -238,7 +330,7 @@
 						}
 					});
 					// Appel AJAX
-					axios.patch('/reject', {
+					axios.patch('/dmdreject', {
 						motif: motif,
 						uuid: $('#uuid').val()
 					}).then(response => {
