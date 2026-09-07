@@ -88,6 +88,7 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
+		// dd($request);
         if (!Auth::check()) {
             return 'x';
         }
@@ -99,7 +100,7 @@ class DemandController extends Controller
 			'phone_number' => [
 				'required',
 				'numeric',
-                'digits_between:8,15',
+                'digits_between:8,10',
 			],
 			'email' => [
 				'nullable',
@@ -118,7 +119,11 @@ class DemandController extends Controller
             'particular_sign' => 'required',
             'home_address' => 'required',
             'person_fullname' => 'required',
-            'person_number' => 'required',
+            'person_number' => [
+				'required',
+				'numeric',
+                'digits_between:8,10',
+			],
             'person_address' => 'required',
             'arrival_at' => 'required|date|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
@@ -132,8 +137,8 @@ class DemandController extends Controller
 			'lastname.required' => "Le nom est obligatoire.",
 			'firstname.required' => "Les prénoms sont obligatoires.",
 			'phone_number.required' => "Le numéro de téléphone est obligatoire.",
-            'phone_number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
-			'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
+			'phone_number.numeric' => "Le numéro de téléphone doit être un nombre.",
+			'phone_number.digits_between' => "Le numéro de téléphone doit contenir entre 8 et 10 chiffres.",
             'email.email' => "Adresse e-mail non valide.",
 			'email.unique' => "Adresse e-mail existe déjà dans la base de données.",
 			'profession.required' => "La profession est obligatoire.",
@@ -265,8 +270,6 @@ class DemandController extends Controller
         if (!Auth::check()) {
             return redirect('/');
         }
-		// Title
-		$title = 'Modification du document consulaire';
 		// Menu
 		$currentMenu = 'demands';
 		// Vérifier si le document existe
@@ -275,6 +278,9 @@ class DemandController extends Controller
 			Log::warning("Demand::edit - Aucune document trouvé pour l'uUID : {$uuid}");
 			return redirect('/demands');
 		}
+		// Title
+		$title = $query->status == 2 ? 'Duplication' : 'Modification';
+		$title .= ' du document consulaire';
 		// Modal
 		$addmodal = '<a href="/demands" class="btn btn-sm fw-bold btn-danger">Retour</a>';
 		$documents = Document::orderBy('label')->get();
@@ -288,7 +294,9 @@ class DemandController extends Controller
 		$user['phone'] = Country::select('alpha')->where('code', $query->user->phone_code)->first();
 		$user['person'] = Country::select('alpha')->where('code', $query->user->person_code)->first();
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
-		return view('pages.demands.edit', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'pays', 'civility', 'town', 'documents', 'user', 'ville', 'nationality', 'docFiles', 'dmdFiles'));
+		$firstDoc = $documents->first();
+		$page = $query->status == 2 ? 'duplicate' : 'edit';
+		return view('pages.demands.' . $page, compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'pays', 'civility', 'town', 'documents', 'user', 'ville', 'nationality', 'docFiles', 'dmdFiles', 'firstDoc'));
 	}
 	// Mettre à jour une demande
 	public function update(Request $request, $uuid) {
@@ -303,7 +311,7 @@ class DemandController extends Controller
 			'phone_number' => [
 				'required',
 				'numeric',
-                'digits_between:8,15',
+                'digits_between:8,10',
 			],
 			'email' => [
 				'nullable',
@@ -322,7 +330,11 @@ class DemandController extends Controller
             'particular_sign' => 'required',
             'home_address' => 'required',
             'person_fullname' => 'required',
-            'person_number' => 'required',
+            'person_number' => [
+				'required',
+				'numeric',
+                'digits_between:8,10',
+			],
             'person_address' => 'required',
             'arrival_at' => 'required|date|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
@@ -336,13 +348,16 @@ class DemandController extends Controller
 			'lastname.required' => "Le nom est obligatoire.",
 			'firstname.required' => "Les prénoms sont obligatoires.",
 			'phone_number.required' => "Le numéro de téléphone est obligatoire.",
-            'phone_number.regex' => "Le numéro de téléphone doit contenir 10 chiffres.",
-			'phone_number.unique' => "Le numéro de téléphone existe déjà dans la base de données.",
+			'phone_number.numeric' => "Le numéro de téléphone doit être un nombre.",
+			'phone_number.digits_between' => "Le numéro de téléphone doit contenir entre 8 et 10 chiffres.",
             'email.email' => "Adresse e-mail non valide.",
 			'email.unique' => "Adresse e-mail existe déjà dans la base de données.",
 			'profession.required' => "La profession est obligatoire.",
 			'nationality_id.required' => "La nationalité est obligatoire.",
 			'nationality_id.exists' => "La nationalité n'existe pas dans la base de données.",
+			'person_number.required' => "Le numéro de téléphone du représentant est obligatoire.",
+			'person_number.numeric' => "Le numéro de téléphone du représentant doit être un nombre.",
+			'person_number.digits_between' => "Le numéro de téléphone du représentant doit contenir entre 8 et 10 chiffres.",
 			'birthday_at.required' => "La date de naissance est obligatoire.",
 			'birthday_at.date_format' => "Le format de la date de naissance est incorrecte.",
 			'town_id.required' => "La prefecture est obligatoire.",

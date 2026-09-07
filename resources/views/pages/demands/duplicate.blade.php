@@ -129,8 +129,8 @@
                 <div class="col-xl-12 col-xxl-7">
                     <!--begin::Form Wizard Form-->
                     <form class="formField" id="kt_contact_add_form" data-wizard-validation="false">
-                        @method('PUT')
-                        <input type="hidden" id="rootForm" value="demands/{{ $query->uuid }}">
+                        <input type="hidden" id="rootForm" value="demands">
+                        <input type="hidden" id="codeDoc" name="codeDoc" value="{{ old('code', $firstDoc->code) }}">
                         <input type="hidden" id="step2" value="1">
                         <input type="hidden" id="step3" value="1">
                         <!--begin::Form Wizard Step 1-->
@@ -531,7 +531,7 @@
                                 <button type="button" class="btn btn-light-danger font-weight-bold px-6 py-3 fs-4 btn-previous btn-step">Précédent</button>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Modifier</button>
+                                <button type="button" class="btn btn-success font-weight-bold px-6 py-3 fs-4 btn-submit btn-step submitForm" data-step="1">Enregistrer</button>
                                 <button type="button" class="btn btn-primary font-weight-bold px-6 py-3 fs-4 btn-next btn-step" data-step="1">Suivant</button>
                             </div>
                         </div>

@@ -388,6 +388,13 @@ $(document).on('click', '.status', function(e) {
 //Form Add/Mod
 $(document).on('click', '.submitForm', function(e) {
   e.preventDefault();
+  ["phone_number", "person_number"].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) {
+      // Supprime tous les espaces
+      el.value = el.value.replace(/\s+/g, "");
+    }
+  });
   let iCheck = false;
   let hasError = false;
   $('.msgError').html('');
