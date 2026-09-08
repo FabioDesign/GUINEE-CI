@@ -88,7 +88,6 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
-		// dd($request);
         if (!Auth::check()) {
             return 'x';
         }
@@ -217,9 +216,15 @@ class DemandController extends Controller
         try {
             // Création de l'utilisateur
             if ($request->user_id) {
-				$user = User::find($request->user_id)->update($set);
+                $user = User::find($request->user_id); // On récupère l'objet User
+                if ($user) {
+                    $user->update($set); // On met à jour (retourne true/false, mais on s'en fiche car $user est déjà l'objet)
+                } else {
+                    // Sécurité : si l'ID n'existe pas, on le crée comme un nouvel utilisateur
+                    $user = User::create($set);
+                }
             } else {
-				$user = User::create($set);
+                $user = User::create($set); // Retourne l'objet User créé
             }
             // Création de la demande
 			$reference = Demand::reference($request->codeDoc, $user->birthday_at);

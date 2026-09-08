@@ -132,6 +132,11 @@ class Demand extends Model
         'signature' => optional($consul)->signature,
         'stamp' => optional($consul)->stamp,
       ];
+      // Carte d'identité
+      if ($query->document_id == 3) {
+        $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
+        $dataPDF['photo'] = $dmdFiles->path;
+      }
       // Données du Qrcode
       $dataQR = implode("\n", [
         $uuid,

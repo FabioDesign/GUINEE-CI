@@ -45,7 +45,7 @@ Route::controller(PasswordController::class)->group(function () {
 // Route pour les documents
 Route::controller(DocumentController::class)->group(function () {
   Route::post('listDocs', 'listDocs');
-  Route::get('getDocuments/{id}', 'getDocuments');
+  Route::get('getDocs/{id}', 'getDocs');
 });
 // Routes protégées par authentification
 Route::middleware(['auth'])->group(function () {

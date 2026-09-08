@@ -134,7 +134,7 @@
 
       /* ── Bloc PHOTO ────────────────────────────────────────────── */
       .photo-box {
-        border: 2px dashed #000;
+        /* border: 2px dashed #000; */
         width: 150px;
         height: 170px;
         text-align: center;

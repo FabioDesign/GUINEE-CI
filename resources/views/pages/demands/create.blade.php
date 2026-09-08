@@ -320,7 +320,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-12 dmdError text-danger fw-bold fs-5 text-center"></div>
                             </div>
-                            <div class="row mb-2">
+                            <div class="row mb-10">
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Document : <span class="text-danger">*</span></label>
                                     <select id="document_id" name="document_id" class="form-control">
@@ -347,29 +347,7 @@
                                     <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" onKeyUp="verif_int(this)" />
                                 </div>
                             </div>
-                            <div class="row mb-2 photo-input" style="display: none;">
-                                <div class="col-md-6 col-12">
-                                    <label class="fw-bolder text-dark fs-6">
-                                        Photo d'identité : <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="file" id="photo" name="photo" class="form-control" accept=".pdf,.png,.jpg,.jpeg" />
-                                </div>
-                                <div class="col-md-3 col-12">
-                                    <label class="photo-view fw-bolder text-dark fs-6 mt-10" style="display: none;">
-                                        <a href="" class="photo-link" target="_blank">
-                                        (Voir la photo)
-                                        </a>
-                                        &nbsp;&nbsp;
-                                        <span class="btn btn-icon btn-circle btn-active-color-danger w-25px h-25px bg-body shadow remove-photo" data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Supprimer la photo" data-bs-original-title="Supprimer la photo" data-kt-initialized="1">
-                                            <i class="ki-duotone ki-cross fs-3 text-danger">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mt-10 mb-5">
+                            <div class="row mb-5">
                                 <div class="col-md-12 col-12">
                                     <label class="fw-bolder text-dark fs-4">Pièces jointes :</label>
                                 </div>
@@ -735,8 +713,8 @@
             // Rechercher les documents
             $(document).on('change', '#document_id', function() {
                 let id = $(this).val();
+                console.log(id);
 				if (!id) return;
-                if (id == 3) $('.photo-input').show(); else $('.photo-input').hide();
                 const getDocs = async (id) => {
                     try {
                         const response = await axios.get( `/getDocs/${id}`);
@@ -747,6 +725,7 @@
                 }
                 getDocs(id).then(
                     response => {
+                        console.log(response);
                         if (response) {
                             $('#copy').val(1);
                             $('#codeDoc').val(response.docs.code);
@@ -988,78 +967,6 @@
                     $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
                 }
-            });
-            // Validation + affichage fichier
-            $(document).on('change', '#photo', function() {
-                $('.dmdError').html('');
-                // Récupérer le fichier
-                var input = this;
-                var fileObj = input.files[0];
-                // Si le fichier n'est pas sélectionné, retourner.
-                if (!fileObj) return;
-                // Récupérer la taille du fichier
-                var iSize = fileObj.size;
-                var fileName = fileObj.name.toLowerCase();
-                var iExt = fileName.split('.').pop();
-                // Les types autorisés : Image.
-                var ValidTypes = ['jpg', 'jpeg', 'png'];
-                // Les types autorisés : PDF ou Image.
-                if ($.inArray(iExt, ValidTypes) < 0) {
-                    $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                    $('.dmdError').html('Les types autorisés : Image.');
-                    return;
-                }
-                // Taille max : 2MB.
-                if (iSize > 2000000) {
-                    $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                    $('.dmdError').html('Taille max : 2MB.');
-                    return;
-                }
-                // // Récupérer la ligne correspondante
-                // var parentRow = $(this).closest('.row');
-                // var photoView = parentRow.find('.photo-view');
-                // var photoLink = parentRow.find('.photo-link');
-                // // Récupérer l'ID et le label du fichier
-                // var docId = $(this).data('id');
-                // var label = $(this).data('label');
-                // // URL temporaire
-                // var fileURL = URL.createObjectURL(fileObj);
-                // // Injecter lien
-                // fileLink.attr('href', fileURL);
-                // // Afficher le bloc
-                // fileView.show();
-                // // Supprimer ancienne ligne si existe
-                // $('.files-valid').find('[data-id="'+docId+'"]').remove();
-                // // Ajouter dans la liste
-                // var html = `
-                //     <div class="mb-2 d-flex align-items-center" data-id="${docId}">
-                //         <i class="ki-duotone ki-check following fs-3 me-3"></i> ${label} : 
-                //         <a href="${fileURL}" target="_blank" class="text-primary ms-2">(Voir la pièce jointe)</a>
-                //     </div>
-                // `;
-                // $('.files-valid').append(html);
-                // Activer bouton suivant
-                dmdForm();
-            });
-            // Supprimer la photo
-            $(document).on('click', '.remove-photo', function() {
-                var parentRow = $(this).closest('.row');
-                var input = parentRow.find('#photo');
-                // var docId = input.data('id');
-                // reset input file
-                input.val('');
-                // cacher le lien
-                parentRow.find('.photo-view').hide();
-                // vider le lien
-                parentRow.find('.photo-link').attr('href', '');
-                // supprimer dans la liste
-                // $('.files-valid').find('[data-id="'+docId+'"]').remove();
-                // ── Ou compter uniquement ceux qui sont visibles (display: block) ────────────
-                $('#step3').val(0);
-                $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                $('.dmdError').show().html("Veuillez renseigner la photo.");
             });
             // Zone de texte Document
             $(document).on('keyup', '.requiredDmd', function() {

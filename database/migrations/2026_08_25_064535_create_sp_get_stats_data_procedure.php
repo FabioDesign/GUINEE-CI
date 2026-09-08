@@ -57,31 +57,31 @@ return new class extends Migration
 			        ), 0) AS free,			
 			        COALESCE(SUM(
 			            CASE
-			                WHEN d.created_at IS NOT NULL THEN 1
+			                WHEN d.created_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
 			        ), 0) AS created,			
 			        COALESCE(SUM(
 			            CASE
-			                WHEN d.transmitted_at IS NOT NULL THEN 1
+			                WHEN d.transmitted_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
 			        ), 0) AS transmitted,			
 			        COALESCE(SUM(
 			            CASE
-			                WHEN d.validated_at IS NOT NULL THEN 1
+			                WHEN d.validated_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
 			        ), 0) AS validated,			
 			        COALESCE(SUM(
 			            CASE
-			                WHEN d.rejected_at IS NOT NULL THEN 1
+			                WHEN d.rejected_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
 			        ), 0) AS rejected,			
 			        COALESCE(SUM(
 			            CASE
-			                WHEN d.recovered_at IS NOT NULL THEN 1
+			                WHEN d.recovered_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
 			        ), 0) AS recovered			
@@ -91,9 +91,8 @@ return new class extends Migration
 		            p_document_id IS NULL
 		            OR d.document_id = p_document_id
 		          )			
-		      	AND d.validated_at >= p_start_date			
-		      	AND d.validated_at < DATE_ADD(p_end_date, INTERVAL 1 DAY)			
-		      	AND d.status = 2;
+		      	AND d.created_at >= p_start_date			
+		      	AND d.created_at < DATE_ADD(p_end_date, INTERVAL 1 DAY);
             END
         ");
     }
