@@ -34,20 +34,16 @@ const phoneInstances = {};
 $('#embassy_id, #country_id, #nationality_id').select2({
   placeholder: "Sélectionner un pays",
   width: '100%',
-
   templateResult: formatCountry,
   templateSelection: formatCountrySelection,
-
   escapeMarkup: function (markup) {
       return markup;
   }
 });
 function formatCountry(country) {
   if (!country.id) return country.text;
-
   let code = $(country.element).data('code');
   let flag = $(country.element).data('alpha').toLowerCase();
-
   return `
       <span>
           <span class="fi fi-${flag}" style="margin-right:8px;"></span>
@@ -55,13 +51,10 @@ function formatCountry(country) {
       </span>
   `;
 }
-
 function formatCountrySelection(country) {
   if (!country.id) return country.text;
-
   let code = $(country.element).data('code');
   let flag = $(country.element).data('alpha').toLowerCase();
-
   return `
       <span>
           <span class="fi fi-${flag}" style="margin-right:5px;"></span>
@@ -75,7 +68,6 @@ const selectFields = [
   { selector: '#consulat_id', placeholder: "Sélectionner le consulat" },
   { selector: '#document_id', placeholder: "Sélectionner le document" },
 ];
-
 selectFields.forEach(field => {
   $(field.selector).select2({
     width: '100%',

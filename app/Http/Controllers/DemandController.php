@@ -88,6 +88,7 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
+		dd($request->all());
         if (!Auth::check()) {
             return 'x';
         }

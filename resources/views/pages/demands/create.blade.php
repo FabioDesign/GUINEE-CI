@@ -517,6 +517,7 @@
                                     <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
                                 </div>
                             </div>
+                            
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>

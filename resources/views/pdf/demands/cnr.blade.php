@@ -16,7 +16,7 @@
       {{-- ── Champs du demandeur ───────────────────────────────── --}}
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr class="field-row">
-          <td class="field-label">QUE</td>
+          <td class="field-label">QUE {{ $dataPDF['sex'] == 'M' ? 'LE VEUF' : 'LA VEUVE' }}</td>
           <td class="field-value">: {{ $dataPDF['civility'] }} {{ $dataPDF['lastname'] }} {{ $dataPDF['firstname'] }}</td>
         </tr>
         <tr class="field-row">
@@ -50,12 +50,12 @@
       </table>
       {{-- ── Mention célibat ───────────────────────────────────── --}}
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin: 20px 0;">
-        EST CELIBATAIRE A CE JOUR.
+        NE S'EST PLUS {{ $dataPDF['sex'] == 'M' ? 'REMARIE' : 'REMARIEE' }} DEPUIS LE DECES DE SON {{ $dataPDF['sex'] == 'M' ? 'EPOUSE' : 'EPOUX' }}
       </p>
       {{-- ── Texte de clôture ──────────────────────────────────── --}}
       <p style="font-size:12pt; margin-top: 20px; text-align:justify; line-height: 1.5;">
-        EN FOI DE QUOI, NOUS LUI DELIVRONS LE PRESENT CERTIFICAT DE CELIBAT POUR SERVIR ET VALOIR
-        CE QUE DE DROIT.
+        EN FOI DE QUOI, NOUS LUI DELIVRONS LE PRESENT CERTIFICAT DE NON REMARIAGE<br>
+        POUR SERVIR ET VALOIR CE QUE DE DROIT.
       </p>
     </td>
   </tr>
