@@ -347,6 +347,22 @@
                                     <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" onKeyUp="verif_int(this)" />
                                 </div>
                             </div>
+                            <div class="block-cdi">
+                                <div class="row mb-5">
+                                    <div class="col-md-3 col-12">
+                                        <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    </div>
+                                    <div class="col-md-3 col-12">
+                                        <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark"></span></label>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
                                     <label class="fw-bolder text-dark fs-4">Pièces jointes :</label>
@@ -517,7 +533,6 @@
                                     <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
                                 </div>
                             </div>
-                            
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>
