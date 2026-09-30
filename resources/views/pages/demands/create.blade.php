@@ -349,17 +349,42 @@
                             </div>
                             <div class="block-cdi">
                                 <div class="row mb-5">
+                                    <div class="col-md-12 col-12">
+                                        <label class="fs-4 fw-bold text-dark">Infos sur les noms : </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
                                     <div class="col-md-3 col-12">
-                                        <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                        <label class="fw-bolder text-dark fs-5">Nom 1 :</label>
+                                        <input type="text" class="form-control lastname uppercase" readonly />
                                     </div>
                                     <div class="col-md-4 col-12">
-                                        <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                        <label class="fw-bolder text-dark fs-5">Prénoms 1 :</label>
+                                        <input type="text" class="form-control firstname uppercase" readonly />
                                     </div>
+                                    <div class="col-md-3" col-12">
+                                        <label class="fw-bolder text-dark fs-5">Date de naissance 1 :</label>
+                                        <input type="text" class="form-control birthday_at date_at" readonly>
+                                    </div>
+                                    <div class="col-md-2 col-12 checkbox-inline mt-6">
+                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="1" class="iCheck" checked> Choix 1</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
                                     <div class="col-md-3 col-12">
-                                        <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark"></span></label>
+                                        <label class="fw-bolder text-dark fs-5">Nom 2 : <span class="text-danger">*</span></label>
+                                        <input type="text" id="lastname_cdi" name="lastname_cdi" class="form-control requiredUser" placeholder="Saisir nom" data-valid="1" />
                                     </div>
-                                    <div class="col-md-2 col-12">
-                                        <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Prénoms 2 : <span class="text-danger">*</span></label>
+                                        <input type="text" id="firstname_cdi" name="firstname_cdi" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
+                                    </div>
+                                    <div class="col-md-3" col-12">
+                                        <label class="fw-bolder text-dark fs-5">Date de naissance 2 : <span class="text-danger">*</span></label>
+                                        <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" class="form-control date_at" readonly>
+                                    </div>
+                                    <div class="col-md-2 col-12 checkbox-inline mt-6">
+                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck"> Choix 2</label>
                                     </div>
                                 </div>
                             </div>
@@ -659,10 +684,10 @@
                 getUsers(id).then(
                     response => {
                         if (response) {
-                            $('#lastname').val(response.user.lastname);
-                            $('.lastname').text(response.user.lastname);
-                            $('#firstname').val(response.user.firstname);
-                            $('.firstname').text(response.user.firstname);
+                            $('#lastname, #lastname_cdi, .lastname').val(response.user.lastname);
+                            $('.lastname, .lastname_cdi').text(response.user.lastname);
+                            $('#firstname, #firstname_cdi, .firstname').val(response.user.firstname);
+                            $('.firstname, .firstname_cdi').text(response.user.firstname);
                             $('#email').val(response.user.email);
                             $('.email').text(response.user.email);
                             phoneInstances["phone_number"].setCountry(response.phone.alpha);
@@ -674,10 +699,12 @@
                             $('.nationality_id').text(response.user.nationality_id);
                             $('#town_id').val(response.user.town_id);
                             document.querySelector("#birthday_at")._flatpickr.setDate(response.user.birthday_at);
+                            document.querySelector(".birthday_at")._flatpickr.setDate(response.user.birthday_at);
+                            document.querySelector("#birthdayat_cdi")._flatpickr.setDate(response.user.birthday_at);
                             let birthday_date = response.user.birthday_at.slice(0, 10);
                             let birthday_parts = birthday_date.split('-');
                             let birthday_at = `${birthday_parts[2]}-${birthday_parts[1]}-${birthday_parts[0]}`;
-                            $('.birthday_at').text(birthday_at);
+                            $('.birthday_at, .birthdayat_cdi').text(birthday_at);
                             $('#birthplace').val(response.user.birthplace);
                             $('.birthplace').text(response.user.birthplace);
                             $('#father_fullname').val(response.user.father_fullname);
