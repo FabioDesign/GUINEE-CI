@@ -31,7 +31,7 @@
 <div class="row mt-10">
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
-        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #7239EA;background-image:url('assets/img/bg-purple.svg')">
+        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
             <!--begin::Header-->
             <div id="amount" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
             <!--end::Header-->
@@ -100,7 +100,7 @@
     </div>
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
-        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
+        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #12A9E3;background-image:url('assets/img/bg-purple.svg')">
             <!--begin::Header-->
             <div id="recovered" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
             <!--end::Header-->
@@ -125,7 +125,7 @@
 <div class="row mb-5">
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
-        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #7239EA;background-image:url('assets/img/bg-purple.svg')">
+        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
             <!--begin::Header-->
             <div id="validated" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
             <!--end::Header-->
@@ -194,7 +194,7 @@
     </div>
     <div class="col-md-3 col-12">
     <!--begin::Card widget 20-->
-        <div class="card card-flush bgi-no-repeat bgi-size-cover bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-image:url('/assets/img/bg-green.png')">
+        <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end mb-5 mb-xl-10 h-175px" style="background-color: #12A9E3;background-image:url('assets/img/bg-purple.svg')">
             <!--begin::Header-->
             <div id="created" class="card-header py-10 fs-2hx fw-bold text-white m-auto px-0">0</div>
             <!--end::Header-->

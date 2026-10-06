@@ -219,11 +219,11 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Date : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthday_at" name="birthday_at" class="form-control date_at" readonly value="{{ old('birthday_at', optional($query->user)->birthday_at) }}">
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
                                     <select id="country_id" name="country_id" class="form-control">
                                         <option value="" selected>Sélectionner</option>
@@ -232,7 +232,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Préfecture : <span class="text-danger">*</span></label>
                                     <select id="town_id" name="town_id" class="form-control requiredUser" data-valid="0">
                                         <option value="" selected>Sélectionner</option>
@@ -241,7 +241,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Lieu : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthplace" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="0" value="{{ old('birthplace', optional($query->user)->birthplace) }}" />
                                 </div>
@@ -417,18 +417,18 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">{{ optional($query->user)->birthday_at->format('d-m-Y') }}</span></label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark">{{ optional($query->user)->birthplace }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Pays de naissance : <span class="country_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->country }}</span></label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark">{{ $query->user->town->label }}</span></label>
                                 </div>
                             </div>

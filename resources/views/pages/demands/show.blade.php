@@ -35,18 +35,18 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">{{ optional($query->user)->birthday_at->format('d-m-Y') }}</span></label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Lieu de naissance : <span class="fw-bold fs-5 text-dark">{{ optional($query->user)->birthplace }}</span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Pays de naissance : <span class="fw-bold fs-5 text-uppercase text-dark">{{ $country->country }}</span></label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Préfecture de naissance : <span class="fw-bold fs-5 text-dark">{{ $prefecture->label }}</span></label>
                                 </div>
                             </div>

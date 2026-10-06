@@ -220,11 +220,11 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Date : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthday_at" name="birthday_at" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Pays : <span class="text-danger">*</span></label>
                                     <select id="country_id" name="country_id" class="form-control">
                                         <option value="" selected>Sélectionner</option>
@@ -233,7 +233,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Préfecture : <span class="text-danger">*</span></label>
                                     <select id="town_id" name="town_id" class="form-control requiredUser" data-valid="1">
                                         <option value="" selected>Sélectionner</option>
@@ -242,7 +242,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3" col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fw-bolder text-dark fs-5">Lieu : <span class="text-danger">*</span></label>
                                     <input type="text" id="birthplace" name="birthplace" class="form-control requiredUser" placeholder="Saisir lieu de naissance" data-valid="1" />
                                 </div>
@@ -362,7 +362,7 @@
                                         <label class="fw-bolder text-dark fs-5">Prénoms 1 :</label>
                                         <input type="text" class="form-control firstname uppercase" readonly />
                                     </div>
-                                    <div class="col-md-3" col-12">
+                                    <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 1 :</label>
                                         <input type="text" class="form-control birthday_at date_at" readonly>
                                     </div>
@@ -379,7 +379,7 @@
                                         <label class="fw-bolder text-dark fs-5">Prénoms 2 : <span class="text-danger">*</span></label>
                                         <input type="text" id="firstname_cdi" name="firstname_cdi" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
                                     </div>
-                                    <div class="col-md-3" col-12">
+                                    <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 2 : <span class="text-danger">*</span></label>
                                         <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" class="form-control date_at" readonly>
                                     </div>
@@ -449,15 +449,15 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Pays de naissance : 
                                         <span class="country_id fw-bold fs-5 text-uppercase text-dark">                                            
@@ -467,7 +467,7 @@
                                         </span>
                                 </label>
                                 </div>
-                                <div class="col-md-6" col-12">
+                                <div class="col-md-6 col-12">
                                     <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span></label>
                                 </div>
                             </div>
