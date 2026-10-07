@@ -684,10 +684,10 @@
                 getUsers(id).then(
                     response => {
                         if (response) {
-                            $('#lastname, #lastname_cdi, .lastname').val(response.user.lastname);
-                            $('.lastname, .lastname_cdi').text(response.user.lastname);
-                            $('#firstname, #firstname_cdi, .firstname').val(response.user.firstname);
-                            $('.firstname, .firstname_cdi').text(response.user.firstname);
+                            $('#lastname, .lastname').val(response.user.lastname);
+                            $('.lastname').text(response.user.lastname);
+                            $('#firstname, .firstname').val(response.user.firstname);
+                            $('.firstname').text(response.user.firstname);
                             $('#email').val(response.user.email);
                             $('.email').text(response.user.email);
                             phoneInstances["phone_number"].setCountry(response.phone.alpha);
@@ -700,11 +700,10 @@
                             $('#town_id').val(response.user.town_id);
                             document.querySelector("#birthday_at")._flatpickr.setDate(response.user.birthday_at);
                             document.querySelector(".birthday_at")._flatpickr.setDate(response.user.birthday_at);
-                            document.querySelector("#birthdayat_cdi")._flatpickr.setDate(response.user.birthday_at);
                             let birthday_date = response.user.birthday_at.slice(0, 10);
                             let birthday_parts = birthday_date.split('-');
                             let birthday_at = `${birthday_parts[2]}-${birthday_parts[1]}-${birthday_parts[0]}`;
-                            $('.birthday_at, .birthdayat_cdi').text(birthday_at);
+                            $('.birthday_at').text(birthday_at);
                             $('#birthplace').val(response.user.birthplace);
                             $('.birthplace').text(response.user.birthplace);
                             $('#father_fullname').val(response.user.father_fullname);
@@ -768,7 +767,6 @@
                 }
                 getDocs(id).then(
                     response => {
-                        console.log(response);
                         if (response) {
                             $('#copy').val(1);
                             $('#codeDoc').val(response.docs.code);
@@ -1041,7 +1039,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total',
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi'
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
@@ -1050,21 +1048,21 @@
                         let code = phoneInstances[field].getSelectedCountryData().dialCode;
                         $('.' + field).text(`+${code} ${number}`);
                     } else {
-                        $('.' + field).text($(this).val());
+                        $('.' + field).val($(this).val()).text($(this).val());
                     }
                 });
             });
             // Dates : reformatage Y-m-d → d-m-Y
-            var dateFields = ['birthday_at', 'arrival_at'];
+            var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
                     var val = $(this).val();
                     if (val) {
                         var parts     = val.split('-');
                         var formatted = parts[2] + '-' + parts[1] + '-' + parts[0];
-                        $('.' + field).text(formatted);
+                        $('.' + field).val(formatted).text(formatted);
                     } else {
-                        $('.' + field).text('');
+                        $('.' + field).val('').text('');
                     }
                 });
             });
