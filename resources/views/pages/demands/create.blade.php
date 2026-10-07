@@ -381,7 +381,7 @@
                                     </div>
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 2 : <span class="text-danger">*</span></label>
-                                        <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" class="form-control date_at" readonly>
+                                        <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                     <div class="col-md-2 col-12 checkbox-inline mt-6">
                                         <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck"> Choix 2</label>
