@@ -373,11 +373,11 @@
                                 <div class="row mb-5">
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Nom 2 : <span class="text-danger">*</span></label>
-                                        <input type="text" id="lastname_cdi" name="lastname_cdi" class="form-control requiredUser" placeholder="Saisir nom" data-valid="1" />
+                                        <input type="text" id="lastname_cdi" name="lastname_cdi" class="form-control requiredDmd" placeholder="Saisir nom" data-valid="0" />
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fw-bolder text-dark fs-5">Prénoms 2 : <span class="text-danger">*</span></label>
-                                        <input type="text" id="firstname_cdi" name="firstname_cdi" class="form-control requiredUser" placeholder="Saisir prénoms" data-valid="1" />
+                                        <input type="text" id="firstname_cdi" name="firstname_cdi" class="form-control requiredDmd" placeholder="Saisir prénoms" data-valid="0" />
                                     </div>
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 2 : <span class="text-danger">*</span></label>
@@ -431,91 +431,134 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-2 col-12">
-                                    <label class="fs-5">Civilité : <span class="civility fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Civilité : 
+                                        <span class="civility fw-bold fs-5 text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <label class="fs-5">Nom : <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Nom : 
+                                        <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Prénoms : <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-6 col-12">
-                                    <label class="fs-5">Numéro de téléphone : <span class="phone_number fw-bold fs-5 text-dark"></span></label>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <label class="fs-5">Email : <span class="email fw-bold fs-5 text-lowercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Prénoms : 
+                                        <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Date de naissance : <span class="birthday_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
+                                    <label class="fs-5">
+                                        Numéro de téléphone : 
+                                        <span class="phone_number fw-bold fs-5 text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Lieu de naissance : <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Email : 
+                                        <span class="email fw-bold fs-5 text-lowercase text-dark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Date de naissance : 
+                                        <span class="birthday_at fw-bold fs-5 text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Lieu de naissance : 
+                                        <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Pays de naissance : 
-                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">                                            
-                                        @foreach($country as $data)
-                                            @php echo $data->id == 61 ? $data->country : '' @endphp
-                                        @endforeach
-                                        </span>
-                                </label>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <label class="fs-5">Préfecture de naissance : <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-6 col-12">
-                                    <label class="fs-5">Profession : <span class="profession fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Nationalité : 
-                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">
-                                        @foreach($nationality as $data)
-                                            @php echo $data->id == 61 ? $data->nationality : '' @endphp
-                                        @endforeach
-                                        </span>
+                                        Préfecture de naissance : 
+                                        <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Noms du père : <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Profession : 
+                                        <span class="profession fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Noms de la mère : <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-4 col-12">
-                                    <label class="fs-5">Taille : <span class="size fw-bold fs-5 text-uppercase text-dark"></span></label>
-                                </div>
-                                <div class="col-md-4 col-12">
-                                    <label class="fs-5">Teint : <span class="complexion fw-bold fs-5 text-uppercase text-dark"></span></label>
-                                </div>
-                                <div class="col-md-4 col-12">
-                                    <label class="fs-5">Cheveux : <span class="hairs fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Nationalité : 
+                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Date d'arrivée : <span class="arrival_at fw-bold fs-5 text-dark">@php echo date('d-m-Y') @endphp</span></label>
+                                    <label class="fs-5">
+                                        Noms du père : 
+                                        <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Signes particuliers : <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Noms de la mère : 
+                                        <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">
+                                        Taille : 
+                                        <span class="size fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">
+                                        Teint : 
+                                        <span class="complexion fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">
+                                        Cheveux : 
+                                        <span class="hairs fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Date d'arrivée : 
+                                        <span class="arrival_at fw-bold fs-5 text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Signes particuliers : 
+                                        <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
-                                    <label class="fs-5">Domicile : <span class="home_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Domicile : 
+                                        <span class="home_address fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -525,15 +568,24 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nom et prénoms : <span class="person_fullname fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Nom et prénoms : 
+                                        <span class="person_fullname fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Numéro de téléphone : <span class="person_number fw-bold fs-5 text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Numéro de téléphone : 
+                                        <span class="person_number fw-bold fs-5 text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
-                                    <label class="fs-5">Adresse : <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span></label>
+                                    <label class="fs-5">
+                                        Adresse : 
+                                        <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -546,16 +598,48 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Nombre : <span class="number fw-bold fs-5 text-uppercase text-dark">{{ $firstDoc->number }}</span></label>
+                                    <label class="fs-5">
+                                        Nombre : 
+                                        <span class="number fw-bold fs-5 text-uppercase text-dark">{{ $firstDoc->number }}</span>
+                                    </label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Montant : <span class="price fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
+                                    <label class="fs-5">
+                                        Montant : 
+                                        <span class="price fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span>
+                                    </label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Copie : <span class="copy fw-bold fs-5 text-uppercase text-dark">1</span></label>
+                                    <label class="fs-5">
+                                        Copie : 
+                                        <span class="copy fw-bold fs-5 text-uppercase text-dark">1</span>
+                                    </label>
                                 </div>
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Total : <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span></label>
+                                    <label class="fs-5">
+                                        Total : 
+                                        <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="block-cdi row mb-5">
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">
+                                        Nom : 
+                                        <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Prénoms : 
+                                        <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">
+                                        Date de naissance : 
+                                        <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mb-5">
