@@ -623,19 +623,19 @@
                                 </div>
                             </div>
                             <div class="block-cdi row mb-5">
-                                <div class="col-md-4 col-12">
+                                <div class="col-md-3 col-12">
                                     <label class="fs-5">
                                         Nom : 
                                         <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-5 col-12">
                                     <label class="fs-5">
                                         Prénoms : 
                                         <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-4 col-12">
                                     <label class="fs-5">
                                         Date de naissance : 
                                         <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
