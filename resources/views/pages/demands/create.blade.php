@@ -326,7 +326,7 @@
                                     <select id="document_id" name="document_id" class="form-control">
                                         <option value="" selected>Sélectionner</option>
                                         @foreach($documents as $data)
-                                            <option value="{{ $data->id }}" @php echo $data->id == $firstDoc->id ? 'selected':'' @endphp>{{ $data->label }}</option>
+                                            <option value="{{ $data->id }}" data-code="{{ $data->code }}" @php echo $data->id == $firstDoc->id ? 'selected':'' @endphp>{{ $data->label }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -347,7 +347,7 @@
                                     <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" onKeyUp="verif_int(this)" />
                                 </div>
                             </div>
-                            <div class="block-cdi">
+                            <div class="block-cdi d-none">
                                 <div class="row mb-5">
                                     <div class="col-md-12 col-12">
                                         <label class="fs-4 fw-bold text-dark">Infos sur les noms : </label>
@@ -356,11 +356,11 @@
                                 <div class="row mb-5">
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Nom 1 :</label>
-                                        <input type="text" class="form-control lastname uppercase" readonly />
+                                        <input type="text" class="form-control lastname" readonly />
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fw-bolder text-dark fs-5">Prénoms 1 :</label>
-                                        <input type="text" class="form-control firstname uppercase" readonly />
+                                        <input type="text" class="form-control firstname" readonly />
                                     </div>
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 1 :</label>
@@ -432,19 +432,19 @@
                             <div class="row mb-5">
                                 <div class="col-md-2 col-12">
                                     <label class="fs-5">
-                                        Civilité : 
+                                        Civilité :
                                         <span class="civility fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
-                                        Nom : 
+                                        Nom :
                                         <span class="lastname fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Prénoms : 
+                                        Prénoms :
                                         <span class="firstname fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -452,13 +452,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Numéro de téléphone : 
+                                        Numéro de téléphone :
                                         <span class="phone_number fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Email : 
+                                        Email :
                                         <span class="email fw-bold fs-5 text-lowercase text-dark"></span>
                                     </label>
                                 </div>
@@ -466,13 +466,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Date de naissance : 
+                                        Date de naissance :
                                         <span class="birthday_at fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Lieu de naissance : 
+                                        Lieu de naissance :
                                         <span class="birthplace fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -480,13 +480,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Pays de naissance : 
+                                        Pays de naissance :
                                         <span class="country_id fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Préfecture de naissance : 
+                                        Préfecture de naissance :
                                         <span class="town_id fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -494,13 +494,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Profession : 
+                                        Profession :
                                         <span class="profession fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Nationalité : 
+                                        Nationalité :
                                         <span class="nationality_id fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -508,13 +508,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Noms du père : 
+                                        Noms du père :
                                         <span class="father_fullname fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Noms de la mère : 
+                                        Noms de la mère :
                                         <span class="mother_fullname fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -522,19 +522,19 @@
                             <div class="row mb-5">
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
-                                        Taille : 
+                                        Taille :
                                         <span class="size fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
-                                        Teint : 
+                                        Teint :
                                         <span class="complexion fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
-                                        Cheveux : 
+                                        Cheveux :
                                         <span class="hairs fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -542,13 +542,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Date d'arrivée : 
+                                        Date d'arrivée :
                                         <span class="arrival_at fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Signes particuliers : 
+                                        Signes particuliers :
                                         <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -556,7 +556,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
                                     <label class="fs-5">
-                                        Domicile : 
+                                        Domicile :
                                         <span class="home_address fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -569,13 +569,13 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Nom et prénoms : 
+                                        Nom et prénoms :
                                         <span class="person_fullname fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
-                                        Numéro de téléphone : 
+                                        Numéro de téléphone :
                                         <span class="person_number fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
@@ -583,7 +583,7 @@
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
                                     <label class="fs-5">
-                                        Adresse : 
+                                        Adresse :
                                         <span class="person_address fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
@@ -599,45 +599,45 @@
                             <div class="row mb-5">
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
-                                        Nombre : 
+                                        Nombre :
                                         <span class="number fw-bold fs-5 text-uppercase text-dark">{{ $firstDoc->number }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
-                                        Montant : 
+                                        Montant :
                                         <span class="price fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
-                                        Copie : 
+                                        Copie :
                                         <span class="copy fw-bold fs-5 text-uppercase text-dark">1</span>
                                     </label>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
-                                        Total : 
+                                        Total :
                                         <span class="total fw-bold fs-5 text-uppercase text-dark">{{ number_format($firstDoc->price, 0, ',', ' ') }}</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="block-cdi row mb-5">
+                            <div class="block-cdi row mb-5 d-none">
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
-                                        Nom : 
+                                        Nom :
                                         <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <label class="fs-5">
-                                        Prénoms : 
+                                        Prénoms :
                                         <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
-                                        Date de naissance : 
+                                        Date de naissance :
                                         <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
                                     </label>
                                 </div>
@@ -839,7 +839,13 @@
             // Rechercher les documents
             $(document).on('change', '#document_id', function() {
                 let id = $(this).val();
-                console.log(id);
+                let code = $(this).find('option:selected').data('code');
+                if (code == 'CDI') {
+                    $('.block-cdi').addClass('d-block').removeClass('d-none');
+                } else {
+                    $('.block-cdi').removeClass('d-block').addClass('d-none');
+                }
+                // console.log(code);
 				if (!id) return;
                 const getDocs = async (id) => {
                     try {
@@ -926,7 +932,7 @@
                 if (step == 2) {
                     let step2 = $('#step2').val();
                     if (step2 == 0) {
-                        $('.btn-next').addClass('not-active');
+                        // $('.btn-next').addClass('not-active');
                     } else {
                         $('.btn-next').addClass('btn-primary').removeClass('not-active');
                     }
@@ -1111,15 +1117,15 @@
                         sum += $(this).data('valid');
                     }
                 });
-                if (sum > 0) {
-                    $('#step3').val(0);
-                    $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                } else {
-                    $('#step3').val(1);
-                    $('.dmdError').hide().html("");
-                    $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                }
+                // if (sum > 0) {
+                //     $('#step3').val(0);
+                //     $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                // } else {
+                //     $('#step3').val(1);
+                //     $('.dmdError').hide().html("");
+                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                // }
             }
             // Champs texte / input
             var textFields = [
@@ -1132,7 +1138,7 @@
                         let code = phoneInstances[field].getSelectedCountryData().dialCode;
                         $('.' + field).text(`+${code} ${number}`);
                     } else {
-                        $('.' + field).val($(this).val()).text($(this).val());
+                        $('.' + field).val($(this).val()).text($(this).val()).toUpperCase();
                     }
                 });
             });
