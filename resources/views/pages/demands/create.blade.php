@@ -367,7 +367,7 @@
                                         <input type="text" class="form-control birthday_at date_at" readonly>
                                     </div>
                                     <div class="col-md-2 col-12 checkbox-inline mt-6">
-                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="1" class="iCheck" checked> Choix 1</label>
+                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="1" class="iCheck check_cdi" checked> Choix 1</label>
                                     </div>
                                 </div>
                                 <div class="row mb-5">
@@ -384,7 +384,7 @@
                                         <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                     <div class="col-md-2 col-12 checkbox-inline mt-6">
-                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck"> Choix 2</label>
+                                        <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck check_cdi"> Choix 2</label>
                                     </div>
                                 </div>
                             </div>
@@ -622,24 +622,36 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="block-cdi row mb-5 d-none">
-                                <div class="col-md-3 col-12">
-                                    <label class="fs-5">
-                                        Nom :
-                                        <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
-                                    </label>
+                            <div class="block-cdi mb-5 d-none">
+                                <div class="row mb-5">
+                                    <div class="col-md-12 col-12">
+                                        <label class="fs-4 fw-bold text-dark">Infos sur les noms : </label>
+                                    </div>
                                 </div>
-                                <div class="col-md-5 col-12">
-                                    <label class="fs-5">
-                                        Prénoms :
-                                        <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
-                                    </label>
+                                <div class="row mb-5">
+                                    <div class="col-md-3 col-12">
+                                        <label class="fs-5">
+                                            Nom :
+                                            <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-5 col-12">
+                                        <label class="fs-5">
+                                            Prénoms :
+                                            <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fs-5">
+                                            Date de naissance :
+                                            <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="col-md-4 col-12">
-                                    <label class="fs-5">
-                                        Date de naissance :
-                                        <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
-                                    </label>
+                                <div class="row mb-5">
+                                    <div class="col-md-12 col-12">
+                                        <label class="fs-4 text-dark">C'est <span class="info-cdi fw-bold text-uppercase"></span> qui a été retenu.</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-5">
@@ -679,6 +691,16 @@
                 // éviter de déclencher 2 fois si on clique directement sur le radio
                 if (!$(e.target).is('input')) {
                     $(this).find('input[type="radio"]').iCheck('check');
+                }
+            });
+            //Cocher afficher CDI
+            $(document).on('ifChecked', '.check_cdi', function(event) {
+                let value = $(this).val();
+                console.log(value);
+                if (value == 1) {
+                    $('.info-cdi').text($('#lastname').val() + ' ' + $('#firstname').val());
+                } else {
+                    $('.info-cdi').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text());
                 }
             });
             // Rechercher les utilisateurs
@@ -842,6 +864,7 @@
                 let code = $(this).find('option:selected').data('code');
                 if (code == 'CDI') {
                     $('.block-cdi').addClass('d-block').removeClass('d-none');
+                    $('.info-cdi').text($('#lastname').val() + ' ' + $('#firstname').val());
                 } else {
                     $('.block-cdi').removeClass('d-block').addClass('d-none');
                 }
@@ -944,7 +967,7 @@
                 if (step == 3) {
                     let step3 = $('#step3').val();
                     if (step3 == 0) {
-                        $('.btn-next').addClass('not-active');
+                        // $('.btn-next').addClass('not-active');
                     } else {
                         $('.btn-next').addClass('btn-primary').removeClass('not-active');
                     }
@@ -965,7 +988,7 @@
             // Changement du pays
             $(document).on('change', '#country_id', function() {
                 $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                // $('.btn-next').addClass('not-active').removeClass('btn-primary');
             });
             // Changement de la civilité et de la préfecture
             $(document).on('change', '#civility, #town_id', function() {
@@ -993,7 +1016,7 @@
                     if (!regex.test(value)) {
                         $('#step2').val(0);
                         $('.userError').show().html("Adresse e-mail non valide.");
-                        $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                        // $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     } else userForm();
                 } else userForm();
             });
@@ -1009,7 +1032,7 @@
                 if (sum > 0) {
                     $('#step2').val(0);
                     $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
                 } else {
                     $('#step2').val(1);
                     $('.userError').hide().html("");
@@ -1041,14 +1064,14 @@
                 // Les types autorisés : PDF ou Image.
                 if ($.inArray(iExt, ValidTypes) < 0) {
                     $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('Les types autorisés : PDF ou Image.');
                     return;
                 }
                 // Taille max : 2MB.
                 if (iSize > 2000000) {
                     $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('Taille max : 2MB.');
                     return;
                 }
@@ -1095,7 +1118,7 @@
                 var totalVisible = $('.file-view:visible .btn-remove').length;
                 if (totalVisible == 0) {
                     $('#step3').val(0);
-                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
                 }
             });
@@ -1117,15 +1140,15 @@
                         sum += $(this).data('valid');
                     }
                 });
-                // if (sum > 0) {
-                //     $('#step3').val(0);
-                //     $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                //     $('.btn-next').addClass('not-active').removeClass('btn-primary');
-                // } else {
-                //     $('#step3').val(1);
-                //     $('.dmdError').hide().html("");
-                //     $('.btn-next').addClass('btn-primary').removeClass('not-active');
-                // }
+                if (sum > 0) {
+                    $('#step3').val(0);
+                    $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
+                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                } else {
+                    $('#step3').val(1);
+                    $('.dmdError').hide().html("");
+                    $('.btn-next').addClass('btn-primary').removeClass('not-active');
+                }
             }
             // Champs texte / input
             var textFields = [
@@ -1138,7 +1161,9 @@
                         let code = phoneInstances[field].getSelectedCountryData().dialCode;
                         $('.' + field).text(`+${code} ${number}`);
                     } else {
-                        $('.' + field).val($(this).val()).text($(this).val()).toUpperCase();
+                        const value = $(this).val().toUpperCase();
+                        $('.' + field).val(value).text(value);
+                        console.log(field, value);
                     }
                 });
             });
@@ -1146,9 +1171,10 @@
             var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
+                    console.log(field, $(this).val());
                     var val = $(this).val();
                     if (val) {
-                        var parts     = val.split('-');
+                        var parts = val.split('-');
                         var formatted = parts[2] + '-' + parts[1] + '-' + parts[0];
                         $('.' + field).val(formatted).text(formatted);
                     } else {
