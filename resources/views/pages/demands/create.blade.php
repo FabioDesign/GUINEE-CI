@@ -696,7 +696,6 @@
             //Cocher afficher CDI
             $(document).on('ifChecked', '.check_cdi', function(event) {
                 let value = $(this).val();
-                console.log(value);
                 if (value == 1) {
                     $('.info-cdi').text($('#lastname').val() + ' ' + $('#firstname').val());
                 } else {
@@ -868,7 +867,6 @@
                 } else {
                     $('.block-cdi').removeClass('d-block').addClass('d-none');
                 }
-                // console.log(code);
 				if (!id) return;
                 const getDocs = async (id) => {
                     try {
@@ -1163,7 +1161,6 @@
                     } else {
                         const value = $(this).val().toUpperCase();
                         $('.' + field).val(value).text(value);
-                        console.log(field, value);
                     }
                 });
             });
@@ -1171,7 +1168,6 @@
             var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
-                    console.log(field, $(this).val());
                     var val = $(this).val();
                     if (val) {
                         var parts = val.split('-');
