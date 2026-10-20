@@ -93,7 +93,7 @@ class DemandController extends Controller
             return 'x';
         }
 		// Validator
-		$validator = Validator::make($request->all(), [
+        $rules = [
 			'civility' => 'required|in:M.,Mme,Mlle',
 			'lastname' => 'required',
 			'firstname' => 'required',
@@ -131,7 +131,14 @@ class DemandController extends Controller
 			'total' => 'required|integer',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
-		], [
+		];
+        // Test sur CC
+        if ($request->document_id == 1) {
+            $rules['agency'] = 'required|integer|exists:agencies,id';
+            $rules['rdvhour'] = 'required|integer|exists:timings,id';
+            $rules['rdvdate_at'] = 'required|date|date_format:Y-m-d';
+        }
+        $validator = Validator::make($request->all(), $rules, [
 			'civility.required' => "La civilité est obligatoire.",
 			'civility.in' => "La civilité est incorrecte.",
 			'lastname.required' => "Le nom est obligatoire.",

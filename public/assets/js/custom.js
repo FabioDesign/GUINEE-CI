@@ -407,8 +407,13 @@ $(document).on('click', '.submitForm', function(e) {
         datasT.append(this.name, $(this).val());
         iCheck = true;
       }
-    } else datasT.append(this.name, $(this).val());
+    } else {
+      datasT.append(this.name, $(this).val());
+    }
   });
+  let code = $('#document_id').find('option:selected').data('code');
+  datasT.append('document_code', code);
+  
   if ((rootForm.slice(0, 5) === 'users') || (rootForm.slice(0, 7) === 'account')) {
     var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
     var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
