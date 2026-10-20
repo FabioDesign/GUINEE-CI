@@ -144,8 +144,8 @@ class DashboardController extends Controller
 		->map(function ($item) {
 			$date = \Carbon\Carbon::parse($item->day_date)->locale('fr');
 			return [
-				'day_date'  => $date->format('j'),                               // 15
-				'label' => ucfirst($date->isoFormat('dddd D')),              // Samedi 15
+				'day_date'  => $date->format('j'), // 15
+				'label' => ucfirst($date->isoFormat('dddd D')), // Samedi 15
 			];
 		});
 

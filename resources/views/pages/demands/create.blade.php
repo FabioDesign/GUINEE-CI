@@ -623,34 +623,29 @@
                                 </div>
                             </div>
                             <div class="block-cdi mb-5 d-none">
-                                <div class="row mb-5">
-                                    <div class="col-md-12 col-12">
-                                        <label class="fs-4 fw-bold text-dark">Infos sur les noms : </label>
-                                    </div>
-                                </div>
-                                <div class="row mb-5">
+                                <div class="row mt-10 mb-5">
                                     <div class="col-md-3 col-12">
                                         <label class="fs-5">
-                                            Nom :
+                                            Nom 2 :
                                             <span class="lastname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                         </label>
                                     </div>
                                     <div class="col-md-5 col-12">
                                         <label class="fs-5">
-                                            Prénoms :
+                                            Prénoms 2 :
                                             <span class="firstname_cdi fw-bold fs-5 text-uppercase text-dark"></span>
                                         </label>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
-                                            Date de naissance :
+                                            Date de naissance 2 :
                                             <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="row mb-5">
                                     <div class="col-md-12 col-12">
-                                        <label class="fs-4 text-dark">C'est <span class="info-cdi fw-bold text-uppercase"></span> qui a été retenu.</label>
+                                        <label class="fs-4 text-dark">A retenir : <span class="cdi-info fw-bold text-uppercase"></span> (Choix <span class="cdi-choix fw-bold"></span>)</label>
                                     </div>
                                 </div>
                             </div>
@@ -696,10 +691,11 @@
             //Cocher afficher CDI
             $(document).on('ifChecked', '.check_cdi', function(event) {
                 let value = $(this).val();
+                $('.cdi-choix').text(value);
                 if (value == 1) {
-                    $('.info-cdi').text($('#lastname').val() + ' ' + $('#firstname').val());
+                    $('.cdi-info').text($('.lastname').val() + ' ' + $('.firstname').val() + ' ' + $('.block-cdi input.birthday_at[type="text"]').val());
                 } else {
-                    $('.info-cdi').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text());
+                    $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.birthdayat_cdi').text());
                 }
             });
             // Rechercher les utilisateurs
@@ -863,7 +859,13 @@
                 let code = $(this).find('option:selected').data('code');
                 if (code == 'CDI') {
                     $('.block-cdi').addClass('d-block').removeClass('d-none');
-                    $('.info-cdi').text($('#lastname').val() + ' ' + $('#firstname').val());
+                    const choix = $('input[name="check_cdi"]:checked').val();
+                    $('.cdi-choix').text(choix);
+                    if (choix == 1) {
+                        $('.cdi-info').text($('.lastname').val() + ' ' + $('.firstname').val() + ' ' + $('.block-cdi input.birthday_at[type="text"]').val());
+                    } else {
+                        $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.birthdayat_cdi').text());
+                    }
                 } else {
                     $('.block-cdi').removeClass('d-block').addClass('d-none');
                 }
@@ -953,7 +955,7 @@
                 if (step == 2) {
                     let step2 = $('#step2').val();
                     if (step2 == 0) {
-                        // $('.btn-next').addClass('not-active');
+                        $('.btn-next').addClass('not-active');
                     } else {
                         $('.btn-next').addClass('btn-primary').removeClass('not-active');
                     }
@@ -965,7 +967,7 @@
                 if (step == 3) {
                     let step3 = $('#step3').val();
                     if (step3 == 0) {
-                        // $('.btn-next').addClass('not-active');
+                        $('.btn-next').addClass('not-active');
                     } else {
                         $('.btn-next').addClass('btn-primary').removeClass('not-active');
                     }
@@ -986,7 +988,7 @@
             // Changement du pays
             $(document).on('change', '#country_id', function() {
                 $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                $('.btn-next').addClass('not-active').removeClass('btn-primary');
             });
             // Changement de la civilité et de la préfecture
             $(document).on('change', '#civility, #town_id', function() {
@@ -1014,7 +1016,7 @@
                     if (!regex.test(value)) {
                         $('#step2').val(0);
                         $('.userError').show().html("Adresse e-mail non valide.");
-                        // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                        $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     } else userForm();
                 } else userForm();
             });
@@ -1030,7 +1032,7 @@
                 if (sum > 0) {
                     $('#step2').val(0);
                     $('.userError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                 } else {
                     $('#step2').val(1);
                     $('.userError').hide().html("");
@@ -1062,14 +1064,14 @@
                 // Les types autorisés : PDF ou Image.
                 if ($.inArray(iExt, ValidTypes) < 0) {
                     $('#step3').val(0);
-                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('Les types autorisés : PDF ou Image.');
                     return;
                 }
                 // Taille max : 2MB.
                 if (iSize > 2000000) {
                     $('#step3').val(0);
-                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').html('Taille max : 2MB.');
                     return;
                 }
@@ -1116,7 +1118,7 @@
                 var totalVisible = $('.file-view:visible .btn-remove').length;
                 if (totalVisible == 0) {
                     $('#step3').val(0);
-                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                     $('.dmdError').show().html("Veuillez renseigner la pièce jointe.");
                 }
             });
@@ -1141,7 +1143,7 @@
                 if (sum > 0) {
                     $('#step3').val(0);
                     $('.dmdError').show().html("Veuillez renseigner tous les champs obligatoires.");
-                    // $('.btn-next').addClass('not-active').removeClass('btn-primary');
+                    $('.btn-next').addClass('not-active').removeClass('btn-primary');
                 } else {
                     $('#step3').val(1);
                     $('.dmdError').hide().html("");
