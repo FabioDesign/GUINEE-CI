@@ -840,7 +840,7 @@
                             $('#nationality_id').html(response.nationality.map(nationality => `<option value="${nationality.id}" data-alpha="${nationality.alpha}" data-code="+${nationality.code}" ${nationality.id == response.user.nationality_id ? 'selected' : ''}>${nationality.label}</option>`).join(''));
                             $('.nationality_id').text(response.label_nation);
                             $('#country_id').html(response.country.map(country => `<option value="${country.id}" data-alpha="${country.alpha}" data-code="+${country.code}" ${country.id == response.ville.country_id ? 'selected' : ''}>${country.country}</option>`).join(''));
-                            // $('.country_id').text(response.label_country);
+                            $('.country_id').text(response.label_country);
                             $('#town_id').html(response.town.map(town => `<option value="${town.id}" ${town.id == response.user.town_id ? 'selected' : ''}>${town.label}</option>`).join(''));
                             $('.town_id').text(response.ville.label);
                             $('#step2').val(1);

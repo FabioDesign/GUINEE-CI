@@ -607,9 +607,9 @@ class UserController extends Controller
 		$data['country'] = Country::select('id', 'alpha', 'code', 'country')->orderBy('country')->get();
 		$data['nationality'] = Country::select('id', 'alpha', 'code', 'nationality')->orderBy('nationality')->get();
 		$data['label_nation'] = Country::where('id', $data['user']->nationality_id)->first()->nationality;
-		$data['label_country'] = Country::where('id', $data['user']->country_id)->first()->country;
 		$data['ville'] = Town::select('id', 'label', 'country_id')->where('id', $data['user']->town_id)->first();
 		$data['town'] = Town::select('id', 'label')->where('country_id', $data['ville']->country_id)->orderBy('label')->get();
+		$data['label_country'] = Country::where('id', $data['ville']->country_id)->first()->country;
 		$data['phone'] = Country::select('alpha')->where('code', $data['user']->phone_code)->first();
 		$data['person'] = Country::select('alpha')->where('code', $data['user']->person_code)->first();
 		return response()->json([
