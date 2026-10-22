@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Auth, DB, Log, Storage, Validator};
-use App\Models\{Consulat, Attachment, Country, Demand, DocFile, Document, File, Profile, Town, User};
+use App\Models\{Consulat, Attachment, Country, Demand, DemandCdi, DocFile, Document, File, Profile, Town, User};
 
 class DemandController extends Controller
 {
@@ -253,6 +253,16 @@ class DemandController extends Controller
 					'demand_id' => $demand->id,
 					'file_id' => $file_id,
 					'path' => $path,
+				]);
+			}
+			// Création du CDI
+			if ($request->codeDoc == 'CDI') {
+				DemandCdi::create([
+					'birthday_at' => $request->birthdayat_cdi,
+					'firstname' => Str::upper(Myhelper::valideString($request->firstname),'UTF-8'),
+					'lastname' => Str::upper(Myhelper::valideString($request->lastname),'UTF-8'),
+					'number' => $request->check_cdi,
+					'demand_id' => $demand->id,
 				]);
 			}
             DB::commit(); // Valider la transaction
