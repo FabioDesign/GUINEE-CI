@@ -109,7 +109,7 @@ class DemandController extends Controller
 			'profession' => 'required',
 			'nationality_id' => 'required|exists:countries,id',
             'town_id' => 'required|exists:towns,id',
-            'birthday_at' => 'required|date|date_format:Y-m-d',
+            'birthday_at' => 'required|date_format:Y-m-d',
             'birthplace' => 'required',
             'father_fullname' => 'required',
             'mother_fullname' => 'required',
@@ -125,18 +125,18 @@ class DemandController extends Controller
                 'digits_between:8,10',
 			],
             'person_address' => 'required',
-            'arrival_at' => 'required|date|date_format:Y-m-d',
+            'arrival_at' => 'required|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
 			'number' => 'required|integer|min:1',
 			'total' => 'required|integer',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
 		];
-        // Test sur CC
-        if ($request->document_id == 1) {
-            $rules['agency'] = 'required|integer|exists:agencies,id';
-            $rules['rdvhour'] = 'required|integer|exists:timings,id';
-            $rules['rdvdate_at'] = 'required|date|date_format:Y-m-d';
+        // Test sur CDI
+		if ($request->codeDoc == 'CDI') {
+            $rules['firstname_cdi'] = 'required';
+            $rules['lastname_cdi'] = 'required';
+            $rules['birthdayat_cdi'] = 'required|date_format:Y-m-d';
         }
         $validator = Validator::make($request->all(), $rules, [
 			'civility.required' => "La civilité est obligatoire.",
@@ -177,6 +177,10 @@ class DemandController extends Controller
 			'copy.min' => "Le nombre de copies doit être supérieur à 0.",
 			'filename.required' => "Les fichiers sont obligatoires.",
 			'filename.array' => "Les fichiers doivent être un tableau.",
+			'firstname_cdi.required' => "Le 2ème prénom est obligatoire.",
+			'lastname_cdi.required' => "Le 2ème nom est obligatoire.",
+			'birthdayat_cdi.required' => "La 2ème date de naissance est obligatoire.",
+			'birthdayat_cdi.date_format' => "Le format de la 2ème date de naissance est incorrecte.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -259,8 +263,8 @@ class DemandController extends Controller
 			if ($request->codeDoc == 'CDI') {
 				DemandCdi::create([
 					'birthday_at' => $request->birthdayat_cdi,
-					'firstname' => Str::upper(Myhelper::valideString($request->firstname),'UTF-8'),
-					'lastname' => Str::upper(Myhelper::valideString($request->lastname),'UTF-8'),
+					'firstname' => Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8'),
+					'lastname' => Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8'),
 					'number' => $request->check_cdi,
 					'demand_id' => $demand->id,
 				]);
@@ -343,7 +347,7 @@ class DemandController extends Controller
 			'profession' => 'required',
 			'nationality_id' => 'required|exists:countries,id',
             'town_id' => 'required|exists:towns,id',
-            'birthday_at' => 'required|date|date_format:Y-m-d',
+            'birthday_at' => 'required|date_format:Y-m-d',
             'birthplace' => 'required',
             'father_fullname' => 'required',
             'mother_fullname' => 'required',
@@ -359,7 +363,7 @@ class DemandController extends Controller
                 'digits_between:8,10',
 			],
             'person_address' => 'required',
-            'arrival_at' => 'required|date|date_format:Y-m-d',
+            'arrival_at' => 'required|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
 			'number' => 'required|integer|min:1',
 			'total' => 'required|integer|min:1',

@@ -54,14 +54,12 @@ class DashboardController extends Controller
         }
         //Validator
         $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date|date_format:Y-m-d',
-            'end_date' => 'required|date|date_format:Y-m-d|after_or_equal:start_date',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
         ], [
             'start_date.required' => "La date de début est obligatoire.",
-            'start_date.date' => "La date de début doit être une date valide.",
             'start_date.date_format' => "La date de début doit être au format YYYY-MM-DD.",
             'end_date.required' => "La date de fin est obligatoire.",
-            'end_date.date' => "La date de fin doit être une date valide.",
             'end_date.date_format' => "La date de fin doit être au format YYYY-MM-DD.",
             'end_date.after_or_equal' => "La date de fin doit être après la date de début ou égale à la date de début.",
         ]);
