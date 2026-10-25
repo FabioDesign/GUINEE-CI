@@ -1,6 +1,10 @@
 @extends('pdf.layouts.master')
 
 @section('body')
+@php
+    // Choix du sexe
+    $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
+@endphp
 <table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
   <tr>
     <td style="vertical-align:top;">
@@ -20,7 +24,7 @@
           <td class="field-value">: {{ $dataPDF['civility'] }} {{ $dataPDF['lastname'] }} {{ $dataPDF['firstname'] }}</td>
         </tr>
         <tr class="field-row">
-          <td class="field-label">EST {{ $dataPDF['sex'] == 'M' ? 'NE' : 'NEE' }} LE</td>
+          <td class="field-label">EST {{ $isMale ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
         </tr>
         <tr class="field-row">
@@ -32,7 +36,7 @@
           <td class="field-value">: {{ $dataPDF['prefecture'] }}</td>
         </tr>
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} DE</td>
+          <td class="field-label">{{ $isMale ? 'FILS' : 'FILLE' }} DE</td>
           <td class="field-value">: {{ $dataPDF['father'] }}</td>
         </tr>
         <tr class="field-row">
@@ -44,7 +48,7 @@
           <td class="field-value">: {{ $dataPDF['profession'] }}</td>
         </tr>
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'DOMICILIE' : 'DOMICILIEE' }} A</td>
+          <td class="field-label">{{ $isMale ? 'DOMICILIE' : 'DOMICILIEE' }} A</td>
           <td class="field-value">: {{ $dataPDF['home_address'] }}</td>
         </tr>
       </table>

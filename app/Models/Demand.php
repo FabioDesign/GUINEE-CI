@@ -5,6 +5,7 @@ namespace App\Models;
 use PDF;
 use File;
 use DateTime;
+use App\Models\DemandCdi;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
@@ -133,9 +134,17 @@ class Demand extends Model
         'stamp' => optional($consul)->stamp,
       ];
       // Carte d'identité
-      if ($query->document_id == 3) {
+      if (optional($query->document)->code == 'ADI') {
         $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
         $dataPDF['photo'] = $dmdFiles->path;
+      }
+      // Certificat d'individualité
+      if (optional($query->document)->code == 'CDI') {
+        $cdi = DemandCdi::where('demand_id', $query->id)->first();
+        $dataPDF['number'] = $cdi->number;
+        $dataPDF['lastname_cdi'] = $cdi->lastname;
+        $dataPDF['firstname_cdi'] = $cdi->firstname;
+        $dataPDF['birthdayat_cdi'] = $cdi->birthday_at->format('d/m/Y');
       }
       // Données du Qrcode
       $dataQR = implode("\n", [

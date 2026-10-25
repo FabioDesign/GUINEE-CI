@@ -64,7 +64,8 @@ class DemandController extends Controller
 		$country = Country::find($prefecture->country_id);
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
 		$delivered_at = Carbon::parse(Myhelper::addWorkingDays($query->copy))->format('d-m-Y');
-		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at'));
+		$cdi = DemandCdi::where('demand_id', $query->id)->first();
+		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at', 'cdi'));
 	}
     //Liste des demandes
 	public function create() {
@@ -88,7 +89,7 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
-		dd($request->all());
+		// dd($request->all());
         if (!Auth::check()) {
             return 'x';
         }

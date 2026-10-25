@@ -397,12 +397,7 @@ $(document).on('click', '.submitForm', function(e) {
   $('.formField').find('input, select, textarea').each(function() {
     if ($(this).is(':input:file')) {
       if ($(this).val() !== '') datasT.append(this.name, $(this)[0].files[0]);
-    } else if ($(this).is(':checkbox')) {
-      if ($(this).is(':checked')) {
-        datasT.append(this.name, $(this).val());
-        iCheck = true;
-      }
-    } else if ($(this).is(':radio')) {
+    } else if (($(this).is(':checkbox')) || ($(this).is(':radio'))) {
       if ($(this).is(':checked')) {
         datasT.append(this.name, $(this).val());
         iCheck = true;
@@ -411,17 +406,15 @@ $(document).on('click', '.submitForm', function(e) {
       datasT.append(this.name, $(this).val());
     }
   });
+  let phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
+  let person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
   if ((rootForm.slice(0, 5) === 'users') || (rootForm.slice(0, 7) === 'account')) {
-    var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
-    var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
     datasT.append('phone_code', phone_code);
     datasT.append('person_code', person_code);
     datasT.append('img_sta', $('#remove_sta').data('status'));
     datasT.append('img_sig', $('#remove_sig').data('status'));
   }
   if (rootForm.slice(0, 7) === 'demands') {
-    var phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
-    var person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
     datasT.append('phone_code', phone_code);
     datasT.append('person_code', person_code);
   }
@@ -466,7 +459,7 @@ $(document).on('click', '.submitForm', function(e) {
   $('.formField .password').each(function() {
     if (!hasError) {
       if ($(this).val().length < 5) {
-        $('.msgError').html("Les mots de passe doivent être supérieur à 5 caractères");
+        $('.msgError').html("Les mots de passe doivent être supérieurs à 5 caractères");
         $(this).addClass('is-invalid');
         hasError = true;
       } else if ($('#newpass').val() !== $('#confirmpass').val()) {
@@ -502,10 +495,11 @@ $(document).on('click', '.submitForm', function(e) {
               confirmButton: "btn btn-square font-weight-bold btn-light-success"
             }
           }).then(function() {
-            if (response.status == 1)
+            if (response.status == 1) {
               location.reload();
-            else
+            } else {
               location.href = '/';
+            }
           });
         } else {
           $('.msgError').html(response.message);

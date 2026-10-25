@@ -130,6 +130,38 @@
                                     <label class="fs-5">Total : <span class="fw-bold fs-5 text-dark">{{ number_format($query->price, 0, ',', ' ') }}</span></label>
                                 </div>
                             </div>
+                            @if($query->document->code == 'CDI')
+                            <div class="row mt-10 mb-5">
+                                <div class="col-md-3 col-12">
+                                    <label class="fs-5">
+                                        Nom 2 :
+                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->lastname }}</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-5 col-12">
+                                    <label class="fs-5">
+                                        Prénoms 2 :
+                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->firstname }}</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">
+                                        Date de naissance 2 :
+                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->birthday_at->format('d-m-Y') }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 col-12">
+                                    <label class="fs-5 text-dark">
+                                        A retenir :
+                                        <span class="fw-bold">
+                                            {{ $cdi->number == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $cdi->lastname . ' ' . $cdi->firstname . ' ' . $cdi->birthday_at->format('d-m-Y') }}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            @endif
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>

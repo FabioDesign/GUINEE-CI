@@ -1,6 +1,10 @@
 @extends('pdf.layouts.master')
 
 @section('body')
+@php
+    // Choix du sexe
+    $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
+@endphp
 <table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 70px;">
   <tr>
     {{-- ── Champs du demandeur ──────────────────────────────────── --}}
@@ -15,7 +19,7 @@
           <td class="field-value">: {{ $dataPDF['firstname'] }}</td>
         </tr>
         <tr class="field-row">
-          <td class="field-label">{{ $dataPDF['sex'] == 'M' ? 'NE' : 'NEE' }} LE</td>
+          <td class="field-label">{{ $isMale ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
         </tr>
         <tr class="field-row">
@@ -28,7 +32,7 @@
         </tr>
         <tr class="field-row">
           <td class="field-label">
-            {{ $dataPDF['sex'] == 'M' ? 'FILS' : 'FILLE' }} DE :
+            {{ $isMale ? 'FILS' : 'FILLE' }} DE :
           </td>
           <td class="field-value">: {{ $dataPDF['father'] }}</td>
         </tr>
