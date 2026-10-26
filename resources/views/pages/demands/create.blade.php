@@ -347,12 +347,7 @@
                                     <input type="text" id="total" name="total" value="{{ old('price', $firstDoc->price) }}" class="form-control text-center" onKeyUp="verif_int(this)" />
                                 </div>
                             </div>
-                            <div class="block-cdi d-none">
-                                <div class="row mb-5">
-                                    <div class="col-md-12 col-12">
-                                        <label class="fs-4 fw-bold text-dark">Infos sur les noms : </label>
-                                    </div>
-                                </div>
+                            <div class="block-dmd block-cdi d-none">
                                 <div class="row mb-5">
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Nom 1 :</label>
@@ -385,6 +380,23 @@
                                     </div>
                                     <div class="col-md-2 col-12 checkbox-inline mt-6">
                                         <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck check_cdi"> Choix 2</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-dmd block-cbc d-none">
+                                <div class="row mb-5">
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Situation matrimoniale : <span class="text-danger">*</span></label>
+                                        <select id="maritalstatus_id" name="maritalstatus_id" class="form-control requiredDmd" data-valid="0">
+                                            <option value="" selected>Sélectionner</option>
+                                            @foreach($maritalStatus as $data)
+                                                <option value="{{ $data->id }}">{{ $data->label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Nombre d'enfants : <span class="text-danger">*</span></label>
+                                        <input type="text" id="children" name="children" class="form-control requiredDmd text-center" placeholder="0" onKeyUp="verif_int(this)" data-valid="0" />
                                     </div>
                                 </div>
                             </div>
@@ -649,6 +661,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="block-cbc d-none">
+                                <div class="row mt-10 mb-5">
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            Situation matrimoniale :
+                                            <span class="maritalstatus_id fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            Nombre d'enfants :
+                                            <span class="children fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>
@@ -837,7 +865,7 @@
     `<option value="${civility}" ${civility == response.user.civility ? 'selected' : ''}>${civility}</option>`
 ).join(''));
                             $('.civility').text(response.user.civility);
-                            $('#nationality_id').html(response.nationality.map(nationality => `<option value="${nationality.id}" data-alpha="${nationality.alpha}" data-code="+${nationality.code}" ${nationality.id == response.user.nationality_id ? 'selected' : ''}>${nationality.label}</option>`).join(''));
+                            $('#nationality_id').html(response.nationality.map(nationality => `<option value="${nationality.id}" data-alpha="${nationality.alpha}" data-code="+${nationality.code}" ${nationality.id == response.user.nationality_id ? 'selected' : ''}>${nationality.nationality}</option>`).join(''));
                             $('.nationality_id').text(response.label_nation);
                             $('#country_id').html(response.country.map(country => `<option value="${country.id}" data-alpha="${country.alpha}" data-code="+${country.code}" ${country.id == response.ville.country_id ? 'selected' : ''}>${country.country}</option>`).join(''));
                             $('.country_id').text(response.label_country);
@@ -858,7 +886,9 @@
             $(document).on('change', '#document_id', function() {
                 let id = $(this).val();
                 let code = $(this).find('option:selected').data('code');
+                $('.block-dmd').find('[data-valid]').attr('data-valid', 0).data('valid', 0);
                 if (code == 'CDI') {
+                    $('.block-cdi').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
                     $('.block-cdi').addClass('d-block').removeClass('d-none');
                     const choix = $('input[name="check_cdi"]:checked').val();
                     $('.cdi-choix').text(choix);
@@ -869,6 +899,12 @@
                     }
                 } else {
                     $('.block-cdi').removeClass('d-block').addClass('d-none');
+                }
+                if (code == 'CBC') {
+                    $('.block-cbc').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
+                    $('.block-cbc').addClass('d-block').removeClass('d-none');
+                } else {
+                    $('.block-cbc').removeClass('d-block').addClass('d-none');
                 }
 				if (!id) return;
                 const getDocs = async (id) => {
@@ -1132,6 +1168,15 @@
                 }
                 dmdForm();
             });
+            // Changement de la situation matrimoniale
+            $(document).on('change', '#maritalstatus_id', function() {
+                if ($(this).val() == '') {
+                    $(this).data('valid', 1).attr('data-valid', 1);
+                } else {
+                    $(this).data('valid', 0).attr('data-valid', 0);
+                }
+                dmdForm();
+            });
             // Validation du formulaire de l'document
             function dmdForm() {
                 var sum = 0;
@@ -1153,7 +1198,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi'
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children'
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
@@ -1182,7 +1227,7 @@
                 });
             });
             var selectFields = [
-                'civility', 'country_id', 'town_id', 'nationality_id', 'document_id',
+                'civility', 'country_id', 'town_id', 'nationality_id', 'document_id', 'maritalstatus_id',
             ];
             $.each(selectFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {

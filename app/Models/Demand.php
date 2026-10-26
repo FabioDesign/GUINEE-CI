@@ -24,6 +24,7 @@ class Demand extends Model
    * @var array<string, string>
    */
   protected $casts = [
+    'birthday_at' => 'date',
     'delivered_at' => 'date',
     'rejected_at' => 'datetime',
     'recovered_at' => 'datetime',
@@ -67,6 +68,10 @@ class Demand extends Model
   // Relation avec le récupérateur
   public function recoveredBy() {
     return $this->belongsTo(User::class, 'recovered_by');
+  }
+  // Relation avec le statut matrimonial
+  public function maritalstatus() {
+    return $this->belongsTo(MaritalStatus::class, 'maritalstatus_id');
   }
   // Reference
   public static function reference(string $codeDoc, string $birthday_at): ?string {
@@ -128,6 +133,7 @@ class Demand extends Model
         'hairs' => optional($query->user)->hairs,
         'particular_sign' => optional($query->user)->particular_sign,
         'home_address' => optional($query->user)->home_address,
+        'arrival_at' => optional($query->user)->arrival_at->format('d/m/Y'),
         'validated_at' => optional($query->validated_at)->format('d/m/Y'),
         'signatory' => optional($consul)->civility . ' ' . optional($consul)->firstname . ' ' . optional($consul)->lastname,
         'signature' => optional($consul)->signature,
@@ -140,11 +146,15 @@ class Demand extends Model
       }
       // Certificat d'individualité
       if (optional($query->document)->code == 'CDI') {
-        $cdi = DemandCdi::where('demand_id', $query->id)->first();
-        $dataPDF['number'] = $cdi->number;
-        $dataPDF['lastname_cdi'] = $cdi->lastname;
-        $dataPDF['firstname_cdi'] = $cdi->firstname;
-        $dataPDF['birthdayat_cdi'] = $cdi->birthday_at->format('d/m/Y');
+        $dataPDF['count'] = $query->count;
+        $dataPDF['lastname_cdi'] = $query->lastname;
+        $dataPDF['firstname_cdi'] = $query->firstname;
+        $dataPDF['birthdayat_cdi'] = $query->birthday_at->format('d/m/Y');
+      }
+      // Certificat de conjoint
+      if (optional($query->document)->code == 'CBC') {
+        $dataPDF['count'] = $query->count;
+        $dataPDF['maritalstatus'] = Str::upper(optional($query->maritalstatus)->label);
       }
       // Données du Qrcode
       $dataQR = implode("\n", [

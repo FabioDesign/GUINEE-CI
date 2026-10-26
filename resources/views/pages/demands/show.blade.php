@@ -135,19 +135,19 @@
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
                                         Nom 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->lastname }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->lastname }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <label class="fs-5">
                                         Prénoms 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->firstname }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->firstname }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
                                         Date de naissance 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $cdi->birthday_at->format('d-m-Y') }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->birthday_at->format('d-m-Y') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -156,9 +156,19 @@
                                     <label class="fs-5 text-dark">
                                         A retenir :
                                         <span class="fw-bold">
-                                            {{ $cdi->number == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $cdi->lastname . ' ' . $cdi->firstname . ' ' . $cdi->birthday_at->format('d-m-Y') }}
+                                            {{ $query->count == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $query->lastname . ' ' . $query->firstname . ' ' . $query->birthday_at->format('d-m-Y') }}
                                         </span>
                                     </label>
+                                </div>
+                            </div>
+                            @endif
+                            @if($query->document->code == 'CBC')
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Situation matrimoniale : <span class="fw-bold fs-5 text-dark">{{ optional($query->maritalstatus)->label }}</span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nombre d'enfants : <span class="fw-bold fs-5 text-dark">{{ $query->count }}</span></label>
                                 </div>
                             </div>
                             @endif

@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
                 MenuSeeder::class,
                 // Profil
                 ProfileSeeder::class,
+                // Statut matrimonial
+                MaritalStatusSeeder::class,
                 // Menu-Action
                 MenuActionSeeder::class,
                 // Permission

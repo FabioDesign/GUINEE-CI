@@ -18,6 +18,10 @@ return new class extends Migration
             $table->tinyInteger('number');
             $table->tinyInteger('copy');
             $table->decimal('price', 10, 0);
+            $table->tinyInteger('count');
+            $table->string('lastname');
+            $table->string('firstname');
+            $table->date('birthday_at');
             $table->text('motif')->nullable();
             $table->text('path')->nullable();
             $table->tinyInteger('status')->default('0');

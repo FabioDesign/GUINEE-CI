@@ -2,9 +2,9 @@
 
 @section('body')
 @php
-    // Choix du nom à retenir (radio number : 1 = Nom 1, 2 = Nom 2)
+    // Choix du nom à retenir (radio count : 1 = Nom 1, 2 = Nom 2)
     $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
-    $choix    = $dataPDF['number'] ?? 1;
+    $choix    = $dataPDF['count'] ?? 1;
     $retenu   = '';
     if ($choix == 1) {
         $retenu = trim(($dataPDF['lastname'] ?? '') . ' ' . ($dataPDF['firstname'] ?? ''));
@@ -17,8 +17,8 @@
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
       <p style="font-size:12pt; margin-bottom: 30px; line-height: 1.5;">
-        L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE,<br>
-        {{ $dataPDF['consulat'] ?? '- ABIDJAN' }}
+        L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['consulat'] }}<br>
+        SUR LA FOI DES DOCUMENTS PRESENTS,
       </p>
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">
         CERTIFIE

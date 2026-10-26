@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Auth, DB, Log, Storage, Validator};
-use App\Models\{Consulat, Attachment, Country, Demand, DemandCdi, DocFile, Document, File, Profile, Town, User};
+use App\Models\{Consulat, Attachment, Country, Demand, DocFile, Document, File, MaritalStatus, Profile, Town, User};
 
 class DemandController extends Controller
 {
@@ -64,8 +64,7 @@ class DemandController extends Controller
 		$country = Country::find($prefecture->country_id);
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
 		$delivered_at = Carbon::parse(Myhelper::addWorkingDays($query->copy))->format('d-m-Y');
-		$cdi = DemandCdi::where('demand_id', $query->id)->first();
-		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at', 'cdi'));
+		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at'));
 	}
     //Liste des demandes
 	public function create() {
@@ -84,8 +83,9 @@ class DemandController extends Controller
 		$country = Country::orderBy('country')->get();
 		$documents = Document::orderBy('label')->get();
 		$firstDoc = $documents->first();
+		$maritalStatus = MaritalStatus::orderBy('label')->get();
 		$docFiles = DocFile::where('document_id', $firstDoc->id)->get();
-		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc'));
+		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc', 'maritalStatus'));
 	}
     // Account creation
     public function store(Request $request) {
@@ -133,6 +133,11 @@ class DemandController extends Controller
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
 		];
+		// Test sur CBC
+		if ($request->codeDoc == 'CBC') {
+			$rules['children'] = 'required|integer';
+			$rules['maritalstatus_id'] = 'required|exists:marital_status,id';
+		}
         // Test sur CDI
 		if ($request->codeDoc == 'CDI') {
             $rules['firstname_cdi'] = 'required';
@@ -182,6 +187,10 @@ class DemandController extends Controller
 			'lastname_cdi.required' => "Le 2ème nom est obligatoire.",
 			'birthdayat_cdi.required' => "La 2ème date de naissance est obligatoire.",
 			'birthdayat_cdi.date_format' => "Le format de la 2ème date de naissance est incorrecte.",
+			'children.required' => "Le nombre d'enfants est obligatoire.",
+			'children.integer' => "Le nombre d'enfants doit être un nombre entier.",
+			'maritalstatus_id.required' => "La situation matrimoniale est obligatoire.",
+			'maritalstatus_id.exists' => "La situation matrimoniale n'existe pas dans la base de données.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -250,6 +259,18 @@ class DemandController extends Controller
                 'user_id' => $user->id,
 				'consulat_id' => Auth::user()->consulat_id,
             ];
+			// Création du CBC
+			if ($request->codeDoc == 'CBC') {
+				$set['count'] = $request->children;
+				$set['maritalstatus_id'] = $request->maritalstatus_id;
+			}
+			// Création du CDI
+			if ($request->codeDoc == 'CDI') {
+				$set['birthday_at'] = $request->birthdayat_cdi;
+				$set['firstname'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
+				$set['lastname'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
+				$set['count'] = $request->check_cdi;
+			}
             $demand = Demand::create($set);
             // Création des fichiers
             foreach ($request->filename as $file_id => $filename) {
@@ -258,16 +279,6 @@ class DemandController extends Controller
 					'demand_id' => $demand->id,
 					'file_id' => $file_id,
 					'path' => $path,
-				]);
-			}
-			// Création du CDI
-			if ($request->codeDoc == 'CDI') {
-				DemandCdi::create([
-					'birthday_at' => $request->birthdayat_cdi,
-					'firstname' => Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8'),
-					'lastname' => Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8'),
-					'number' => $request->check_cdi,
-					'demand_id' => $demand->id,
 				]);
 			}
             DB::commit(); // Valider la transaction

@@ -3,7 +3,7 @@
 @section('body')
 @php
     // Choix du sexe
-    $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
+    $isMale = ($dataPDF['sex'] ?? 'M') == 'M';
 @endphp
 <table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
   <tr>

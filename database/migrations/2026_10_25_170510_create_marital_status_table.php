@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('demand_cdi', function (Blueprint $table) {
+        Schema::create('marital_status', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('number');
-            $table->string('lastname');
-            $table->string('firstname');
-            $table->date('birthday_at');
-            $table->timestamps();
-            $table->foreignId('demand_id');
+            $table->string('label', 50);
         });
     }
 
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('demand_cdi');
+        Schema::dropIfExists('marital_status');
     }
 };
