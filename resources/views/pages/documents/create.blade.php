@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-2 col-12">
                     <label class="fw-bolder text-dark fs-5">Nombre : <span class="text-danger">*</span></label>
-                    <input type="text" name="number" class="form-control requiredField" placeholder="Saisir le nombre" onKeyUp="verif_int(this)" />
+                    <input type="text" name="count" class="form-control requiredField" placeholder="Saisir le nombre" onKeyUp="verif_int(this)" />
                 </div>
             </div>
             <div class="row mb-5">

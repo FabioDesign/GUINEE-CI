@@ -124,7 +124,7 @@
               <td>${i}</td>
               <td>${data.user}</td>
               <td>${data.label}</td>
-              <td class="text-center">${data.number}</td>
+              <td class="text-center">${data.count}</td>
               <td class="text-center">${data.copy}</td>
               <td class="text-center">${data.price}</td>
               <td class="text-center align-middle"><span data-kt-element="status" class="badge ${color} fw-bold px-4 py-3">${status}</span></td>

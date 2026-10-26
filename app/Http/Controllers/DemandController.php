@@ -89,7 +89,6 @@ class DemandController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
-		// dd($request->all());
         if (!Auth::check()) {
             return 'x';
         }
@@ -128,7 +127,7 @@ class DemandController extends Controller
             'person_address' => 'required',
             'arrival_at' => 'required|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
-			'number' => 'required|integer|min:1',
+			'count' => 'required|integer|min:1',
 			'total' => 'required|integer',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
@@ -173,9 +172,9 @@ class DemandController extends Controller
 			'arrival_at.date_format' => "Le format de la date d'arrivée est incorrecte.",
 			'document_id.required' => "Le document est obligatoire.",
 			'document_id.exists' => "Le document n'existe pas dans la base de données.",
-			'number.required' => "Le numéro est obligatoire.",
-			'number.integer' => "Le numéro doit être un nombre entier.",
-			'number.min' => "Le numéro doit être supérieur à 0.",
+			'count.required' => "Le numéro est obligatoire.",
+			'count.integer' => "Le numéro doit être un nombre entier.",
+			'count.min' => "Le numéro doit être supérieur à 0.",
 			'total.required' => "Le prix est obligatoire.",
 			'total.integer' => "Le prix doit être un nombre entier.",
 			'copy.required' => "Le nombre de copies est obligatoire.",
@@ -253,7 +252,7 @@ class DemandController extends Controller
             $set = [
 				'reference' => $reference,
                 'document_id' => $request->document_id,
-                'number' => $request->number,
+                'count' => $request->count,
                 'price' => $request->total,
                 'copy' => $request->copy,
                 'user_id' => $user->id,
@@ -261,7 +260,7 @@ class DemandController extends Controller
             ];
 			// Création du CBC
 			if ($request->codeDoc == 'CBC') {
-				$set['count'] = $request->children;
+				$set['number'] = $request->children;
 				$set['maritalstatus_id'] = $request->maritalstatus_id;
 			}
 			// Création du CDI
@@ -269,7 +268,7 @@ class DemandController extends Controller
 				$set['birthday_at'] = $request->birthdayat_cdi;
 				$set['firstname'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
 				$set['lastname'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
-				$set['count'] = $request->check_cdi;
+				$set['number'] = $request->check_cdi;
 			}
             $demand = Demand::create($set);
             // Création des fichiers
@@ -377,7 +376,7 @@ class DemandController extends Controller
             'person_address' => 'required',
             'arrival_at' => 'required|date_format:Y-m-d',
 			'document_id' => 'required|exists:documents,id',
-			'number' => 'required|integer|min:1',
+			'count' => 'required|integer|min:1',
 			'total' => 'required|integer|min:1',
 			'copy' => 'required|integer|min:1',
 			'filename' => 'required|array',
@@ -413,9 +412,9 @@ class DemandController extends Controller
 			'arrival_at.date_format' => "Le format de la date d'arrivée est incorrecte.",
 			'document_id.required' => "Le document est obligatoire.",
 			'document_id.exists' => "Le document n'existe pas dans la base de données.",
-			'number.required' => "Le numéro est obligatoire.",
-			'number.integer' => "Le numéro doit être un nombre entier.",
-			'number.min' => "Le numéro doit être supérieur à 0.",
+			'count.required' => "Le numéro est obligatoire.",
+			'count.integer' => "Le numéro doit être un nombre entier.",
+			'count.min' => "Le numéro doit être supérieur à 0.",
 			'total.required' => "Le prix est obligatoire.",
 			'total.integer' => "Le prix doit être un nombre entier.",
 			'total.min' => "Le prix doit être supérieur à 0.",
@@ -483,7 +482,7 @@ class DemandController extends Controller
             // Mettre à jour la demande
             $set = [
                 'document_id' => $request->document_id,
-                'number' => $request->number,
+                'count' => $request->count,
                 'price' => $request->total,
                 'copy' => $request->copy,
             ];
@@ -567,7 +566,7 @@ class DemandController extends Controller
 			'uuid' => $data->uuid,
 			'user' => $data->username,
 			'label' => $data->label,
-			'number' => $data->number,
+			'count' => $data->count,
 			'price' => $data->price,
 			'copy' => $data->copy,
 			'status' => $data->status,

@@ -500,7 +500,7 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Nombre de jours : <span class="number fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
+                                    <label class="fs-5">Nombre de jours : <span class="count fw-bold fs-5 text-dark">{{ $query->count }}</span></label>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">Montant : <span class="price fw-bold fs-5 text-dark">{{ number_format(optional($query->document)->price, 0, ',', ' ') }}</span></label>
@@ -596,8 +596,8 @@
                     response => {
                         if (response) {
                             $('#copy').val(1);
-                            $('#number').val(response.docs.number);
-                            $('.number').text(response.docs.number);
+                            $('#count').val(response.docs.count);
+                            $('.count').text(response.docs.count);
                             $('#price, #total').val(response.docs.price);
                             $('.price, .total').text(response.docs.price);
                             $('.files-list').html(response.files.map(file => `<div class="row mb-5">
@@ -848,7 +848,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'number', 'price', 'copy', 'total',
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total',
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {

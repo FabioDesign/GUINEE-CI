@@ -40,7 +40,7 @@ return new class extends Migration
                     SELECT
                         doc.id,
                         dmd.uuid,
-                        dmd.number,
+                        dmd.count,
                         dmd.price,
                         dmd.copy,
                         dmd.status,
@@ -61,7 +61,7 @@ return new class extends Migration
                     SELECT
                         doc.id,
                         dmd.uuid,
-                        dmd.number,
+                        dmd.count,
                         dmd.price,
                         dmd.copy,
                         dmd.status,
@@ -83,7 +83,7 @@ return new class extends Migration
                     SELECT
                         doc.id,
                         dmd.uuid,
-                        dmd.number,
+                        dmd.count,
                         dmd.price,
                         dmd.copy,
                         dmd.status,

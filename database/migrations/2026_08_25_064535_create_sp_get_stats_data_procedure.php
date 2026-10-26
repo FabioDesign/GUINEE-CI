@@ -42,56 +42,56 @@ return new class extends Migration
 			    |--------------------------------------------------------------------------
 			    */
 			    SELECT
-			        COALESCE(SUM(d.price), 0) AS amount,			
+			        COALESCE(SUM(d.price), 0) AS amount,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.price <> 0 THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS paid,			
+			        ), 0) AS paid,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.price = 0 THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS free,			
+			        ), 0) AS free,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.created_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS created,			
+			        ), 0) AS created,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.transmitted_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS transmitted,			
+			        ), 0) AS transmitted,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.validated_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS validated,			
+			        ), 0) AS validated,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.rejected_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS rejected,			
+			        ), 0) AS rejected,
 			        COALESCE(SUM(
 			            CASE
 			                WHEN d.recovered_at IS NOT NULL THEN d.copy
 			                ELSE 0
 			            END
-			        ), 0) AS recovered			
+			        ), 0) AS recovered
 			    FROM demands AS d
-			    WHERE d.consulat_id = p_consulat_id			
+			    WHERE d.consulat_id = p_consulat_id
 		      	AND (
 		            p_document_id IS NULL
 		            OR d.document_id = p_document_id
-		          )			
-		      	AND d.created_at >= p_start_date			
+		          )
+		      	AND d.created_at >= p_start_date
 		      	AND d.created_at < DATE_ADD(p_end_date, INTERVAL 1 DAY);
             END
         ");

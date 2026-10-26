@@ -3,12 +3,12 @@
 @section('body')
 @php
     // Choix du sexe
-    $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
+    $isMale = ($dataPDF['sex'] ?? 'M') == 'M';
 
     // Nombre d'enfants
-    $children = $dataPDF['count'] == 0
+    $children = $dataPDF['number'] == 0
     ? 'SANS ENFANT'
-    : ($dataPDF['count'] == 1 ? '1 ENFANT' : $dataPDF['count'] . ' ENFANTS');
+    : ($dataPDF['number'] == 1 ? '1 ENFANT' : $dataPDF['number'] . ' ENFANTS');
 @endphp
 <table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
   <tr>

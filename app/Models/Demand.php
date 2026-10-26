@@ -146,14 +146,14 @@ class Demand extends Model
       }
       // Certificat d'individualité
       if (optional($query->document)->code == 'CDI') {
-        $dataPDF['count'] = $query->count;
+        $dataPDF['number'] = $query->number;
         $dataPDF['lastname_cdi'] = $query->lastname;
         $dataPDF['firstname_cdi'] = $query->firstname;
         $dataPDF['birthdayat_cdi'] = $query->birthday_at->format('d/m/Y');
       }
       // Certificat de conjoint
       if (optional($query->document)->code == 'CBC') {
-        $dataPDF['count'] = $query->count;
+        $dataPDF['number'] = $query->number;
         $dataPDF['maritalstatus'] = Str::upper(optional($query->maritalstatus)->label);
       }
       // Données du Qrcode

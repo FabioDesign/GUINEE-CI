@@ -91,7 +91,7 @@ class DocumentController extends Controller
 			'file_id' => 'required|array',
 			'code' => 'required|string|max:5',
 			'price' => 'required|integer|min:1',
-			'number' => 'required|integer|min:1',
+			'count' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
 			'label.required' => "Le document est obligatoire.",
@@ -100,7 +100,7 @@ class DocumentController extends Controller
 			'file_id.array' => "Les pièces jointes doivent être un tableau.",
 			'code.*' => "Le code est obligatoire et doit être une chaîne de caractères de 5 caractères.",
 			'price.*' => "Le montant est obligatoire et doit être un entier.",
-			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
+			'count.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
 		// Error field
@@ -116,7 +116,7 @@ class DocumentController extends Controller
 		$set = [
 			'label' => $label,
 			'price' => $request->price,
-			'number' => $request->number,
+			'count' => $request->count,
 			'icone' => "far fa-address-card",
 			'code' => str::upper($request->code),
 			'description' => $request->description,
@@ -193,7 +193,7 @@ class DocumentController extends Controller
 			'file_id' => 'required|array',
 			'code' => 'required|string|max:5',
 			'price' => 'required|integer|min:1',
-			'number' => 'required|integer|min:1',
+			'count' => 'required|integer|min:1',
 			'description' => 'required',
 		], [
 			'label.required' => "Le document est obligatoire.",
@@ -202,7 +202,7 @@ class DocumentController extends Controller
 			'file_id.array' => "Les pièces jointes doivent être un tableau.",
 			'code.*' => "Le code est obligatoire et doit être une chaîne de caractères de 5 caractères.",
 			'price.*' => "Le montant est obligatoire et doit être un entier.",
-			'number.*' => "Le nombre de jours est obligatoire et doit être un entier.",
+			'count.*' => "Le nombre de jours est obligatoire et doit être un entier.",
 			'description.required' => "La description est obligatoire.",
 		]);
 		// Error field
@@ -223,7 +223,7 @@ class DocumentController extends Controller
 			]);
 		}
 		$set = [
-			'number' => $request->number,
+			'count' => $request->count,
 			'price' => $request->price,
 			'code' => str::upper($request->code),
 			'description' => $request->description,
@@ -318,7 +318,7 @@ class DocumentController extends Controller
 	// Récupérer un document
 	public function getDocs($id) {
 		// Requete Read
-		$data['docs'] = Document::select('id', 'label', 'code', 'number', 'price', 'description')
+		$data['docs'] = Document::select('id', 'label', 'code', 'count', 'price', 'description')
 		->where('id', $id)
 		->first();
 		$files = DocFile::where('document_id', $id)->get();

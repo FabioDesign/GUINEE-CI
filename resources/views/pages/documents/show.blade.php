@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-2 col-12">
                 <label class="fw-bolder text-dark fs-5">Nombre :</label>
-                <input type="text" value="{{ $query->number }}" class="form-control" />
+                <input type="text" value="{{ $query->count }}" class="form-control" />
             </div>
         </div>
         <div class="row mb-2">

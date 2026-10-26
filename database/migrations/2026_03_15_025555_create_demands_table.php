@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('reference', 50)->unique();
-            $table->tinyInteger('number');
+            $table->tinyInteger('count');
             $table->tinyInteger('copy');
             $table->decimal('price', 10, 0);
-            $table->tinyInteger('count');
+            $table->tinyInteger('number');
             $table->string('lastname');
             $table->string('firstname');
             $table->date('birthday_at');
