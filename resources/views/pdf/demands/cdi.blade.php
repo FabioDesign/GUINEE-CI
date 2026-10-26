@@ -3,14 +3,9 @@
 @section('body')
 @php
     // Choix du nom à retenir (radio count : 1 = Nom 1, 2 = Nom 2)
-    $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
-    $choix    = $dataPDF['count'] ?? 1;
-    $retenu   = '';
-    if ($choix == 1) {
-        $retenu = trim(($dataPDF['lastname'] ?? '') . ' ' . ($dataPDF['firstname'] ?? ''));
-    } elseif ($choix == 2) {
-        $retenu = trim(($dataPDF['lastname_cdi'] ?? '') . ' ' . ($dataPDF['firstname_cdi'] ?? ''));
-    }
+    $isMale = ($dataPDF['sex'] ?? 'M') == 'M';
+    // Nom à retenir
+    $retenu = ($dataPDF['count'] == 1) ? trim(($dataPDF['lastname'] ?? '') . ' ' . ($dataPDF['firstname'] ?? '')) : trim(($dataPDF['lastname_cdi'] ?? '') . ' ' . ($dataPDF['firstname_cdi'] ?? ''));
 @endphp
 <table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 50px;">
   <tr>
