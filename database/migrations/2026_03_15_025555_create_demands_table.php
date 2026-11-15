@@ -21,7 +21,7 @@ return new class extends Migration
             $table->tinyInteger('number');
             $table->string('lastname');
             $table->string('firstname');
-            $table->date('birthday_at');
+            $table->date('date_at');
             $table->text('motif')->nullable();
             $table->text('path')->nullable();
             $table->tinyInteger('status')->default('0');

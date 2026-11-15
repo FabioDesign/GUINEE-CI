@@ -24,7 +24,7 @@ class Demand extends Model
    * @var array<string, string>
    */
   protected $casts = [
-    'birthday_at' => 'date',
+    'date_at' => 'date',
     'delivered_at' => 'date',
     'rejected_at' => 'datetime',
     'recovered_at' => 'datetime',
@@ -144,17 +144,17 @@ class Demand extends Model
         $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
         $dataPDF['photo'] = $dmdFiles->path;
       }
+      // Certificat de conjoint
+      if (optional($query->document)->code == 'CBC') {
+        $dataPDF['number'] = $query->number;
+        $dataPDF['maritalstatus'] = Str::upper(optional($query->maritalstatus)->label);
+      }
       // Certificat d'individualité
       if (optional($query->document)->code == 'CDI') {
         $dataPDF['number'] = $query->number;
         $dataPDF['lastname_cdi'] = $query->lastname;
         $dataPDF['firstname_cdi'] = $query->firstname;
-        $dataPDF['birthdayat_cdi'] = $query->birthday_at->format('d/m/Y');
-      }
-      // Certificat de conjoint
-      if (optional($query->document)->code == 'CBC') {
-        $dataPDF['number'] = $query->number;
-        $dataPDF['maritalstatus'] = Str::upper(optional($query->maritalstatus)->label);
+        $dataPDF['birthdayat_cdi'] = $query->date_at->format('d/m/Y');
       }
       // Données du Qrcode
       $dataQR = implode("\n", [

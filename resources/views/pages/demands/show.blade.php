@@ -118,7 +118,7 @@
                             </div>
                             <div class="row mb-5">
                                 <div class="col-md-3 col-12">
-                                    <label class="fs-5">Nombre de jours : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
+                                    <label class="fs-5">Nombre de jours : <span class="fw-bold fs-5 text-dark">{{ $query->count }}</span></label>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">Montant : <span class="fw-bold fs-5 text-dark">{{ number_format(optional($query->document)->price, 0, ',', ' ') }}</span></label>
@@ -147,7 +147,7 @@
                                 <div class="col-md-4 col-12">
                                     <label class="fs-5">
                                         Date de naissance 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $query->birthday_at->format('d-m-Y') }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->date_at->format('d-m-Y') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                                     <label class="fs-5 text-dark">
                                         A retenir :
                                         <span class="fw-bold">
-                                            {{ $query->count == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $query->lastname . ' ' . $query->firstname . ' ' . $query->birthday_at->format('d-m-Y') }}
+                                            {{ $query->number == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $query->lastname . ' ' . $query->firstname . ' ' . $query->date_at->format('d-m-Y') }}
                                         </span>
                                     </label>
                                 </div>
@@ -168,7 +168,7 @@
                                     <label class="fs-5">Situation matrimoniale : <span class="fw-bold fs-5 text-dark">{{ optional($query->maritalstatus)->label }}</span></label>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <label class="fs-5">Nombre d'enfants : <span class="fw-bold fs-5 text-dark">{{ $query->count }}</span></label>
+                                    <label class="fs-5">Nombre d'enfants : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
                                 </div>
                             </div>
                             @endif
