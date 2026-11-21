@@ -150,10 +150,10 @@
     <div class="dmd-container">
 
       {{-- ── Image de fond avec opacité ──────────────────────────────── --}}
-      <img src="{{ public_path('assets/img/background.png') }}" class="bg-image" alt="Image de fond" />
+      <img src="{{ public_path('assets/img/background.png') }}" class="bg-image" alt="Fond de page" />
 
       {{-- ── Filigrane ─────────────────────────────────────────────── --}}
-      <img src="{{ public_path('assets/img/amoirie.png') }}" class="watermark" alt="Filigrane" />
+      <img src="{{ public_path('assets/img/amoirie.png') }}" class="watermark" alt="Filigrane de page" />
 
       <div class="content">
 
@@ -161,11 +161,11 @@
         @include('pdf.partials.header', ['dataPDF' => $dataPDF])
 
         {{-- ── NUMÉRO DE RÉFÉRENCE ───────────────────────────────────── --}}
-        <table class="ref-table" cellspacing="0" cellpadding="0">
+        <table class="ref-table">
           <tr>
-            <td width="100%" style="font-size:10pt;">
+            <th style="font-size:10pt; width: 100%;">
               <strong>N° {{ $dataPDF['reference'] }}</strong>
-            </td>
+            </th>
           </tr>
         </table>
 

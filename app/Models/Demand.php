@@ -16,6 +16,9 @@ class Demand extends Model
 {
   use HasFactory;
 
+  // Constantes
+  const DATE_FORMAT = 'd/m/Y';
+
   protected $guarded = [];
 
   /**
@@ -123,7 +126,7 @@ class Demand extends Model
         'firstname' => optional($query->user)->firstname,
         'lastname' => optional($query->user)->lastname,
         'profession' => optional($query->user)->profession,
-        'birthday_at' => optional($query->user)->birthday_at->format('d/m/Y'),
+        'birthday_at' => optional($query->user)->birthday_at->format(self::DATE_FORMAT),
         'birthplace' => optional($query->user)->birthplace,
         'prefecture' => Town::find($query->user->town_id)->label,
         'father' => optional($query->user)->father_fullname,
@@ -133,8 +136,8 @@ class Demand extends Model
         'hairs' => optional($query->user)->hairs,
         'particular_sign' => optional($query->user)->particular_sign,
         'home_address' => optional($query->user)->home_address,
-        'arrival_at' => optional($query->user)->arrival_at->format('d/m/Y'),
-        'validated_at' => optional($query->validated_at)->format('d/m/Y'),
+        'arrival_at' => optional($query->user)->arrival_at->format(self::DATE_FORMAT),
+        'validated_at' => optional($query->validated_at)->format(self::DATE_FORMAT),
         'signatory' => optional($consul)->civility . ' ' . optional($consul)->firstname . ' ' . optional($consul)->lastname,
         'signature' => optional($consul)->signature,
         'stamp' => optional($consul)->stamp,
@@ -154,7 +157,7 @@ class Demand extends Model
         $dataPDF['number'] = $query->number;
         $dataPDF['lastname_cdi'] = $query->lastname;
         $dataPDF['firstname_cdi'] = $query->firstname;
-        $dataPDF['birthdayat_cdi'] = $query->date_at->format('d/m/Y');
+        $dataPDF['birthdayat_cdi'] = $query->date_at->format(self::DATE_FORMAT);
       }
       // Données du Qrcode
       $dataQR = implode("\n", [
@@ -165,9 +168,8 @@ class Demand extends Model
         $dataPDF['signatory'],
         $dataPDF['validated_at'],
       ]);
-      // dd($dataPDF, $dataQR);
       // Génération du Qrcode avec les données du reçu
-      // $dataPDF['qrcode'] = QrCode::format('png')->size(250)->generate($dataQR);
+      $dataPDF['qrcode'] = QrCode::format('png')->size(250)->generate($dataQR);
       // Nom du fichier blade
       $blade = 'pdf.demands.' . Str::lower($query->document->code);
       // Vue PDF

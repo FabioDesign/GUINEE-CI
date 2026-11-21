@@ -3,7 +3,7 @@
   <tr>
     {{-- QR Code --}}
     <td width="20%" style="text-align:center; vertical-align:middle;">
-        <img src="{{ public_path('assets/img/qrcode.png') }}" style="height: 120px;" alt="QR Code" />
+      {{ $dataPDF['qrcode'] }}
     </td>
     {{-- Espace central --}}
     <td width="45%"></td>
@@ -36,10 +36,10 @@
 </table>
 
 {{-- ── Mention légale ────────────────────────────────────────── --}}
-<table width="100%" cellspacing="0" cellpadding="0" style="margin-top: 30px;">
+<table style="margin-top: 30px; width: 100%;">
   <tr>
-    <td style="text-align:center; font-size: 8pt; font-style: italic; border-top: 1px solid #000; padding-top: 6px;">
+    <th style="text-align:center; font-size: 8pt; font-style: italic; border-top: 1px solid #000; padding-top: 6px;">
       Ce document n'est valable que muni du sticker de l'Ambassade de Guinée en Côte d'Ivoire
-    </td>
+    </th>
   </tr>
 </table>
