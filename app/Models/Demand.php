@@ -161,7 +161,6 @@ class Demand extends Model
       }
       // Données du Qrcode
       $dataQR = implode("\n", [
-        $uuid,
         $dataPDF['reference'],
         $dataPDF['document'],
         $dataPDF['consulat'],
