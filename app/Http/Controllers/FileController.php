@@ -52,7 +52,7 @@ class FileController extends Controller
 		return view('pages.files.create', compact('title', 'currentMenu', 'addmodal'));
 	}
 	//Add Pièce à fournir
-	public function store(request $request) {
+	public function store(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }

@@ -94,7 +94,7 @@ class ProfileController extends Controller
 		return view('pages.profiles.create', compact('title', 'currentMenu', 'addmodal', 'menusWithActions', 'roles'));
 	}
 	//Add/Mod Profil
-	public function store(request $request) {
+	public function store(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }

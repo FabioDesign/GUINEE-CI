@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\{Auth, DB, Log, Validator, QueryException};
 class DashboardController extends Controller
 {
 	//Tableau de bord
-  	public function index(request $request) {
+  	public function index(Request $request) {
         if (!Auth::check()) {
             return redirect('/');
         }
@@ -41,7 +41,7 @@ class DashboardController extends Controller
 		return view('pages.dashboard', compact('title', 'currentMenu', 'addmodal', 'documents'));
   	}
 	// Stats du tableau de bord
-	public function stats(request $request) {
+	public function stats(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }

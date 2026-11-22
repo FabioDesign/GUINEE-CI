@@ -75,8 +75,7 @@ class DocumentController extends Controller
 		return view('pages.documents.create', compact('title', 'currentMenu', 'addmodal', 'query'));
 	}
 	// Add document
-	public function store(request $request) {
-		// dd($request->all());
+	public function store(Request $request) {
         if (!Auth::check()) {
             return 'x';
         }

@@ -21,7 +21,7 @@ class PasswordController extends Controller
         return view('forgotpass', compact('query'));
 	}
 	//Logic Forgot password
-	public function store(request $request) {
+	public function store(Request $request) {
 		//Validator
 		$validator = Validator::make($request->all(), [
         	'email' => 'required|email',
