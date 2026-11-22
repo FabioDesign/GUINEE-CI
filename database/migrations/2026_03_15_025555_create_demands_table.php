@@ -18,13 +18,13 @@ return new class extends Migration
             $table->tinyInteger('count');
             $table->tinyInteger('copy');
             $table->decimal('price', 10, 0);
-            $table->tinyInteger('number');
-            $table->string('lastname');
-            $table->string('firstname');
-            $table->date('date_at');
+            $table->tinyInteger('number')->default(0);
+            $table->string('lastname')->nullable();
+            $table->string('firstname')->nullable();
+            $table->date('date_at')->nullable();
             $table->text('motif')->nullable();
             $table->text('path')->nullable();
-            $table->tinyInteger('status')->default('0');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->timestamp('transmitted_at')->nullable();
             $table->timestamp('validated_at')->nullable();
