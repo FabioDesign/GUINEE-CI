@@ -304,9 +304,10 @@ $(document).on('click', '.btn-rjt', function() {
 // Gestionnaire pour le changement de statut
 $(document).on('click', '.status', function(e) {
   e.preventDefault();
-  var urlStatus = $(this).data('url');
-  var typeStatus = $(this).data('type');
-  var actionTitle = $(this).attr('data-bs-original-title') || $(this).attr('title');
+  const urlStatus = $(this).data('url');
+  const typeStatus = $(this).data('type');
+  const actionTitle = $(this).attr('data-bs-original-title') || $(this).attr('title');
+  console.log('actionTitle', actionTitle);
   Swal.fire({
     title: actionTitle,
     text: 'Veuillez confirmer votre action.',
@@ -320,10 +321,10 @@ $(document).on('click', '.status', function(e) {
     if (result.isConfirmed) {
       $.ajax({
         url: urlStatus,
-        type: 'PATCH',
+        type: typeStatus,
         data: {
           _token: $('meta[name="csrf-token"]').attr('content'),
-          _method: 'PATCH'
+          _method: typeStatus
         },
         beforeSend: function() {
           Swal.fire({
