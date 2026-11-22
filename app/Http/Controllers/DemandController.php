@@ -85,7 +85,8 @@ class DemandController extends Controller
 		$firstDoc = $documents->first();
 		$maritalStatus = MaritalStatus::orderBy('label')->get();
 		$docFiles = DocFile::where('document_id', $firstDoc->id)->get();
-		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc', 'maritalStatus'));
+		$pays = Country::select('country', 'nationality')->where('id', 61)->first();
+		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc', 'maritalStatus', 'pays'));
 	}
     // Account creation
     public function store(Request $request) {
@@ -530,8 +531,7 @@ class DemandController extends Controller
 	public function searchUsers(Request $request) {
 		//Requete Read-
 		$search = '%' . $request->search . '%';
-		$query = User::select('id', 'firstname', 'lastname', 'gender', 'avatar', 'nationality_id')
-		->with('nationality')
+		$query = User::select('id', 'firstname', 'lastname', 'gender', 'avatar', 'birthday_at', 'birthplace')
 		->where(function ($q) use ($search) {
 			$q->where('lastname', 'like', $search)
 			->orWhere('firstname', 'like', $search);
@@ -544,7 +544,8 @@ class DemandController extends Controller
 		$users = $query->map(fn($data) => [
 			'id'       => $data->id,
 			'username' => $data->firstname . ' ' . $data->lastname,
-			'nationality' => optional($data->nationality)->nationality ?? '',
+			'birthday_at' => $data->birthday_at ? Carbon::parse($data->birthday_at)->format('d-m-Y') : '',
+			'birthplace' => $data->birthplace,
 			'avatar'   => $data->avatar,
 		]);
 		return response()->json([

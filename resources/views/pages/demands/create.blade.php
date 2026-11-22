@@ -479,7 +479,7 @@
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Date de naissance :
-                                        <span class="birthday_at fw-bold fs-5 text-dark"></span>
+                                        <span class="birthday_at fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -493,7 +493,7 @@
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Pays de naissance :
-                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark"></span>
+                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->country }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -513,7 +513,7 @@
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Nationalité :
-                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark"></span>
+                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->nationality }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -552,13 +552,13 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-4 col-12">
                                     <label class="fs-5">
                                         Date d'arrivée :
-                                        <span class="arrival_at fw-bold fs-5 text-dark"></span>
+                                        <span class="arrival_at fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                     </label>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-8 col-12">
                                     <label class="fs-5">
                                         Signes particuliers :
                                         <span class="particular_sign fw-bold fs-5 text-uppercase text-dark"></span>
@@ -710,6 +710,11 @@
         $(document).ready(function() {
             // Masquer les boutons précédent et envoyer
             $('.btn-previous, .btn-submit').hide();
+            // Sauvegarder les options initiales des listes (pour pouvoir les restaurer lors d'une réinitialisation)
+            const initialSelects = {};
+            ['civility', 'country_id', 'town_id', 'nationality_id'].forEach(function (id) {
+                initialSelects[id] = $('#' + id).html();
+            });
             $(document).on('click', '.user-item', function (e) {
                 // éviter de déclencher 2 fois si on clique directement sur le radio
                 if (!$(e.target).is('input')) {
@@ -778,7 +783,7 @@
                                                 <!--begin::Info-->
                                                 <div class="fw-semibold">
                                                     <div class="fs-6 text-gray-800 me-2">${data.username}</div>
-                                                    <div class="fs-6 badge badge-primary">${data.nationality}</div>
+                                                    <div class="fs-6 badge badge-primary">${data.birthday_at} - ${data.birthplace}</div>
                                                 </div>
                                                 <!--end::Info-->
                                             </a>
@@ -786,6 +791,26 @@
                                         </div>
                                     `;
                                 });
+                                outUsers += `
+                                    <!--begin::Users-->
+                                    <div class="mh-375px scroll-y me-n7 pe-7">
+                                        <!--begin::User-->
+                                        <a class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1 user-item">
+                                            <!--begin::Avatar-->
+                                            <label class="boxcheck"><input type="radio" name="user" value="0" class="iCheck user_id"></label>
+                                            <div class="symbol symbol-35px symbol-circle mx-5">
+                                                <img src="/assets/img/homme.jpg" alt="Aucun" />
+                                            </div>
+                                            <!--end::Avatar-->
+                                            <!--begin::Info-->
+                                            <div class="fw-semibold">
+                                                <div class="fs-6 text-gray-800 me-2">Aucun</div>
+                                            </div>
+                                            <!--end::Info-->
+                                        </a>
+                                        <!--end::User-->
+                                    </div>
+                                `;
                             } else {
                                 outUsers += emptyUsers;
                             }
@@ -803,7 +828,16 @@
             $(document).on('ifChecked', '.user_id', function(event) {
                 $('#user_id').val($(this).parents('label').find('input').val());
                 let id = $('#user_id').val();
-				if (!id) return;
+                // ✅ Si "Aucun" est coché → réinitialiser le formulaire et débloquer "Suivant"
+                if (id == 0) {
+                    resetFormStep2();
+                    $('#step2').val(0);                       // l'étape 2 n'est pas encore valide
+                    $('.userError').hide().html('');          // pas d'erreur à l'étape 1
+                    $('.btn-next').addClass('btn-primary').removeClass('not-active'); // "Suivant" débloqué
+                    return;
+                }
+                
+                if (!id) return;
                 // Récupérer les informations de l'utilisateur
                 const getUsers = async (id) => {
                     try {
@@ -816,19 +850,13 @@
                 getUsers(id).then(
                     response => {
                         if (response) {
-                            $('#lastname, .lastname').val(response.user.lastname);
-                            $('.lastname').text(response.user.lastname);
-                            $('#firstname, .firstname').val(response.user.firstname);
-                            $('.firstname').text(response.user.firstname);
-                            $('#email').val(response.user.email);
-                            $('.email').text(response.user.email);
+                            $('#lastname, .lastname').val(response.user.lastname).text(response.user.lastname);
+                            $('#firstname, .firstname').val(response.user.firstname).text(response.user.firstname);
+                            $('#email, .email').val(response.user.email).text(response.user.email);
                             phoneInstances["phone_number"].setCountry(response.phone.alpha);
-                            $('#phone_number').val(response.user.phone_number);
-                            $('.phone_number').text(`+${response.user.phone_code} ${response.user.phone_number}`);
-                            $('#profession').val(response.user.profession);
-                            $('.profession').text(response.user.profession);
+                            $('#phone_number, .phone_number').val(response.user.phone_number).text(`+${response.user.phone_code} ${response.user.phone_number}`);
+                            $('#profession, .profession').val(response.user.profession).text(response.user.profession);
                             $('#nationality_id').val(response.user.nationality_id);
-                            $('.nationality_id').text(response.user.nationality_id);
                             $('#town_id').val(response.user.town_id);
                             document.querySelector("#birthday_at")._flatpickr.setDate(response.user.birthday_at);
                             document.querySelector(".birthday_at")._flatpickr.setDate(response.user.birthday_at);
@@ -836,43 +864,39 @@
                             let birthday_parts = birthday_date.split('-');
                             let birthday_at = `${birthday_parts[2]}-${birthday_parts[1]}-${birthday_parts[0]}`;
                             $('.birthday_at').text(birthday_at);
-                            $('#birthplace').val(response.user.birthplace);
-                            $('.birthplace').text(response.user.birthplace);
-                            $('#father_fullname').val(response.user.father_fullname);
-                            $('.father_fullname').text(response.user.father_fullname);
-                            $('#mother_fullname').val(response.user.mother_fullname);
-                            $('.mother_fullname').text(response.user.mother_fullname);
-                            $('#size').val(response.user.size);
-                            $('.size').text(response.user.size);
-                            $('#complexion').val(response.user.complexion);
-                            $('.complexion').text(response.user.complexion);
-                            $('#hairs').val(response.user.hairs);
-                            $('.hairs').text(response.user.hairs);
-                            $('#particular_sign').val(response.user.particular_sign);
-                            $('.particular_sign').text(response.user.particular_sign);
-                            $('#home_address').val(response.user.home_address);
-                            $('.home_address').text(response.user.home_address);
+                            $('#birthplace, .birthplace').val(response.user.birthplace).text(response.user.birthplace);
+                            $('#father_fullname, .father_fullname').val(response.user.father_fullname).text(response.user.father_fullname);
+                            $('#mother_fullname, .mother_fullname').val(response.user.mother_fullname).text(response.user.mother_fullname);
+                            $('#size, .size').val(response.user.size).text(response.user.size);
+                            $('#complexion, .complexion').val(response.user.complexion).text(response.user.complexion);
+                            $('#hairs, .hairs').val(response.user.hairs).text(response.user.hairs);
+                            $('#particular_sign, .particular_sign').val(response.user.particular_sign).text(response.user.particular_sign);
+                            $('#home_address, .home_address').val(response.user.home_address).text(response.user.home_address);
                             document.querySelector("#arrival_at")._flatpickr.setDate(response.user.arrival_at);
                             let arrival_date = response.user.arrival_at.slice(0, 10);
                             let arrival_parts = arrival_date.split('-');
                             let arrival_at = `${arrival_parts[2]}-${arrival_parts[1]}-${arrival_parts[0]}`;
                             $('.arrival_at').text(arrival_at);
-                            $('#person_fullname').val(response.user.person_fullname);
-                            $('.person_fullname').text(response.user.person_fullname);
+                            $('#person_fullname, .person_fullname').val(response.user.person_fullname).text(response.user.person_fullname);
                             phoneInstances["person_number"].setCountry(response.person.alpha);
-                            $('#person_number').val(response.user.person_number);
+                            $('#person_number, .person_number').val(response.user.person_number).text(`+${response.user.person_code} ${response.user.person_number}`);
                             $('.person_number').text(`+${response.user.person_code} ${response.user.person_number}`);
-                            $('#person_address').val(response.user.person_address);
-                            $('.person_address').text(response.user.person_address);
-                            $('#civility').html(response.civility.map(civility => 
-    `<option value="${civility}" ${civility == response.user.civility ? 'selected' : ''}>${civility}</option>`
-).join(''));
+                            $('#person_address, .person_address').val(response.user.person_address).text(response.user.person_address);
+                            $('#civility').html(
+                                '<option value="">Sélectionner</option>' +
+                                response.civility.map(civility =>
+                                    `<option value="${civility}" ${civility == response.user.civility ? 'selected' : ''}>${civility}</option>`
+                                ).join('')
+                            );
                             $('.civility').text(response.user.civility);
                             $('#nationality_id').html(response.nationality.map(nationality => `<option value="${nationality.id}" data-alpha="${nationality.alpha}" data-code="+${nationality.code}" ${nationality.id == response.user.nationality_id ? 'selected' : ''}>${nationality.nationality}</option>`).join(''));
                             $('.nationality_id').text(response.label_nation);
                             $('#country_id').html(response.country.map(country => `<option value="${country.id}" data-alpha="${country.alpha}" data-code="+${country.code}" ${country.id == response.ville.country_id ? 'selected' : ''}>${country.country}</option>`).join(''));
                             $('.country_id').text(response.label_country);
-                            $('#town_id').html(response.town.map(town => `<option value="${town.id}" ${town.id == response.user.town_id ? 'selected' : ''}>${town.label}</option>`).join(''));
+                            $('#town_id').html(
+                                '<option value="">Sélectionner</option>' +
+                                response.town.map(town => `<option value="${town.id}" ${town.id == response.user.town_id ? 'selected' : ''}>${town.label}</option>`).join('')
+                            );
                             $('.town_id').text(response.ville.label);
                             $('#step2').val(1);
                             $('.body-step2 .requiredUser').each(function() {
@@ -885,6 +909,70 @@
                     }
                 );
             });
+            // Réinitialiser le formulaire
+            function resetFormStep2() {
+                // Réinitialiser les inputs
+                $('#lastname, .lastname').val('').text('');
+                $('#firstname, .firstname').val('').text('');
+                $('#email, .email').val('').text('');
+                $('#profession, .profession').val('').text('');
+                $('#birthplace, .birthplace').val('').text('');
+                $('#father_fullname, .father_fullname').val('').text('');
+                $('#mother_fullname, .mother_fullname').val('').text('');
+                $('#size, .size').val('').text('');
+                $('#complexion, .complexion').val('').text('');
+                $('#hairs, .hairs').val('').text('');
+                $('#particular_sign, .particular_sign').val('').text('');
+                $('#home_address, .home_address').val('').text('');
+                $('#person_fullname, .person_fullname').val('').text('');
+                $('#person_address, .person_address').val('').text('');
+
+                // Réinitialiser les selects : restaurer les options d'origine (valeurs par défaut incluses)
+                $.each(initialSelects, function (id, html) {
+                    $('#' + id).html(html);
+                });
+                // Vider le résumé (étape 4)
+                $('span.civility, span.nationality_id, span.country_id, span.town_id').text('');
+
+                // Réinitialiser les dates à la date du jour (état initial du formulaire)
+                let now = new Date();
+                let dd = String(now.getDate()).padStart(2, '0');
+                let mm = String(now.getMonth() + 1).padStart(2, '0');
+                let todayYmd = now.getFullYear() + '-' + mm + '-' + dd;   // format du champ (Y-m-d)
+                let todayDmy = dd + '-' + mm + '-' + now.getFullYear();   // format du résumé (d-m-Y)
+                ['#birthday_at', '#arrival_at', '.birthday_at'].forEach(function (selector) {
+                    let el = document.querySelector(selector);
+                    if (!el) return;
+                    if (el._flatpickr) {
+                        // La chaîne est analysée explicitement en Y-m-d, indépendamment de la config du calendrier
+                        el._flatpickr.setDate(todayYmd, false, 'Y-m-d');
+                    }
+                    // Filet de sécurité : si le calendrier n'a pas rempli le champ, on le renseigne directement
+                    if (!el.value) {
+                        el.value = todayYmd;
+                    }
+                });
+                // Mettre à jour le résumé (étape 4) via les handlers "change" existants
+                $('#birthday_at, #arrival_at').trigger('change');
+                $('span.birthday_at, span.arrival_at').text(todayDmy);
+
+                // Réinitialiser les téléphones
+                if (phoneInstances["phone_number"]) {
+                    phoneInstances["phone_number"].setCountry('gn');
+                    $('#phone_number').val('');
+                    $('.phone_number').text('');
+                }
+                if (phoneInstances["person_number"]) {
+                    phoneInstances["person_number"].setCountry('gn');
+                    $('#person_number').val('');
+                    $('.person_number').text('');
+                }
+
+                // Remettre les data-valid à 1 (champs obligatoires non remplis)
+                $('.body-step2 .requiredUser').each(function() {
+                    $(this).data('valid', 1).attr('data-valid', 1);
+                });
+            }
             // Rechercher les documents
             $(document).on('change', '#document_id', function() {
                 let id = $(this).val();
