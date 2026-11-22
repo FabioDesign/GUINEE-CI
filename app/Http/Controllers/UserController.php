@@ -91,7 +91,6 @@ class UserController extends Controller
 	}
     // Account creation
     public function store(Request $request) {
-        dd($request->all());
 		// Validator
 		$validator = Validator::make($request->all(), [
 			'civility' => 'required|in:M.,Mme,Mlle',
