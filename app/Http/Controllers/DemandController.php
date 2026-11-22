@@ -232,6 +232,7 @@ class DemandController extends Controller
             'person_number' => $request->person_number,
             'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
             'arrival_at' => $request->arrival_at,
+			'avatar' => $gender == 'M' ? 'homme.jpg' : 'femme.jpg',
         ];
         DB::beginTransaction(); // Démarrer une transaction
         try {
@@ -478,7 +479,7 @@ class DemandController extends Controller
         DB::beginTransaction(); // Démarrer une transaction
         try {
             // Création de l'utilisateur
-			$user = $query->user->update($set);
+			$query->user->update($set);
             // Mettre à jour la demande
             $set = [
                 'document_id' => $request->document_id,

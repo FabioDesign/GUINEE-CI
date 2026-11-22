@@ -206,7 +206,7 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Email :</label>
-                                    <input type="text" id="email" name="email" class="form-control email" placeholder="Saisir email" value="{{ old('email', optional($query->user)->email) }}" />
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Saisir email" value="{{ old('email', optional($query->user)->email) }}" />
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <label class="fw-bolder text-dark fs-5">Profession : <span class="text-danger">*</span></label>
@@ -705,9 +705,9 @@
                 userForm();
             });
             // Zone de email
-            $(document).on('keyup', '.email', function() {
+            $(document).on('keyup', '#email', function() {
                 let value = $(this).val().trim();
-                if (value != '') {
+                if (value) {
                     let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
                     if (!regex.test(value)) {
                         $('#step2').val(0);

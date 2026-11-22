@@ -463,7 +463,7 @@ class UserController extends Controller
                 $set['stamp'] = $stamp;
             }
             $avatar = $gender == 'M' ? 'homme.jpg' : 'femme.jpg';
-            if ($request->file('avatar') != '') {
+            if ($request->file('avatar')) {
                 // Validator
                 $validator = Validator::make($request->all(), [
                     'avatar' => 'required|file|mimes:png,jpg,jpeg|max:2048',

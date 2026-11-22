@@ -444,7 +444,7 @@ $(document).on('click', '.submitForm', function(e) {
       }
     }
   });
-  $('.formField .email').each(function() {
+  $('.formField #email').each(function() {
     if (!hasError) {
       let value = $(this).val().trim();
       let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

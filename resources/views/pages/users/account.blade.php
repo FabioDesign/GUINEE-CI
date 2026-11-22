@@ -76,7 +76,7 @@
 				</div>
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Email : <span class="text-danger">*</span></label>
-					<input type="text" name="email" value="{{ old('email', $query->email) }}" class="form-control requiredField email" placeholder="Saisir email">
+					<input type="text" id="email" name="email" value="{{ old('email', $query->email) }}" class="form-control requiredField" placeholder="Saisir email">
 				</div>
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Profession : <span class="text-danger">*</span></label>

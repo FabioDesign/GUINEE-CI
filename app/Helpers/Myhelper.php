@@ -103,7 +103,7 @@
 
 		        $mail->setFrom(env('MAIL_USERNAME'), env('MAIL_FROM_ADDRESS'));
 		        $mail->addAddress($to);
-				if($cc != ''){
+				if($cc){
 					foreach($cc as $email):
 						$mail->AddCC($email);
 					endforeach;
