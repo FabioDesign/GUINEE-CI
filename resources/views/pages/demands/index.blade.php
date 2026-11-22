@@ -116,7 +116,7 @@
               if (data.printed == 1 && data.id != 1) {
                 printed = 0;
               }
-              if (data.root_id == 1) {
+              if (data.role_id == 1) {
                 printed = 1;
               }
             }
