@@ -169,7 +169,8 @@ class Demand extends Model
         $dataPDF['validated_at'],
       ]);
       // Génération du Qrcode avec les données du reçu
-      $dataPDF['qrcode'] = QrCode::format('png')->size(250)->generate($dataQR);
+      $qrcodePng = QrCode::format('png')->size(250)->generate($dataQR);
+      $dataPDF['qrcode'] = 'data:image/png;base64,' . base64_encode($qrcodePng);
       // Nom du fichier blade
       $blade = 'pdf.demands.' . Str::lower($query->document->code);
       // Vue PDF

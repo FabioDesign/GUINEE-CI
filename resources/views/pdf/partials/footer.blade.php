@@ -3,7 +3,7 @@
   <tr>
     {{-- QR Code --}}
     <td width="20%" style="text-align:center; vertical-align:middle;">
-      {{ $dataPDF['qrcode'] }}
+      <img src="{{ $dataPDF['qrcode'] }}" style="width:120px; height:120px;" alt="QR Code" />
     </td>
     {{-- Espace central --}}
     <td width="45%"></td>
