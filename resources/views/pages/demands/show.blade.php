@@ -135,13 +135,13 @@
                                 <div class="col-md-3 col-12">
                                     <label class="fs-5">
                                         Nom 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $query->lastname }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->field_1 }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <label class="fs-5">
                                         Prénoms 2 :
-                                        <span class="fw-bold fs-5 text-dark">{{ $query->firstname }}</span>
+                                        <span class="fw-bold fs-5 text-dark">{{ $query->field_2 }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-4 col-12">
@@ -156,7 +156,7 @@
                                     <label class="fs-5 text-dark">
                                         A retenir :
                                         <span class="fw-bold">
-                                            {{ $query->number == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $query->lastname . ' ' . $query->firstname . ' ' . $query->date_at->format('d-m-Y') }}
+                                            {{ $query->number == 1 ? optional($query->user)->lastname . ' ' . optional($query->user)->firstname . ' ' . optional($query->user)->birthday_at->format('d-m-Y') : $query->field_1 . ' ' . $query->field_2 . ' ' . $query->date_at->format('d-m-Y') }}
                                         </span>
                                     </label>
                                 </div>

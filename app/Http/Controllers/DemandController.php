@@ -267,8 +267,8 @@ class DemandController extends Controller
 			}
 			// Création du CDI
 			if ($request->codeDoc == 'CDI') {
-				$set['field_1'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
-				$set['field_2'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
+				$set['field_1'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
+				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
 				$set['date_at'] = $request->birthdayat_cdi;
 				$set['number'] = $request->check_cdi;
 			}

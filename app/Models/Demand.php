@@ -155,8 +155,8 @@ class Demand extends Model
       // Certificat d'individualité
       if (optional($query->document)->code == 'CDI') {
         $dataPDF['number'] = $query->number;
-        $dataPDF['lastname_cdi'] = $query->lastname;
-        $dataPDF['firstname_cdi'] = $query->firstname;
+        $dataPDF['lastname_cdi'] = $query->field_1;
+        $dataPDF['firstname_cdi'] = $query->field_2;
         $dataPDF['birthdayat_cdi'] = $query->date_at->format(self::DATE_FORMAT);
       }
       // Données du Qrcode
