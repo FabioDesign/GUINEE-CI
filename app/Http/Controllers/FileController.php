@@ -95,8 +95,8 @@ class FileController extends Controller
             Myhelper::auditTrail(
 				Auth::user()->consulat_id,
 				Auth::user()->profile_id,
-                Session::get('username'), 
-                Session::get('profil'), 
+                Session::get('username'),
+                Session::get('profil'),
                 "Pièce à fournir: {$label}",
 				'Ajouter',
 				Session::get('avatar')

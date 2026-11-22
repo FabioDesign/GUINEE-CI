@@ -53,7 +53,6 @@ return new class extends Migration
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
                     WHERE dmd.consulat_id = v_consulat_id
-                    AND dmd.deleted_at IS NULL
                     ORDER BY dmd.created_at DESC;
 
                 
@@ -73,8 +72,7 @@ return new class extends Migration
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
-                    WHERE dmd.deleted_at IS NULL
-                      AND dmd.consulat_id = v_consulat_id
+                    WHERE dmd.consulat_id = v_consulat_id
                       AND dmd.status != 0
                     ORDER BY dmd.created_at DESC;
 
@@ -95,8 +93,7 @@ return new class extends Migration
                     FROM demands dmd
                     INNER JOIN users usr ON usr.id = dmd.user_id
                     INNER JOIN documents doc ON doc.id = dmd.document_id
-                    WHERE dmd.deleted_at IS NULL
-                      AND dmd.consulat_id = v_consulat_id
+                    WHERE dmd.consulat_id = v_consulat_id
                     ORDER BY dmd.created_at DESC;
 
                 END IF;
