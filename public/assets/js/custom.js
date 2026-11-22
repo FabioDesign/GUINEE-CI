@@ -1,9 +1,9 @@
 //Nombre entier
 function verif_int(champ) {
-  var chiffres = new RegExp('[0-9]');
-  for(x = 0; x < champ.value.length; x++) {
-    verif = chiffres.test(champ.value.charAt(x));
-    if (verif == false) {
+  const chiffres = new RegExp('[0-9]');
+  for(let x = 0; x < champ.value.length; x++) {
+    const verif = chiffres.test(champ.value.charAt(x));
+    if (verif === false) {
       champ.value = champ.value.substr(0,x) + champ.value.substr(x+1,champ.value.length-x+1); x--;
     }
   }
@@ -406,20 +406,18 @@ $(document).on('click', '.submitForm', function(e) {
       datasT.append(this.name, $(this).val());
     }
   });
-  let phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
-  let person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
   if ((rootForm.slice(0, 5) === 'users') || (rootForm.slice(0, 7) === 'account')) {
-    datasT.append('phone_code', phone_code);
-    datasT.append('person_code', person_code);
     datasT.append('img_sta', $('#remove_sta').data('status'));
     datasT.append('img_sig', $('#remove_sig').data('status'));
   }
-  if (rootForm.slice(0, 7) === 'demands') {
+  if ((rootForm.slice(0, 5) === 'users') || (rootForm.slice(0, 7) === 'account') || (rootForm.slice(0, 7) === 'demands')) {
+    const phone_code = phoneInstances["phone_number"].getSelectedCountryData().dialCode;
+    const person_code = phoneInstances["person_number"].getSelectedCountryData().dialCode;
     datasT.append('phone_code', phone_code);
     datasT.append('person_code', person_code);
   }
   $('.formField .requiredField').each(function() {
-    if (jQuery.trim($(this).val()) === '') {
+    if ($(this).val().trim() === '') {
       $('.msgError').html("Veuillez renseigner les champs obligatoires !");
       $(this).addClass('is-invalid');
       hasError = true;
@@ -436,7 +434,7 @@ $(document).on('click', '.submitForm', function(e) {
   });
   $('.formField .number').each(function() {
     if (!hasError) {
-      let value = jQuery.trim($(this).val());
+      let value = $(this).val().trim();
       let regex = /^[0-9\s]*$/;
       if ((value != '')&&(!regex.test(value))) {
         $('.msgError').html("Téléphone non valide.");
@@ -447,7 +445,7 @@ $(document).on('click', '.submitForm', function(e) {
   });
   $('.formField .email').each(function() {
     if (!hasError) {
-      let value = jQuery.trim($(this).val());
+      let value = $(this).val().trim();
       let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if ((value != '')&&(!regex.test(value))) {
         $(this).addClass('is-invalid');

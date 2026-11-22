@@ -706,7 +706,7 @@
             });
             // Zone de email
             $(document).on('keyup', '.email', function() {
-                let value = jQuery.trim($(this).val());
+                let value = $(this).val().trim();
                 if (value != '') {
                     let regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
                     if (!regex.test(value)) {
