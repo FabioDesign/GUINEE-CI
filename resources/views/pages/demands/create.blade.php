@@ -493,7 +493,7 @@
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Pays de naissance :
-                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->country }}</span>
+                                        <span class="country_id fw-bold fs-5 text-uppercase text-dark">{{ $listPays->country }}</span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -513,7 +513,7 @@
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">
                                         Nationalité :
-                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">{{ $pays->nationality }}</span>
+                                        <span class="nationality_id fw-bold fs-5 text-uppercase text-dark">{{ $listPays->nationality }}</span>
                                     </label>
                                 </div>
                             </div>

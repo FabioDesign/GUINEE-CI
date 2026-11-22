@@ -85,8 +85,8 @@ class DemandController extends Controller
 		$firstDoc = $documents->first();
 		$maritalStatus = MaritalStatus::orderBy('label')->get();
 		$docFiles = DocFile::where('document_id', $firstDoc->id)->get();
-		$pays = Country::select('country', 'nationality')->where('id', 61)->first();
-		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc', 'maritalStatus', 'pays'));
+		$listPays = Country::select('country', 'nationality')->where('id', 61)->first();
+		return view('pages.demands.create', compact('title', 'currentMenu', 'addmodal', 'civility', 'town', 'country', 'nationality', 'documents', 'docFiles', 'firstDoc', 'maritalStatus', 'listPays'));
 	}
     // Account creation
     public function store(Request $request) {
@@ -267,8 +267,8 @@ class DemandController extends Controller
 			}
 			// Création du CDI
 			if ($request->codeDoc == 'CDI') {
-				$set['firstname'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
-				$set['lastname'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
+				$set['field_1'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
+				$set['field_2'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
 				$set['date_at'] = $request->birthdayat_cdi;
 				$set['number'] = $request->check_cdi;
 			}
