@@ -9,15 +9,19 @@
 			@method('PUT')
 			<input type="hidden" name="account">
 			<input type="hidden" id="rootForm" value="users/{{ $query->uuid }}">
+			<input type="hidden" name="profile_id" value="{{ $query->profile_id }}">
+			<input type="hidden" name="consulat_id" value="{{ $query->consulat_id }}">
+			<input type="hidden" name="embassy_id" value="{{ $consulat->country_id }}">
 			<span class="msgError" style="display: none;"></span>
 			<!--begin::Input group-->
 			<div class="row mb-6">
 				<!--begin::Col-->
 				<div class="col-md-12 col-12 text-center">
 					<!--begin::Image input-->
-					<div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('{{ asset('storage/' . $query->avatar) }}')">
+					@php $avatar = ($query->avatar != 'homme.jpg' && $query->avatar != 'femme.jpg') ? 'storage/' : 'assets/img/'; @endphp
+					<div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('{{ asset($avatar . $query->avatar) }}')">
 						<!--begin::Preview existing avatar-->
-						<div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ asset('storage/' . $query->avatar) }});background-position: center;"></div>
+						<div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ asset($avatar . $query->avatar) }});background-position: center;"></div>
 						<!--end::Preview existing avatar-->
 						<!--begin::Label-->
 						<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Changer avatar">
@@ -79,44 +83,6 @@
 					<input type="text" name="profession" value="{{ old('profession', $query->profession) }}" class="form-control requiredField" placeholder="Saisir profession">
 				</div>
 			</div>
-            <div class="row mb-5">
-                <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Profil : <span class="text-danger">*</span></label>
-                    <select id="profile_id" name="profile_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($profile as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->profile_id ? 'selected':'' @endphp>{{ $data->label }}</option>
-						@endforeach
-					</select>
-                </div>
-                <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
-                    <select id="nationality_id" name="nationality_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($nationality as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->nationality }}</option>
-						@endforeach
-					</select>
-                </div>
-                <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Ambassade : <span class="text-danger">*</span></label>
-                    <select id="embassy_id" name="embassy_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($embassy as $data)
-							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $consulat->country_id ? 'selected':'' @endphp>{{ $data->country }}</option>
-						@endforeach
-					</select>
-                </div>
-                <div class="col-md-3 col-12">
-                    <label class="fw-bolder text-dark fs-5">Consulat : <span class="text-danger">*</span></label>
-                    <select id="consulat_id" name="consulat_id" class="form-control">
-						<option value="" selected>Sélectionner</option>
-						@foreach($consulats as $data)
-							<option value="{{ $data->id }}" @php echo $data->id == $query->consulat_id ? 'selected':'' @endphp>{{ $data->label }}</option>
-						@endforeach
-					</select>
-                </div>
-            </div>
 			<div class="row mb-5">
 				<div class="col-md-4 col-12">
 					<label class="fw-bolder text-dark fs-5">Date de naissance : <span class="text-danger">*</span></label>
@@ -155,16 +121,25 @@
 					<input type="text" name="mother_fullname" value="{{ old('mother_fullname', $query->mother_fullname) }}" class="form-control requiredField" placeholder="Saisir nom et prénoms de la mère">
 				</div>
 			</div>
-			<div class="row mb-5">
-				<div class="col-md-4 col-12">
+            <div class="row mb-5">
+                <div class="col-md-3 col-12">
+                    <label class="fw-bolder text-dark fs-5">Nationalité : <span class="text-danger">*</span></label>
+                    <select id="nationality_id" name="nationality_id" class="form-control">
+						<option value="" selected>Sélectionner</option>
+						@foreach($nationality as $data)
+							<option value="{{ $data->id }}" data-alpha="{{ $data->alpha }}" data-code="+{{ $data->code }}" @php echo $data->id == $query->nationality_id ? 'selected':'' @endphp>{{ $data->nationality }}</option>
+						@endforeach
+					</select>
+                </div>
+				<div class="col-md-3 col-12">
 					<label class="fw-bolder text-dark fs-5">Taille : <span class="text-danger">*</span></label>
 					<input type="text" name="size" value="{{ old('size', $query->size) }}" class="form-control requiredField" placeholder="Saisir taille">
 				</div>
-				<div class="col-md-4 col-12">
+				<div class="col-md-3 col-12">
 					<label class="fw-bolder text-dark fs-5">Teint : <span class="text-danger">*</span></label>
 					<input type="text" name="complexion" value="{{ old('complexion', $query->complexion) }}" class="form-control requiredField" placeholder="Saisir teint">
 				</div>
-				<div class="col-md-4 col-12">
+				<div class="col-md-3 col-12">
 					<label class="fw-bolder text-dark fs-5">Cheveux : <span class="text-danger">*</span></label>
 					<input type="text" name="hairs" value="{{ old('hairs', $query->hairs) }}" class="form-control requiredField" placeholder="Saisir cheveux">
 				</div>

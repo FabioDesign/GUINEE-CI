@@ -228,6 +228,7 @@ class UserController extends Controller
             'person_number' => $request->person_number,
             'person_address' => Str::upper(Myhelper::valideString($request->person_address),'UTF-8'),
             'arrival_at' => $request->arrival_at,
+            'avatar' => $gender == 'M' ? 'homme.jpg' : 'femme.jpg',
             'signature' => $signature,
             'stamp' => $stamp,
             'password_at' => now(),
@@ -461,7 +462,7 @@ class UserController extends Controller
                 $stamp = $request->file('stamp') != '' ? $request->file('stamp')->store('stamps', 'public') : '';
                 $set['stamp'] = $stamp;
             }
-            $avatar = '';
+            $avatar = $gender == 'M' ? 'homme.jpg' : 'femme.jpg';
             if ($request->file('avatar') != '') {
                 // Validator
                 $validator = Validator::make($request->all(), [
@@ -479,9 +480,9 @@ class UserController extends Controller
                         'message' => $validator->errors()->first(),
                     ]);
                 }
-                $set['avatar'] = $avatar = $request->file('avatar')->store('avatars', 'public');
+                $avatar = $request->file('avatar')->store('avatars', 'public');
             }
-            // dd($set);
+            $set['avatar'] = $avatar;
             DB::beginTransaction(); // Démarrer une transaction
 			// Mettre à jour l'utilisateur
 			$user->update($set);
@@ -500,8 +501,6 @@ class UserController extends Controller
                 $prenom = explode(' ', $firstname);
                 $username = $prenom[0] . ' ' . $lastname;
                 Session::put('username', $username);
-                // Avatar
-                if ($avatar != '')
                 Session::put('avatar', $avatar);
             }
             return response()->json([
@@ -581,9 +580,6 @@ class UserController extends Controller
 		<a href="#" class="btn btn-sm fw-bold btn-success submitForm">Modifier</a>';
         $civility = ['M.', 'Mme', 'Mlle'];
         $query = User::where('id', Auth::user()->id)->first();
-        // Avatar
-        if ($query->avatar == '')
-        $query->avatar = $query->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 		$country = Country::orderBy('country')->get();
 		$nationality = Country::orderBy('nationality')->get();
 		$consulat = Consulat::where('id', $query->consulat_id)->first();
@@ -646,7 +642,6 @@ class UserController extends Controller
             // Déterminer si le login est un email ou un numéro de téléphone
             if (filter_var($request->login, FILTER_VALIDATE_EMAIL)) {
                 // Authentification par email
-                $loginField = 'email';
                 $credentials = [
                     'email' => $request->login,
                     'password' => $request->password,
@@ -772,11 +767,7 @@ class UserController extends Controller
             Session::put('map', $user->embassy->alpha ?? '');
             Session::put('menus', $menus);
             // Avatar
-            if ($user->avatar != '')
-                $avatar = $user->avatar;
-            else
-                $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
-            Session::put('avatar', $avatar);
+            Session::put('avatar', $user->avatar);
             // Log de connexion
             Myhelper::auditTrail(
                 Auth::user()->consulat_id,
@@ -785,7 +776,7 @@ class UserController extends Controller
                 $user->profile->label ?? '',
                 $menus->first()->label,
                 'Connecter',
-                $avatar
+                $user->avatar
             );
             return response()->json([
                 'status' => 1,
@@ -805,9 +796,9 @@ class UserController extends Controller
             Myhelper::auditTrail(
                 Auth::user()->consulat_id,
 			    Auth::user()->profile_id,
-                Session::get('username'), 
-                Session::get('profil'), 
-                Session::get('title'), 
+                Session::get('username'),
+                Session::get('profil'),
+                Session::get('title'),
                 'Deconnecter',
                 Session::get('avatar')
             );

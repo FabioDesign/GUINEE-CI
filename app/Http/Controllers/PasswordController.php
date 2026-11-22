@@ -62,11 +62,6 @@ class PasswordController extends Controller
 				'password_at' => now(),
 				'password' => Hash::make($password),
 			]);
-            // Avatar
-            if ($user->avatar != '')
-                $avatar = $user->avatar;
-            else
-                $avatar = $user->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg';
 			Myhelper::auditTrail(
                 $user->consulat_id,
                 $user->profile_id,
@@ -74,7 +69,7 @@ class PasswordController extends Controller
                 $user->label,
                 'Mot de passe oublié',
                 'Modifier',
-                $avatar
+                $user->avatar
             );
 			return response()->json([
 				'status' => 1,

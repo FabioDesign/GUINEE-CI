@@ -761,6 +761,9 @@
                             let outUsers = ``;
                             if (response.length > 0) {
                                 response.map(data => {
+                                    let avatarPath = (data.avatar !== 'homme.jpg' && data.avatar !== 'femme.jpg')
+                                        ? '/storage/'
+                                        : '/assets/img/';
                                     outUsers += `
                                         <!--begin::Users-->
                                         <div class="mh-375px scroll-y me-n7 pe-7">
@@ -769,7 +772,7 @@
                                                 <!--begin::Avatar-->
                                                 <label class="boxcheck"><input type="radio" name="user" value="${data.id}" class="iCheck user_id"></label>
                                                 <div class="symbol symbol-35px symbol-circle mx-5">
-                                                    <img src="/storage/${data.avatar}" alt="${data.username}" />
+                                                    <img src="${avatarPath}${data.avatar}" alt="${data.username}" />
                                                 </div>
                                                 <!--end::Avatar-->
                                                 <!--begin::Info-->

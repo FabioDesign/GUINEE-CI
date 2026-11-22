@@ -96,7 +96,8 @@
 								<div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
 									<!--begin::Menu wrapper-->
 									<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-										<img src="{{ asset('storage/' . Session::get('avatar')) }}" class="img-avatar" alt="{{ Session::get('username') }}" />
+										@php $avatar = (Session::get('avatar') != 'homme.jpg' && Session::get('avatar') != 'femme.jpg') ? 'storage/' : 'assets/img/'; @endphp
+										<img src="{{ asset($avatar . Session::get('avatar')) }}" class="img-avatar" alt="{{ Session::get('username') }}" />
 									</div>
 									<!--begin::User account menu-->
 									<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -105,7 +106,8 @@
 											<div class="menu-content d-flex align-items-center px-3">
 												<!--begin::Avatar-->
 												<div class="symbol symbol-50px me-5">
-													<img src="{{ asset('storage/' . Session::get('avatar')) }}" alt="{{ Session::get('username') }}" />
+													@php $avatar = (Session::get('avatar') != 'homme.jpg' && Session::get('avatar') != 'femme.jpg') ? 'storage/' : 'assets/img/'; @endphp
+													<img src="{{ asset($avatar . Session::get('avatar')) }}" alt="{{ Session::get('username') }}" />
 												</div>
 												<!--end::Avatar-->
 												<!--begin::Username-->
@@ -207,7 +209,8 @@
 								<div class="d-flex align-items-center flex-grow-1">
 									<!--begin::Avatar-->
 									<div class="symbol symbol-45px me-5">
-										<img src="{{ asset('storage/' . Session::get('avatar')) }}" alt="{{ Session::get('username') }}">
+										@php $avatar = (Session::get('avatar') != 'homme.jpg' && Session::get('avatar') != 'femme.jpg') ? 'storage/' : 'assets/img/'; @endphp
+										<img src="{{ asset($avatar . Session::get('avatar')) }}" alt="{{ Session::get('username') }}">
 									</div>
 									<!--end::Avatar-->
 									<!--begin::Info-->

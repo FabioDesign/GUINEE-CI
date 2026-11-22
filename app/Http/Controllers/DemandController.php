@@ -544,9 +544,7 @@ class DemandController extends Controller
 			'id'       => $data->id,
 			'username' => $data->firstname . ' ' . $data->lastname,
 			'nationality' => optional($data->nationality)->nationality ?? '',
-			'avatar'   => $data->avatar != ''
-							? $data->avatar
-							: ($data->gender == 'M' ? 'avatars/homme.jpg' : 'avatars/femme.jpg'),
+			'avatar'   => $data->avatar,
 		]);
 		return response()->json([
 			'status' => 1,
