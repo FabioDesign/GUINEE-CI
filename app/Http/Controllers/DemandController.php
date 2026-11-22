@@ -55,7 +55,7 @@ class DemandController extends Controller
 		}
 		// Modal
 		$actionIds = Myhelper::actions(Auth::user()->profile_id, 2);
-		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
+		$transmis = (($query->status == 0) && (in_array(6, $actionIds))) ? '<a href="#" data-url="/demands/status/' . $uuid . '" data-type="PATCH" data-bs-toggle="tooltip" data-bs-placement="top" title="Transmettre la demande" class="btn btn-sm fw-bold btn-success status">Transmettre</a>' : '';
 		$valid = (($query->status == 1) && (in_array(7, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Valider la demande" class="btn btn-sm fw-bold btn-success btn-vld">Valider</a>' : '';
 		$rejet = (($query->status == 1) && (in_array(8, $actionIds))) ? '<a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Rejeter la demande" class="btn btn-sm fw-bold btn-danger btn-rjt">Rejeter</a>' : '';
 		// Modal
