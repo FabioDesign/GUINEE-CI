@@ -1,5 +1,10 @@
 @extends('pdf.layouts.master')
 
+{{-- Titre avec retour à la ligne imposé (comme sur le modèle CND.pdf) --}}
+@section('doc_title')
+CERTIFICAT DE NON DIVORCE<br>ET DE NON SEPARATION DE CORPS
+@endsection
+
 @section('body')
 @php
     // Choix du sexe du demandeur (le conjoint décédé est de sexe opposé)
