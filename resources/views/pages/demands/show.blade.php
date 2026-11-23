@@ -172,6 +172,29 @@
                                 </div>
                             </div>
                             @endif
+                            @if($query->document->code == 'CND')
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Nom du défunt : <span class="fw-bold fs-5 text-dark">{{ $query->field_1 }}</span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Prénoms du défunt : <span class="fw-bold fs-5 text-dark">{{ $query->field_2 }}</span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Date du mariage : <span class="fw-bold fs-5 text-dark">{{ $query->date_at->format('d-m-Y') }}</span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Lieu du mariage : <span class="fw-bold fs-5 text-dark">{{ $query->field_3 }}</span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Acte de mariage N° : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
+                                </div>
+                            </div>
+                            @endif
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>

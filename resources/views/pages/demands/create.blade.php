@@ -400,6 +400,32 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="block-dmd block-cnd d-none">
+                                <div class="row mb-5">
+                                    <div class="col-md-6 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Nom du défunt : <span class="text-danger">*</span></label>
+                                        <input type="text" id="lastname_cnd" name="lastname_cnd" class="form-control requiredDmd" placeholder="Saisir nom" data-valid="0" />
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Prénoms du défunt : <span class="text-danger">*</span></label>
+                                        <input type="text" id="firstname_cnd" name="firstname_cnd" class="form-control requiredDmd" placeholder="Saisir prénoms" data-valid="0" />
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Acte de mariage N° : <span class="text-danger">*</span></label>
+                                        <input type="text" id="weddingnumber_cnd" name="weddingnumber_cnd" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Date du mariage : <span class="text-danger">*</span></label>
+                                        <input type="text" id="weddingat_cnd" name="weddingat_cnd" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5">Lieu du mariage : <span class="text-danger">*</span></label>
+                                        <input type="text" id="weddingplace_cnd" name="weddingplace_cnd" class="form-control requiredDmd" placeholder="Saisir lieu" data-valid="0" />
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mb-5">
                                 <div class="col-md-12 col-12">
                                     <label class="fw-bolder text-dark fs-4">Pièces jointes :</label>
@@ -651,7 +677,7 @@
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
                                             Date de naissance 2 :
-                                            <span class="birthdayat_cdi fw-bold fs-5 text-dark"></span>
+                                            <span class="birthdayat_cdi fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -673,6 +699,42 @@
                                         <label class="fs-5">
                                             Nombre d'enfants :
                                             <span class="children fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-cnd mb-5 d-none">
+                                <div class="row mt-10 mb-5">
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            Nom du défunt :
+                                            <span class="lastname_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            Prénoms du défunt :
+                                            <span class="firstname_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-4 col-12">
+                                        <label class="fs-5">
+                                            Acte de mariage N° :
+                                            <span class="weddingnumber_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fs-5">
+                                            Date du mariage :
+                                            <span class="weddingat_cnd fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="fs-5">
+                                            Lieu du mariage :
+                                            <span class="weddingplace_cnd fw-bold fs-5 text-uppercase text-dark"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -997,6 +1059,12 @@
                 } else {
                     $('.block-cbc').removeClass('d-block').addClass('d-none');
                 }
+                if (code == 'CND') {
+                    $('.block-cnd').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
+                    $('.block-cnd').addClass('d-block').removeClass('d-none');
+                } else {
+                    $('.block-cnd').removeClass('d-block').addClass('d-none');
+                }
 				if (!id) return;
                 const getDocs = async (id) => {
                     try {
@@ -1011,10 +1079,8 @@
                         if (response) {
                             $('#copy').val(1);
                             $('#codeDoc').val(response.docs.code);
-                            $('#count').val(response.docs.count);
-                            $('.count').text(response.docs.count);
-                            $('#price, #total').val(response.docs.price);
-                            $('.price, .total').text(response.docs.price);
+                            $('#count, .count').val(response.docs.count).text(response.docs.count);
+                            $('#price, #total, .price, .total').val(response.docs.price).text(response.docs.price);
                             $('.files-list').html(response.files.map(file => `<div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fw-bolder text-dark fs-6">
@@ -1289,7 +1355,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children'
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children', 'lastname_cnd', 'firstname_cnd', 'weddingplace_cnd', 'weddingnumber_cnd'
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
@@ -1304,7 +1370,7 @@
                 });
             });
             // Dates : reformatage Y-m-d → d-m-Y
-            var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi'];
+            var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi', 'weddingat_cnd'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
                     var val = $(this).val();

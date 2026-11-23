@@ -18,10 +18,11 @@ return new class extends Migration
             $table->tinyInteger('count');
             $table->tinyInteger('copy');
             $table->decimal('price', 10, 0);
-            $table->tinyInteger('number')->default(0);
+            $table->string('number')->nullable();
+            $table->date('date_at')->nullable();
             $table->string('field_1')->nullable();
             $table->string('field_2')->nullable();
-            $table->date('date_at')->nullable();
+            $table->string('field_3')->nullable();
             $table->text('motif')->nullable();
             $table->text('path')->nullable();
             $table->tinyInteger('status')->default(0);

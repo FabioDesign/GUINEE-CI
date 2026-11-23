@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->string('code', 5);
             $table->string('icone', 50);
-            $table->string('label', 50);
+            $table->string('label');
             $table->decimal('price', 10, 0);
             $table->tinyInteger('count');
             $table->text('description')->nullable();

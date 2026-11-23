@@ -63,7 +63,7 @@ class DemandController extends Controller
 		$prefecture = Town::find(optional($query->user)->town_id);
 		$country = Country::find($prefecture->country_id);
 		$dmdFiles = Attachment::where('demand_id', $query->id)->get();
-		$delivered_at = Carbon::parse(Myhelper::addWorkingDays($query->copy))->format('d-m-Y');
+		$delivered_at = Carbon::parse(Myhelper::addWorkingDays($query->count))->format('d-m-Y');
 		return view('pages.demands.show', compact('title', 'currentMenu', 'addmodal', 'query', 'country', 'prefecture', 'dmdFiles', 'delivered_at'));
 	}
     //Liste des demandes
@@ -144,6 +144,14 @@ class DemandController extends Controller
             $rules['lastname_cdi'] = 'required';
             $rules['birthdayat_cdi'] = 'required|date_format:Y-m-d';
         }
+		// Test sur CND
+		if ($request->codeDoc == 'CND') {
+			$rules['lastname_cnd'] = 'required';
+			$rules['firstname_cnd'] = 'required';
+			$rules['weddingat_cnd'] = 'required|date_format:Y-m-d';
+			$rules['weddingplace_cnd'] = 'required';
+			$rules['weddingnumber_cnd'] = 'required';
+		}
         $validator = Validator::make($request->all(), $rules, [
 			'civility.required' => "La civilité est obligatoire.",
 			'civility.in' => "La civilité est incorrecte.",
@@ -191,6 +199,12 @@ class DemandController extends Controller
 			'children.integer' => "Le nombre d'enfants doit être un nombre entier.",
 			'maritalstatus_id.required' => "La situation matrimoniale est obligatoire.",
 			'maritalstatus_id.exists' => "La situation matrimoniale n'existe pas dans la base de données.",
+			'lastname_cnd.required' => "Le nom du défunt est obligatoire.",
+			'firstname_cnd.required' => "Les prénoms du défunt sont obligatoires.",
+			'weddingat_cnd.required' => "La date du mariage est obligatoire.",
+			'weddingat_cnd.date_format' => "Le format de la date du mariage est incorrecte.",
+			'weddingplace_cnd.required' => "Le lieu du mariage est obligatoire.",
+			'weddingnumber_cnd.required' => "Le numéro de l'acte de mariage est obligatoire.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -271,6 +285,14 @@ class DemandController extends Controller
 				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
 				$set['date_at'] = $request->birthdayat_cdi;
 				$set['number'] = $request->check_cdi;
+			}
+			// Création du CND
+			if ($request->codeDoc == 'CND') {
+				$set['date_at'] = $request->weddingat_cnd;
+				$set['field_1'] = Str::upper(Myhelper::valideString($request->lastname_cnd),'UTF-8');
+				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cnd),'UTF-8');
+				$set['field_3'] = Str::upper(Myhelper::valideString($request->weddingplace_cnd),'UTF-8');
+				$set['number'] = $request->weddingnumber_cnd;
 			}
             $demand = Demand::create($set);
             // Création des fichiers

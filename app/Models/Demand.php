@@ -159,6 +159,14 @@ class Demand extends Model
         $dataPDF['firstname_cdi'] = $query->field_2;
         $dataPDF['birthdayat_cdi'] = $query->date_at->format(self::DATE_FORMAT);
       }
+      // Certificat de décès
+      if (optional($query->document)->code == 'CND') {
+        $dataPDF['number'] = $query->number;
+        $dataPDF['lastname_cnd'] = $query->field_1;
+        $dataPDF['firstname_cnd'] = $query->field_2;
+        $dataPDF['wedding_at'] = $query->date_at->format(self::DATE_FORMAT);
+        $dataPDF['wedding_place'] = $query->field_3;
+      }
       // Données du Qrcode
       $dataQR = implode("\n", [
         $dataPDF['reference'],
