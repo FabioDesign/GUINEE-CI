@@ -182,16 +182,14 @@
                                 </div>
                             </div>
                             <div class="row mb-5">
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-4 col-12">
+                                    <label class="fs-5">Acte de mariage N° : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
+                                </div>
+                                <div class="col-md-4 col-12">
                                     <label class="fs-5">Date du mariage : <span class="fw-bold fs-5 text-dark">{{ $query->date_at->format('d-m-Y') }}</span></label>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-4 col-12">
                                     <label class="fs-5">Lieu du mariage : <span class="fw-bold fs-5 text-dark">{{ $query->field_3 }}</span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-6 col-12">
-                                    <label class="fs-5">Acte de mariage N° : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
                                 </div>
                             </div>
                             @endif
