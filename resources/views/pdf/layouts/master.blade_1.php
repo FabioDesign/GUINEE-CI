@@ -170,7 +170,14 @@
         </table>
 
         {{-- ── TITRE DU DOCUMENT ─────────────────────────────────────── --}}
-        <div class="doc-title">{{ $dataPDF['document'] }}</div>
+        {{-- Titre par défaut = libellé de la table documents ; une vue peut le surcharger via @section('doc_title') pour forcer un retour à la ligne --}}
+        <div class="doc-title">
+          @hasSection('doc_title')
+            @yield('doc_title')
+          @else
+            {{ $dataPDF['document'] }}
+          @endif
+        </div>
         <div class="doc-ornement">
           <img src="{{ public_path('assets/img/ornement.jpg') }}" style="height: 20px;" alt="Ornement" />
         </div>

@@ -113,7 +113,15 @@
         width: 100%;
       }
 
-      /* ── Pied de page ──────────────────────────────────────────── */
+      /* ── Pied de page : ancré en bas de page, identique pour tous les documents ── */
+      .page-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 20px;
+        z-index: 2;
+      }
       .footer-table {
         width: 100%;
         border-collapse: collapse;
@@ -185,10 +193,12 @@
         {{-- ── CORPS SPÉCIFIQUE À CHAQUE DOCUMENT ───────────────────── --}}
         @yield('body')
 
-        {{-- ── PIED DE PAGE COMMUN ───────────────────────────────────── --}}
-        @include('pdf.partials.footer', ['dataPDF' => $dataPDF])
-
       </div>{{-- /content --}}
     </div>{{-- /dmd-container --}}
+
+    {{-- ── PIED DE PAGE COMMUN (position fixe en bas de page) ────── --}}
+    <div class="page-footer">
+      @include('pdf.partials.footer', ['dataPDF' => $dataPDF])
+    </div>
   </body>
 </html>
