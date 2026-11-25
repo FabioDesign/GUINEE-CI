@@ -45,7 +45,7 @@
         </tr>
         <tr class="field-row">
           <td class="field-label">&nbsp;</td>
-          <td class="field-value">&nbsp;&nbsp;{{ $isMale ? 'NE' : 'NEE' }} LE {{ $dataPDF['birthdayat_cdi'] }}</td>
+          <td class="field-value">&nbsp;&nbsp;{{ $isMale ? 'NE' : 'NEE' }} LE {{ $dataPDF['dateat_cdi'] }}</td>
         </tr>
 
         {{-- Mention de concordance --}}

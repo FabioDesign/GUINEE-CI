@@ -142,15 +142,15 @@ class DemandController extends Controller
 		if ($request->codeDoc == 'CDI') {
             $rules['firstname_cdi'] = 'required';
             $rules['lastname_cdi'] = 'required';
-            $rules['birthdayat_cdi'] = 'required|date_format:Y-m-d';
+            $rules['dateat_cdi'] = 'required|date_format:Y-m-d';
         }
 		// Test sur CND
 		if ($request->codeDoc == 'CND') {
 			$rules['lastname_cnd'] = 'required';
 			$rules['firstname_cnd'] = 'required';
-			$rules['weddingat_cnd'] = 'required|date_format:Y-m-d';
-			$rules['weddingplace_cnd'] = 'required';
-			$rules['weddingnumber_cnd'] = 'required';
+			$rules['dateat_cnd'] = 'required|date_format:Y-m-d';
+			$rules['place_cnd'] = 'required';
+			$rules['number_cnd'] = 'required';
 		}
         $validator = Validator::make($request->all(), $rules, [
 			'civility.required' => "La civilité est obligatoire.",
@@ -193,18 +193,18 @@ class DemandController extends Controller
 			'filename.array' => "Les fichiers doivent être un tableau.",
 			'firstname_cdi.required' => "Le 2ème prénom est obligatoire.",
 			'lastname_cdi.required' => "Le 2ème nom est obligatoire.",
-			'birthdayat_cdi.required' => "La 2ème date de naissance est obligatoire.",
-			'birthdayat_cdi.date_format' => "Le format de la 2ème date de naissance est incorrecte.",
+			'dateat_cdi.required' => "La 2ème date de naissance est obligatoire.",
+			'dateat_cdi.date_format' => "Le format de la 2ème date de naissance est incorrecte.",
 			'children.required' => "Le nombre d'enfants est obligatoire.",
 			'children.integer' => "Le nombre d'enfants doit être un nombre entier.",
 			'maritalstatus_id.required' => "La situation matrimoniale est obligatoire.",
 			'maritalstatus_id.exists' => "La situation matrimoniale n'existe pas dans la base de données.",
 			'lastname_cnd.required' => "Le nom du défunt est obligatoire.",
 			'firstname_cnd.required' => "Les prénoms du défunt sont obligatoires.",
-			'weddingat_cnd.required' => "La date du mariage est obligatoire.",
-			'weddingat_cnd.date_format' => "Le format de la date du mariage est incorrecte.",
-			'weddingplace_cnd.required' => "Le lieu du mariage est obligatoire.",
-			'weddingnumber_cnd.required' => "Le numéro de l'acte de mariage est obligatoire.",
+			'dateat_cnd.required' => "La date du mariage est obligatoire.",
+			'dateat_cnd.date_format' => "Le format de la date du mariage est incorrecte.",
+			'place_cnd.required' => "Le lieu du mariage est obligatoire.",
+			'number_cnd.required' => "Le numéro de l'acte de mariage est obligatoire.",
 		]);
 		// Error field
 		if ($validator->fails()) {
@@ -281,18 +281,23 @@ class DemandController extends Controller
 			}
 			// Création du CDI
 			if ($request->codeDoc == 'CDI') {
+				$set['number'] = $request->check_cdi;
+				$set['date_at'] = $request->dateat_cdi;
 				$set['field_1'] = Str::upper(Myhelper::valideString($request->lastname_cdi),'UTF-8');
 				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cdi),'UTF-8');
-				$set['date_at'] = $request->birthdayat_cdi;
-				$set['number'] = $request->check_cdi;
 			}
 			// Création du CND
 			if ($request->codeDoc == 'CND') {
-				$set['date_at'] = $request->weddingat_cnd;
+				$set['number'] = $request->number_cnd;
+				$set['date_at'] = $request->dateat_cnd;
 				$set['field_1'] = Str::upper(Myhelper::valideString($request->lastname_cnd),'UTF-8');
 				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cnd),'UTF-8');
-				$set['field_3'] = Str::upper(Myhelper::valideString($request->weddingplace_cnd),'UTF-8');
-				$set['number'] = $request->weddingnumber_cnd;
+				$set['field_3'] = Str::upper(Myhelper::valideString($request->place_cnd),'UTF-8');
+			}
+			// Création du APC et APP
+			if ($request->codeDoc == 'APC' || $request->codeDoc == 'APP') {
+				$set['number'] = $request->number_aap;
+				$set['date_at'] = $request->dateat_aap;
 			}
             $demand = Demand::create($set);
             // Création des fichiers

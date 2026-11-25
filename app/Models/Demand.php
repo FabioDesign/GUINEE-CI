@@ -100,7 +100,7 @@ class Demand extends Model
   public static function filenameUnique($codeDoc) {
     do {
       $alfa = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
-      $string = $codeDoc.substr(str_shuffle($alfa), 0, 13) . '.pdf';
+      $string = $codeDoc . substr(str_shuffle($alfa), 0, 13) . '.pdf';
     } while(self::where('path', $string)->exists());
     return $string;
   }
@@ -119,6 +119,7 @@ class Demand extends Model
       $dataPDF = [
         'reference' => $query->reference,
         'document' => optional($query->document)->label,
+        'code' => optional($query->document)->code,
         'consulat' => optional($query->consulat)->label,
         'sex' => optional($query->user)->gender,
         'gender' => optional($query->user)->gender == 'M' ? 'MASCULIN' : 'FÉMININ',
@@ -157,7 +158,7 @@ class Demand extends Model
         $dataPDF['number'] = $query->number;
         $dataPDF['lastname_cdi'] = $query->field_1;
         $dataPDF['firstname_cdi'] = $query->field_2;
-        $dataPDF['birthdayat_cdi'] = $query->date_at->format(self::DATE_FORMAT);
+        $dataPDF['dateat_cdi'] = $query->date_at->format(self::DATE_FORMAT);
       }
       // Certificat de décès
       if (optional($query->document)->code == 'CND') {
@@ -166,6 +167,13 @@ class Demand extends Model
         $dataPDF['firstname_cnd'] = $query->field_2;
         $dataPDF['wedding_at'] = $query->date_at->format(self::DATE_FORMAT);
         $dataPDF['wedding_place'] = $query->field_3;
+      }
+      // Permis de conduire
+      if ((optional($query->document)->code == 'APC') || (optional($query->document)->code == 'APP')) {
+        $dataPDF['number'] = $query->number;
+        $dataPDF['delivery_at'] = $query->date_at->format(self::DATE_FORMAT);
+        $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
+        $dataPDF['photo'] = $dmdFiles->path;
       }
       // Données du Qrcode
       $dataQR = implode("\n", [
@@ -179,7 +187,10 @@ class Demand extends Model
       $qrcodePng = QrCode::format('png')->size(250)->generate($dataQR);
       $dataPDF['qrcode'] = 'data:image/png;base64,' . base64_encode($qrcodePng);
       // Nom du fichier blade
-      $blade = 'pdf.demands.' . Str::lower($query->document->code);
+      // APC (permis de conduire) et APP (passeport) partagent la même vue : aap.blade.php
+      $blade = in_array($query->document->code, ['APC', 'APP'])
+        ? 'pdf.demands.aap'
+        : 'pdf.demands.' . Str::lower($query->document->code);
       // Vue PDF
       $pdf = PDF::loadView($blade, compact('dataPDF'));
       //Chemin d'accès
@@ -187,8 +198,9 @@ class Demand extends Model
       if (!File::isDirectory($dir)) {
         File::makeDirectory($dir, 0755, true, true);
       }
-      // Path to file
+      // Nom du fichier pdf
       $filename = self::filenameUnique($query->document->code);
+      // Path to file
       $path = $dir . '/' . $filename;
       // Save file
       $pdf->save($path);

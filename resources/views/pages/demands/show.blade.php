@@ -193,6 +193,17 @@
                                 </div>
                             </div>
                             @endif
+                            @if($query->document->code == 'APC' || $query->document->code == 'APP')
+                            @php $nameDoc = $query->document->code == 'APC' ? 'Permis de conduire' : 'Passeport'; @endphp
+                            <div class="row mb-5">
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">{{ $nameDoc }} N° : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="fs-5">Date de délivrance : <span class="fw-bold fs-5 text-dark">{{ $query->date_at->format('d-m-Y') }}</span></label>
+                                </div>
+                            </div>
+                            @endif
                             <div class="row mb-5">
                                 <div class="col-md-12 text-gray-700 fw-bolder fs-4">Documents joints</div>
                             </div>

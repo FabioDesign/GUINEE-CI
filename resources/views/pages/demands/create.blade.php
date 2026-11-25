@@ -148,7 +148,7 @@
                                             </i>
                                             <!--end::Icon-->
                                             <!--begin::Input-->
-                                            <input type="text" id="search" placeholder="Rechercher par nom ou prénoms" class="form-control form-control-lg form-control-solid px-15" data-kt-search-element="input">
+                                            <input type="text" id="search" name="search" placeholder="Rechercher par nom ou prénoms" class="form-control form-control-lg form-control-solid px-15" data-kt-search-element="input">
                                             <!--end::Input-->
                                             <!--begin::Spinner-->
                                             <span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-5" data-kt-search-element="spinner">
@@ -376,7 +376,7 @@
                                     </div>
                                     <div class="col-md-3 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date de naissance 2 : <span class="text-danger">*</span></label>
-                                        <input type="text" id="birthdayat_cdi" name="birthdayat_cdi" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                                        <input type="text" id="dateat_cdi" name="dateat_cdi" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                     <div class="col-md-2 col-12 checkbox-inline mt-6">
                                         <label class="boxcheck fw-bolder text-dark fs-5"><input type="radio" name="check_cdi" value="2" class="iCheck check_cdi"> Choix 2</label>
@@ -414,15 +414,27 @@
                                 <div class="row mb-5">
                                     <div class="col-md-4 col-12">
                                         <label class="fw-bolder text-dark fs-5">Acte de mariage N° : <span class="text-danger">*</span></label>
-                                        <input type="text" id="weddingnumber_cnd" name="weddingnumber_cnd" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
+                                        <input type="text" id="number_cnd" name="number_cnd" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fw-bolder text-dark fs-5">Date du mariage : <span class="text-danger">*</span></label>
-                                        <input type="text" id="weddingat_cnd" name="weddingat_cnd" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                                        <input type="text" id="dateat_cnd" name="dateat_cnd" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fw-bolder text-dark fs-5">Lieu du mariage : <span class="text-danger">*</span></label>
-                                        <input type="text" id="weddingplace_cnd" name="weddingplace_cnd" class="form-control requiredDmd" placeholder="Saisir lieu" data-valid="0" />
+                                        <input type="text" id="place_cnd" name="place_cnd" class="form-control requiredDmd" placeholder="Saisir lieu" data-valid="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-dmd block-aap d-none">
+                                <div class="row mb-5">
+                                    <div class="col-md-4 col-12">
+                                        <label class="fw-bolder text-dark fs-5"><span class="label_aap">Permis de conduire</span> N° : <span class="text-danger">*</span></label>
+                                        <input type="text" id="number_aap" name="number_aap" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label for="dateat_aap" class="fw-bolder text-dark fs-5">Date de délivrance : <span class="text-danger">*</span></label>
+                                        <input type="text" id="dateat_aap" name="dateat_aap" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -677,7 +689,7 @@
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
                                             Date de naissance 2 :
-                                            <span class="birthdayat_cdi fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
+                                            <span class="dateat_cdi fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -722,19 +734,35 @@
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
                                             Acte de mariage N° :
-                                            <span class="weddingnumber_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                            <span class="number_cnd fw-bold fs-5 text-uppercase text-dark"></span>
                                         </label>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
                                             Date du mariage :
-                                            <span class="weddingat_cnd fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
+                                            <span class="dateat_cnd fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                         </label>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label class="fs-5">
                                             Lieu du mariage :
-                                            <span class="weddingplace_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                            <span class="place_cnd fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-aap mb-5 d-none">
+                                <div class="row mb-5">
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            <span class="label_aap">Permis de conduire</span> N° :
+                                            <span class="number_aap fw-bold fs-5 text-uppercase text-dark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label class="fs-5">
+                                            Date de délivrance :
+                                            <span class="dateat_aap fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -790,7 +818,7 @@
                 if (value == 1) {
                     $('.cdi-info').text($('.lastname').val() + ' ' + $('.firstname').val() + ' ' + $('.block-cdi input.birthday_at[type="text"]').val());
                 } else {
-                    $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.birthdayat_cdi').text());
+                    $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.dateat_cdi').text());
                 }
             });
             // Rechercher les utilisateurs
@@ -1048,7 +1076,7 @@
                     if (choix == 1) {
                         $('.cdi-info').text($('.lastname').val() + ' ' + $('.firstname').val() + ' ' + $('.block-cdi input.birthday_at[type="text"]').val());
                     } else {
-                        $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.birthdayat_cdi').text());
+                        $('.cdi-info').text($('.lastname_cdi').text() + ' ' + $('.firstname_cdi').text() + ' ' + $('.dateat_cdi').text());
                     }
                 } else {
                     $('.block-cdi').removeClass('d-block').addClass('d-none');
@@ -1064,6 +1092,14 @@
                     $('.block-cnd').addClass('d-block').removeClass('d-none');
                 } else {
                     $('.block-cnd').removeClass('d-block').addClass('d-none');
+                }
+                if ((code == 'APC') || (code == 'APP')) {
+                    const label = (code == 'APC') ? 'Permis de conduire' : 'Passeport';
+                    $('.label_aap').html(label);
+                    $('.block-aap').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
+                    $('.block-aap').addClass('d-block').removeClass('d-none');
+                } else {
+                    $('.block-aap').removeClass('d-block').addClass('d-none');
                 }
 				if (!id) return;
                 const getDocs = async (id) => {
@@ -1355,7 +1391,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children', 'lastname_cnd', 'firstname_cnd', 'weddingplace_cnd', 'weddingnumber_cnd'
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children', 'lastname_cnd', 'firstname_cnd', 'place_cnd', 'number_cnd', 'number_aap'
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
@@ -1370,7 +1406,7 @@
                 });
             });
             // Dates : reformatage Y-m-d → d-m-Y
-            var dateFields = ['birthday_at', 'arrival_at', 'birthdayat_cdi', 'weddingat_cnd'];
+            var dateFields = ['birthday_at', 'arrival_at', 'dateat_cdi', 'dateat_cnd', 'dateat_aap'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
                     var val = $(this).val();
