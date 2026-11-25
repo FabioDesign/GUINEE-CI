@@ -26,8 +26,8 @@ ATTESTATION D'AUTHENTICITE<br>
       <p style="font-size:12pt; margin-bottom: 15px; line-height: 1.5;">
         L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['consulat'] }}
       </p>
-      <p style="font-size:12pt; font-weight:bold; margin-bottom: 20px;">
-        ATTESTE,
+      <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">
+        ATTESTE :
       </p>
       {{-- ── Champs + photo ── --}}
       <table width="100%" cellspacing="0" cellpadding="0">
@@ -50,7 +50,7 @@ ATTESTATION D'AUTHENTICITE<br>
           </td>
           {{-- ── Bloc PHOTO ────────────────────────────────────────── --}}
           <td width="25%" style="vertical-align:top; text-align:center; padding-left:20px;">
-            <div class="photo-box"><img src="{{ public_path('storage/' . $dataPDF['photo']) }}" alt="Photo" style="width:100%; height:auto;"></div>
+            <div class="photo-box"><img src="{{ public_path('storage/' . $dataPDF['photo']) }}" alt="" style="width:100%; height:auto;"></div>
           </td>
         </tr>
       </table>
