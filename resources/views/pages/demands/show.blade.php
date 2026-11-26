@@ -193,8 +193,14 @@
                                 </div>
                             </div>
                             @endif
-                            @if($query->document->code == 'APC' || $query->document->code == 'APP')
-                            @php $nameDoc = $query->document->code == 'APC' ? 'Permis de conduire' : 'Passeport'; @endphp
+                            @if($query->document->code == 'AAC' || $query->document->code == 'APC' || $query->document->code == 'APP')
+                            @php
+                                $nameDoc = match ($query->document->code) {
+                                    'AAC' => 'Carte consulaire',
+                                    'APC' => 'Permis de conduire',
+                                    default => 'Passeport',
+                                };
+                            @endphp
                             <div class="row mb-5">
                                 <div class="col-md-6 col-12">
                                     <label class="fs-5">{{ $nameDoc }} N° : <span class="fw-bold fs-5 text-dark">{{ $query->number }}</span></label>

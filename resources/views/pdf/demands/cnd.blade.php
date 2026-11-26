@@ -10,7 +10,7 @@ CERTIFICAT DE NON DIVORCE<br>ET DE NON SEPARATION DE CORPS
     // Choix du sexe du demandeur (le conjoint décédé est de sexe opposé)
     $isMale = ($dataPDF['sex'] ?? 'M') == 'M';
 @endphp
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
+<table class="body-table" style="margin: 30px 0 40px;">
   <tr>
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
@@ -23,7 +23,7 @@ CERTIFICAT DE NON DIVORCE<br>ET DE NON SEPARATION DE CORPS
         CERTIFIE
       </p>
       {{-- ── Champs du mariage ─────────────────────────────────── --}}
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%">
         <tr class="field-row">
           <td class="field-label">QUE LE MARIAGE CONTRACTE LE</td>
           <td class="field-value">: {{ $dataPDF['wedding_at'] }}</td>

@@ -288,16 +288,16 @@ class DemandController extends Controller
 			}
 			// Création du CND
 			if ($request->codeDoc == 'CND') {
-				$set['number'] = $request->number_cnd;
+				$set['number'] = Str::upper($request->number_cnd);
 				$set['date_at'] = $request->dateat_cnd;
 				$set['field_1'] = Str::upper(Myhelper::valideString($request->lastname_cnd),'UTF-8');
 				$set['field_2'] = Str::upper(Myhelper::valideString($request->firstname_cnd),'UTF-8');
 				$set['field_3'] = Str::upper(Myhelper::valideString($request->place_cnd),'UTF-8');
 			}
 			// Création du APC et APP
-			if ($request->codeDoc == 'APC' || $request->codeDoc == 'APP') {
-				$set['number'] = $request->number_aap;
-				$set['date_at'] = $request->dateat_aap;
+			if (in_array($request->codeDoc, ['AAC', 'APC', 'APP'])) {
+				$set['number'] = Str::upper($request->number_auth);
+				$set['date_at'] = $request->dateat_auth;
 			}
             $demand = Demand::create($set);
             // Création des fichiers

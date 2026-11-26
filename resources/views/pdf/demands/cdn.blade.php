@@ -5,7 +5,7 @@
     // Choix du sexe
     $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
 @endphp
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 70px;">
+<table class="body-table" style="margin: 30px 0 70px;">
   <tr>
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
@@ -17,7 +17,7 @@
         ATTESTE :
       </p>
       {{-- ── Champs du demandeur ───────────────────────────────── --}}
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%">
         <tr class="field-row">
           <td class="field-label">QUE </td>
           <td class="field-value">: {{ $dataPDF['civility'] }} {{ $dataPDF['lastname'] }} {{ $dataPDF['firstname'] }}</td>

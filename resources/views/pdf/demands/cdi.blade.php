@@ -9,7 +9,7 @@
     ? trim(($dataPDF['lastname'] ?? '') . ' ' . ($dataPDF['firstname'] ?? ''))
     : trim(($dataPDF['lastname_cdi'] ?? '') . ' ' . ($dataPDF['firstname_cdi'] ?? ''));
 @endphp
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 50px;">
+<table class="body-table" style="margin: 30px 0 50px;">
   <tr>
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
@@ -22,7 +22,7 @@
       </p>
       {{-- ── Un seul tableau : la colonne des libellés est commune à toutes les lignes,
            donc toutes les valeurs sont alignées verticalement ─────────────── --}}
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%">
         {{-- Premiers noms --}}
         <tr class="field-row">
           <td class="field-label">QUE LES NOMS</td>

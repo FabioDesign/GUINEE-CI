@@ -1,5 +1,5 @@
 {{-- ══ EN-TÊTE COMMUN AMBASSADE DE GUINEE ══════════════════════════════════ --}}
-<table class="header-table" cellspacing="0" cellpadding="0">
+<table class="header-table">
   <tr>
     {{-- Armoirie + REPUBLIQUE --}}
     <td class="header-logo">

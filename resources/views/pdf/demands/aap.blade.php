@@ -19,7 +19,7 @@ ATTESTATION D'AUTHENTICITE<br>
 @endsection
 
 @section('body')
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin: 30px 0 40px;">
+<table class="body-table" style="margin: 30px 0 40px;">
   <tr>
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
@@ -30,10 +30,10 @@ ATTESTATION D'AUTHENTICITE<br>
         ATTESTE :
       </p>
       {{-- ── Champs + photo ── --}}
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%">
         <tr>
           <td width="75%" style="vertical-align:top;">
-            <table width="100%" cellspacing="0" cellpadding="0">
+            <table width="100%">
               <tr class="field-row">
                 <td class="field-label">QUE {{ $titreDoc }} N&deg;</td>
                 <td class="field-value">: {{ $dataPDF['number'] }}</td>

@@ -168,17 +168,20 @@ class Demand extends Model
         $dataPDF['wedding_at'] = $query->date_at->format(self::DATE_FORMAT);
         $dataPDF['wedding_place'] = $query->field_3;
       }
-      // Permis de conduire
-      if ((optional($query->document)->code == 'APC') || (optional($query->document)->code == 'APP')) {
+      // Attestation d'authenticité
+      if (in_array(optional($query->document)->code, ['AAC', 'APC', 'APP'])) {
         $dataPDF['number'] = $query->number;
         $dataPDF['delivery_at'] = $query->date_at->format(self::DATE_FORMAT);
-        $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
-        $dataPDF['photo'] = $dmdFiles->path;
+        if (optional($query->document)->code != 'AAC') {
+          $dmdFiles = Attachment::where('demand_id', $query->id)->where('file_id', 1)->first();
+          $dataPDF['photo'] = $dmdFiles->path;
+        }
       }
       // Données du Qrcode
       $dataQR = implode("\n", [
         $dataPDF['reference'],
         $dataPDF['document'],
+        'COTE D\'IVOIRE',
         $dataPDF['consulat'],
         $dataPDF['signatory'],
         $dataPDF['validated_at'],

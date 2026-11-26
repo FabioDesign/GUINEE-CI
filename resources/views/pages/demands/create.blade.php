@@ -426,15 +426,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="block-dmd block-aap d-none">
+                            <div class="block-dmd block-auth d-none">
                                 <div class="row mb-5">
                                     <div class="col-md-4 col-12">
-                                        <label class="fw-bolder text-dark fs-5"><span class="label_aap">Permis de conduire</span> N° : <span class="text-danger">*</span></label>
-                                        <input type="text" id="number_aap" name="number_aap" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
+                                        <label class="fw-bolder text-dark fs-5"><span class="label_auth">Carte consulaire</span> N° : <span class="text-danger">*</span></label>
+                                        <input type="text" id="number_auth" name="number_auth" class="form-control requiredDmd" placeholder="Saisir numéro" data-valid="0" />
                                     </div>
                                     <div class="col-md-4 col-12">
-                                        <label for="dateat_aap" class="fw-bolder text-dark fs-5">Date de délivrance : <span class="text-danger">*</span></label>
-                                        <input type="text" id="dateat_aap" name="dateat_aap" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
+                                        <label for="dateat_auth" class="fw-bolder text-dark fs-5">Date de délivrance : <span class="text-danger">*</span></label>
+                                        <input type="text" id="dateat_auth" name="dateat_auth" value="{{ date('Y-m-d') }}" class="form-control date_at" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -751,18 +751,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="block-aap mb-5 d-none">
+                            <div class="block-auth mb-5 d-none">
                                 <div class="row mb-5">
                                     <div class="col-md-6 col-12">
                                         <label class="fs-5">
-                                            <span class="label_aap">Permis de conduire</span> N° :
-                                            <span class="number_aap fw-bold fs-5 text-uppercase text-dark"></span>
+                                            <span class="label_auth">Carte consulaire</span> N° :
+                                            <span class="number_auth fw-bold fs-5 text-uppercase text-dark"></span>
                                         </label>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <label class="fs-5">
                                             Date de délivrance :
-                                            <span class="dateat_aap fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
+                                            <span class="dateat_auth fw-bold fs-5 text-dark">{{ date('d-m-Y') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -1093,13 +1093,16 @@
                 } else {
                     $('.block-cnd').removeClass('d-block').addClass('d-none');
                 }
-                if ((code == 'APC') || (code == 'APP')) {
-                    const label = (code == 'APC') ? 'Permis de conduire' : 'Passeport';
-                    $('.label_aap').html(label);
-                    $('.block-aap').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
-                    $('.block-aap').addClass('d-block').removeClass('d-none');
+                if ((code == 'AAC') || (code == 'APC') || (code == 'APP')) {
+                    const label = {
+                        AAC: 'Carte consulaire',
+                        APC: 'Permis de conduire'
+                    }[code] ?? 'Passeport';
+                    $('.label_auth').html(label);
+                    $('.block-auth').find('[data-valid]').attr('data-valid', 1).data('valid', 1);
+                    $('.block-auth').addClass('d-block').removeClass('d-none');
                 } else {
-                    $('.block-aap').removeClass('d-block').addClass('d-none');
+                    $('.block-auth').removeClass('d-block').addClass('d-none');
                 }
 				if (!id) return;
                 const getDocs = async (id) => {
@@ -1391,7 +1394,7 @@
             }
             // Champs texte / input
             var textFields = [
-                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children', 'lastname_cnd', 'firstname_cnd', 'place_cnd', 'number_cnd', 'number_aap'
+                'lastname', 'firstname', 'phone_number', 'email', 'profession', 'birthplace', 'father_fullname', 'mother_fullname', 'size', 'complexion', 'hairs', 'particular_sign', 'home_address', 'person_fullname', 'person_number', 'person_address', 'count', 'price', 'copy', 'total', 'lastname_cdi', 'firstname_cdi', 'children', 'lastname_cnd', 'firstname_cnd', 'place_cnd', 'number_cnd', 'number_auth'
             ];
             $.each(textFields, function (i, field) {
                 $('[name="' + field + '"]').on('keyup change', function () {
@@ -1406,7 +1409,7 @@
                 });
             });
             // Dates : reformatage Y-m-d → d-m-Y
-            var dateFields = ['birthday_at', 'arrival_at', 'dateat_cdi', 'dateat_cnd', 'dateat_aap'];
+            var dateFields = ['birthday_at', 'arrival_at', 'dateat_cdi', 'dateat_cnd', 'dateat_auth'];
             $.each(dateFields, function (i, field) {
                 $('[name="' + field + '"]').on('change', function () {
                     var val = $(this).val();

@@ -5,17 +5,17 @@
     // Choix du sexe
     $isMale   = ($dataPDF['sex'] ?? 'M') == 'M';
 @endphp
-<table class="body-table" cellspacing="0" cellpadding="0" style="margin:50px 0 70px;">
+<table class="body-table" style="margin:50px 0 70px;">
   <tr>
     {{-- ── Champs du demandeur ──────────────────────────────────── --}}
     <td width="75%" style="vertical-align:top;">
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%">
         <tr class="field-row">
           <td class="field-label">NOM</td>
           <td class="field-value">: {{ $dataPDF['lastname'] }}</td>
         </tr>
         <tr class="field-row">
-          <td class="field-label">PRENOM(S)</td>
+          <td class="field-label">PRENOMS</td>
           <td class="field-value">: {{ $dataPDF['firstname'] }}</td>
         </tr>
         <tr class="field-row">

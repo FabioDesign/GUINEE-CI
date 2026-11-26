@@ -1,5 +1,5 @@
 {{-- ══ PIED DE PAGE COMMUN ════════════════════════════════════════════════ --}}
-<table width="100%" cellspacing="0" cellpadding="0">
+<table width="100%">
   <tr>
     {{-- QR Code --}}
     <td width="20%" style="text-align:center; vertical-align:middle;">
