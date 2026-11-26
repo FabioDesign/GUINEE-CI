@@ -6,6 +6,7 @@
     $isMale = ($dataPDF['sex'] ?? 'M') == 'M';
 @endphp
 <table class="body-table" style="margin: 30px 0 40px;">
+  <tr><th></th></tr>
   <tr>
     <td style="vertical-align:top;">
       {{-- ── Texte introductif ─────────────────────────────────── --}}
@@ -13,15 +14,16 @@
         L'AMBASSADE DE LA REPUBLIQUE DE GUINEE EN REPUBLIQUE DE COTE D'IVOIRE - {{ $dataPDF['consulat'] }}
       </p>
       <p style="font-size:12pt; font-weight:bold; text-align:center; margin-bottom: 20px;">
-        ATTESTE :
+        ATTESTE QUE :
       </p>
       <p style="font-size:12pt; margin-bottom: 20px; text-align: justify; line-height: 1.5;">
         LA CARTE D'IDENTITE CONSULAIRE BIOMETRIQUE N&deg; <strong>{{ $dataPDF['number'] }}</strong>
-        DELIVREE LE <strong>{{ $dataPDF['delivery_at'] }}</strong> PAR CES SERVICES COMPETENTS A<br>
+        DELIVREE LE <strong>{{ $dataPDF['delivery_at'] }}</strong> PAR CES SERVICES COMPETENTS A
         <strong>{{ $dataPDF['civility'] }} {{ $dataPDF['lastname'] }} {{ $dataPDF['firstname'] }}</strong>
       </p>
-      {{-- ── Identité du titulaire (tableau aligné, comme adn.blade.php) ── --}}
-      <table width="100%" cellspacing="0" cellpadding="0">
+      {{-- ── Identité du titulaire ── --}}
+      <table style="width:100%">
+        <tr><th></th></tr>
         <tr class="field-row">
           <td class="field-label">{{ $isMale ? 'NE' : 'NEE' }} LE</td>
           <td class="field-value">: {{ $dataPDF['birthday_at'] }}</td>
@@ -48,7 +50,7 @@
         </tr>
       </table>
       {{-- ── Mention d'authenticité ────────────────────────────── --}}
-      <p style="font-size:12pt; margin-top: 5px; text-align: justify; line-height: 1.5;">
+      <p style="font-size:12pt; margin-top: 10px; text-align: justify; line-height: 1.5;">
         EST AUTHENTIQUE CONFORMEMENT AUX DISPOSITIONS EXIGEES SUR LES TITRES DU MEME GENRE.
       </p>
       {{-- ── Texte de clôture ──────────────────────────────────── --}}
